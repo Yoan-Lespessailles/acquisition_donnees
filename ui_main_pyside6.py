@@ -103,22 +103,7 @@ class Ui_MainWindow(object):
         self.button_record.setObjectName(u"button_record")
         self.button_record.setEnabled(True)
         self.button_record.setFont(font)
-        self.button_record.setStyleSheet(u"#button_record {   \n"
-"    background-color: #B8B8B8;\n"
-"    color: white;\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    padding: 12px;\n"
-"    font-size: 16px;\n"
-"}\n"
-"\n"
-"#button_record:hover {\n"
-"    background-color: #ABABAB;\n"
-"}\n"
-"\n"
-"#button_record:pressed {\n"
-"    background-color: #919191;\n"
-"}")
+        self.button_record.setStyleSheet(u"")
 
         self.horizontalLayout.addWidget(self.button_record)
 

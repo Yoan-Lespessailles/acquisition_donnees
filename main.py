@@ -23,6 +23,34 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Charge l'interface créée avec Qt Designer
         self.setupUi(self)
 
+        self.setStyleSheet("""
+                           
+            #button_record {   
+                background-color: #B8B8B8;
+                color: white;
+                border: none;
+                border-radius: 10px;
+                padding: 12px;
+                font-size: 16px;
+            }
+
+            #button_record:hover {
+                background-color: #ABABAB;
+            }
+
+            #button_record:pressed {
+                background-color: #919191;
+            }
+
+            #button_record[recording="false"] {
+                background-color: #B8B8B8;
+            }
+
+            #button_record[recording="true"] {
+                background-color: 870101;
+            }
+        """)
+
         # Remplit la liste des micros disponibles
         self.load_microphones()
 
@@ -33,7 +61,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.select_micro.currentIndexChanged.connect(self.micro_changed)
 
         # Détecte quand l'utilisateur change de caméra
-        self.select_micro.currentIndexChanged.connect(self.camera_changed)
+        self.select_camera.currentIndexChanged.connect(self.camera_changed)
 
         # Prépare la zone vidéo
         self.setup_camera_preview()
@@ -77,7 +105,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
     @Slot(int)
     def camera_changed(self, index):
         # Récupère la caméra associée à l'index sélectionné
-        selected_camera = self.select_micro.itemData(index)
+        selected_camera = self.select_camera.itemData(index)
         
         if selected_camera is not None:
             print("Changement de caméra : ", selected_camera.description())
@@ -89,15 +117,38 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         selected_micro = self.select_micro.currentData()
         if selected_micro is None:
             print("Aucun micro sélectionné")
-            return
+            #return
     
         selected_camera = self.select_camera.currentData()
         if selected_camera is None:
             print("Aucune caméra sélectionnée")
-            return
+            #return
+        
+        print("=== DEBUG DEVICES ===")
+        print("MICRO OBJECT :", selected_micro)
+        if selected_micro:
+            print("MICRO DESCRIPTION :", selected_micro.description())
+            print("MICRO ID :", selected_micro.id())
+
+        # print("CAMERA OBJECT :", selected_camera)
+        # if selected_camera:
+        #     print("CAMERA DESCRIPTION :", selected_camera.description())
+        #     print("CAMERA ID :", selected_camera.id())
+        # print("======================")
 
         print("Micro sélectionné : ", selected_micro.description())
-        print("Caméra sélectionnée : ", selected_camera.description())
+        # print("Caméra sélectionnée : ", selected_camera.description())
+
+        if self.button_record.text() == "Record":
+            self.button_record.setText("Stop Record")
+            self.button_record.setProperty("recording", True)
+        else:
+            self.button_record.setText("Record")
+            self.button_record.setProperty("recording", False)
+
+        # Refresh du style
+        self.button_record.style().unpolish(self.button_record)
+        self.button_record.style().polish(self.button_record)
 
     def setup_camera_preview(self):
         # Crée le widget vidéo qui affichera le retour caméra
