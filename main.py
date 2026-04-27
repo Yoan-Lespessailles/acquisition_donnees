@@ -1,36 +1,106 @@
 import sys
 # importe le module système de python
 
+from PySide6.QtCore import Slot
+
 from PySide6.QtWidgets import QApplication
 # gère la boucle d’événements (clics, clavier, affichage…)
 
-from PySide6.QtUiTools import QUiLoader
-# sert à charger un fichier .ui créé avec Qt Designer
+from PySide6.QtMultimedia import QMediaDevices
+# permet d'accéder aux périphériques multimédias : micros, caméras...
 
-from PySide6.QtCore import QFile
-# permet de lire un fichier au format Qt
+from PySide6.QtWidgets import QMainWindow, QWidget
+from ui_main_pyside6 import Ui_MainWindow
 
-app = QApplication(sys.argv)
-# création de l’application Qt
+class MyWindow(QMainWindow, Ui_MainWindow):
 
-loader = QUiLoader()
-# création d'un “chargeur” d’interface qui va lire le fichier .ui et créer les widgets.
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Prototype Application")
+        self.resize(600, 400)
 
-ui_file = QFile("test_pyside6.ui")
-# indique le fichier à ouvrir
+        # Charge l'interface créée avec Qt Designer
+        self.setupUi(self)
 
-ui_file.open(QFile.ReadOnly)
-# ouverture du fichier en lecture seule (obligatoire pour la lecture)
+        # Remplit la liste des micros disponibles
+        self.load_microphones()
 
-window = loader.load(ui_file)
-# lecture du fichier .ui + création des les widgets + retourne la fenêtre principale
+        # Connecte le bouton Record à une méthode
+        self.button_record.clicked.connect(self.button_record_clicked)
+       
+        # Détecte quand l'utilisateur change de micro
+        self.select_micro.currentIndexChanged.connect(self.micro_changed)
 
-ui_file.close()
-# fermeture du fichier
+        # Détecte quand l'utilisateur change de caméra
+        self.select_micro.currentIndexChanged.connect(self.camera_changed)
+    
+    def load_microphones(self):
+        # Récupère la liste des micros détectés par Qt
+        microphones = QMediaDevices.audioInputs()
+        
+        # Vide la ComboBox au cas où elle contient déjà des éléments
+        self.select_micro.clear()
 
-window.show()
-# Affiche la fenêtre
-# showFullScreen pour ouvrir la fenêtre en grand
+        # Pour chaque micro trouvé
+        for micro in microphones:
+            # description() = nom lisible affiché à l'utilisateur
+            # micro = objet technique stocké en donnée cachée
+            self.select_micro.addItem(micro.description(), micro)
+    
 
-app.exec()
-# lancement de la boucle Qt permettant de cliquer, d'interagir, de garder la fenêtre ouverte
+    @Slot(int)
+    def micro_changed(self, index):
+        # Récupère le micro associé à l'index sélectionné
+        selected_micro = self.select_micro.itemData(index)
+        # itemData() -> donnée technique, itemText() -> texte visible
+
+        if selected_micro is not None:
+            print("Changement de micro :", selected_micro.description())
+
+
+    def load_cameras(self):
+        # Récupère la liste des caméras détectées par Qt
+        cameras = QMediaDevices.videoInputs()
+
+        # Vide la ComboBox au cas où elle contient déjà des élements
+        self.select_camera.clear()
+
+        # Pour chaque caméra trouvée
+        for camera in cameras:
+            self.select_camera.addItem(camera.description(), camera)    
+
+
+    @Slot(int)
+    def camera_changed(self, index):
+        # Récupère la caméra associée à l'index sélectionné
+        selected_camera = self.select_micro.itemData(index)
+        
+        if selected_camera is not None:
+            print("Changement de caméra : ", selected_camera.description())
+
+    
+    @Slot()
+    def button_record_clicked(self):
+        # Récupère le micro actuellement sélectionné
+        selected_micro = self.select_micro.currentData()
+        if selected_micro is None:
+            print("Aucun micro sélectionné")
+            return
+    
+        selected_camera = self.select_camera.currentData()
+        if selected_camera is None:
+            print("Aucune caméra sélectionnée")
+            return
+
+        print("Micro sélectionné : ", selected_micro.description())
+        print("Caméra sélectionnée : ", selected_camera.description())
+
+
+# Exécute le bloc uniquement si ce fichier est lancé directement, pas s’il est importé
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    # création de l’application Qt
+    
+    myWindow = MyWindow()
+    myWindow.show()
+    sys.exit(app.exec())
