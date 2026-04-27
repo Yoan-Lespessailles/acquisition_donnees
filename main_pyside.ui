@@ -21,8 +21,8 @@
     <item>
      <widget class="QWidget" name="widget_camera" native="true">
       <property name="styleSheet">
-       <string notr="true">background-color: black;
-border-radius: 12px;</string>
+       <string notr="true">/*background-color: black;
+border-radius: 12px;*/</string>
       </property>
      </widget>
     </item>
@@ -119,6 +119,9 @@ border-radius: 12px;</string>
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
           <widget class="QPushButton" name="button_record">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <property name="font">
             <font>
              <family>Roboto</family>
@@ -126,11 +129,22 @@ border-radius: 12px;</string>
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">    background-color: #e9e9e9;
-    border: 1px solid #9a9a9a;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 16px;</string>
+            <string notr="true">#button_record {   
+    background-color: #B8B8B8;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 16px;
+}
+
+#button_record:hover {
+    background-color: #ABABAB;
+}
+
+#button_record:pressed {
+    background-color: #919191;
+}</string>
            </property>
            <property name="text">
             <string>Record</string>

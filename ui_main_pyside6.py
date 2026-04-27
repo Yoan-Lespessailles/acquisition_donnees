@@ -31,8 +31,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.widget_camera = QWidget(self.centralwidget)
         self.widget_camera.setObjectName(u"widget_camera")
-        self.widget_camera.setStyleSheet(u"background-color: black;\n"
-"border-radius: 12px;")
+        self.widget_camera.setStyleSheet(u"/*background-color: black;\n"
+"border-radius: 12px;*/")
 
         self.horizontalLayout_2.addWidget(self.widget_camera)
 
@@ -101,12 +101,24 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.button_record = QPushButton(self.area_button)
         self.button_record.setObjectName(u"button_record")
+        self.button_record.setEnabled(True)
         self.button_record.setFont(font)
-        self.button_record.setStyleSheet(u"    background-color: #e9e9e9;\n"
-"    border: 1px solid #9a9a9a;\n"
-"    border-radius: 8px;\n"
-"    padding: 10px;\n"
-"    font-size: 16px;")
+        self.button_record.setStyleSheet(u"#button_record {   \n"
+"    background-color: #B8B8B8;\n"
+"    color: white;\n"
+"    border: none;\n"
+"    border-radius: 10px;\n"
+"    padding: 12px;\n"
+"    font-size: 16px;\n"
+"}\n"
+"\n"
+"#button_record:hover {\n"
+"    background-color: #ABABAB;\n"
+"}\n"
+"\n"
+"#button_record:pressed {\n"
+"    background-color: #919191;\n"
+"}")
 
         self.horizontalLayout.addWidget(self.button_record)
 

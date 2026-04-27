@@ -3,13 +3,14 @@ import sys
 
 from PySide6.QtCore import Slot
 
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout
 # gère la boucle d’événements (clics, clavier, affichage…)
 
-from PySide6.QtMultimedia import QMediaDevices
-# permet d'accéder aux périphériques multimédias : micros, caméras...
+from PySide6.QtMultimedia import QMediaDevices, QCamera, QMediaCaptureSession
+# QMediaDevices permet d'accéder aux périphériques multimédias : micros, caméras...
 
-from PySide6.QtWidgets import QMainWindow, QWidget
+from PySide6.QtMultimediaWidgets import QVideoWidget
+
 from ui_main_pyside6 import Ui_MainWindow
 
 class MyWindow(QMainWindow, Ui_MainWindow):
@@ -33,6 +34,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # Détecte quand l'utilisateur change de caméra
         self.select_micro.currentIndexChanged.connect(self.camera_changed)
+
+        # Prépare la zone vidéo
+        self.setup_camera_preview()
     
     def load_microphones(self):
         # Récupère la liste des micros détectés par Qt
@@ -95,6 +99,36 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         print("Micro sélectionné : ", selected_micro.description())
         print("Caméra sélectionnée : ", selected_camera.description())
 
+    def setup_camera_preview(self):
+        # Crée le widget vidéo qui affichera le retour caméra
+        self.video_widget = QVideoWidget()
+
+        # Crée un layout dans le QWidget vide créé dans Designer
+        layout = QVBoxLayout(self.widget_camera)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.addWidget(self.video_widget)
+
+        # Crée la session de capture Qt
+        self.capture_session = QMediaCaptureSession()
+
+        # Récupère les caméras détectées par Qt
+        cameras = QMediaDevices.videoInputs()
+
+        if not cameras:
+            print("Aucune caméra détectée")
+            return
+
+        # Prend la première caméra pour le test
+        self.camera = QCamera(cameras[0])
+
+        # Branche la caméra à la session
+        self.capture_session.setCamera(self.camera)
+
+        # Branche la sortie vidéo au QVideoWidget
+        self.capture_session.setVideoOutput(self.video_widget)
+
+        # Lance le retour caméra
+        self.camera.start()
 
 # Exécute le bloc uniquement si ce fichier est lancé directement, pas s’il est importé
 if __name__ == "__main__":
