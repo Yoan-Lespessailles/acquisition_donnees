@@ -104,8 +104,22 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             # description() = nom lisible affiché à l'utilisateur
             # micro = objet technique stocké en donnée cachée
             self.select_micro.addItem(micro.description(), micro)
-    
-    # AFFICHAGE CONSOLE
+
+    def get_micro_id(self) :
+        selected_micro = self.select_micro.currentData()
+        # id() renvoie un QByteArray Qt, c'est-à-dire des données binaires.
+        # On le convertit en str Python pour pouvoir l'utiliser facilement
+        # avec startswith() et dans la commande FFmpeg.
+        return bytes(selected_micro.id()).decode()
+
+    def get_camera_id(self) :
+        selected_camera = self.select_camera.currentData()
+        # Même logique que pour le micro : Qt donne un QByteArray,
+        # FFmpeg attend une chaîne Python dans la liste de commande.
+        return bytes(selected_camera.id()).decode()
+
+    # ========== BLOC TEST ==========
+
     @Slot(int)
     def micro_changed(self, index):
         # Récupère le micro associé à l'index sélectionné
@@ -126,7 +140,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         for camera in cameras:
             self.select_camera.addItem(camera.description(), camera)    
 
-    # AFFICHAGE CONSOLE
+    # AFFICHAGE CONSOLE CHANGEMENT DE CAMERA
     @Slot(int)
     def camera_changed(self, index):
         # Récupère la caméra associée à l'index sélectionné
@@ -134,31 +148,37 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         
         if selected_camera is not None:
             print("Changement de caméra : ", selected_camera.description())
+
+            # Changement du flux vidéo
             if hasattr(self, "camera"):
                 self.camera.stop()
             self.camera = QCamera(selected_camera)
             self.capture_session.setCamera(self.camera)
             self.camera.start()
 
+    # ========== BLOC TEST ==========
+
     
     @Slot()
     def button_record_clicked(self):
-        # Récupère le micro actuellement sélectionné
+
+        # ========== BLOC TEST INFOS MICRO + CAMERA ==========
+
+        # Récupère les données du micro et de la caméra actuellement sélectionné
         selected_micro = self.select_micro.currentData()
         selected_camera = self.select_camera.currentData()
         
-        print("=== DEBUG DEVICES ===")
         print("MICRO OBJECT :", selected_micro)
-        if selected_micro:
-            print("MICRO DESCRIPTION :", selected_micro.description())
-            print("MICRO ID :", selected_micro.id())
+        print("MICRO DESCRIPTION :", selected_micro.description())
+        print("MICRO ID :", selected_micro.id(), "\n")
 
         print("CAMERA OBJECT :", selected_camera)
-        if selected_camera:
-            print("CAMERA DESCRIPTION :", selected_camera.description())
-            print("CAMERA ID :", selected_camera.id())
-        print("======================")
+        print("CAMERA DESCRIPTION :", selected_camera.description())
+        print("CAMERA ID :", selected_camera.id())
 
+        # ========== FIN BLOC TEST ==========
+
+        # ========== BLOC STYLE DU BOUTON RECORD ==========
 
         if self.button_record.text() == "Record":
             self.button_record.setText("Stop Record")
@@ -170,6 +190,15 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Refresh du style
         self.button_record.style().unpolish(self.button_record)
         self.button_record.style().polish(self.button_record)
+
+        # ========== BLOC STYLE DU BOUTON RECORD ==========
+
+        if not self.is_recording :
+            self.start_recording()
+        else :
+            self.stop_recording()
+
+        self.is_recording = not self.is_recording
 
     def setup_camera_preview(self):
         # Crée le widget vidéo qui affichera le retour caméra
@@ -206,8 +235,6 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         micro_id = self.get_micro_id()
         camera_id = self.get_camera_id()
 
-        audio_format = self.get_audio_format(micro_id)
-
         if micro_id is None:
             print("Aucun micro sélectionné")
             return False
@@ -215,6 +242,8 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         if camera_id is None:
             print("Aucune caméra sélectionnée")
             return False
+
+        audio_format = self.get_audio_format(micro_id)
 
         output_file = datetime.now().strftime("record_%Y%m%d_%H%M%S.mp4")
 
@@ -225,17 +254,25 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             "-i", camera_id,
             "-f", audio_format,
             "-i", micro_id,
-            "output.mp4"
+            output_file
         ]
 
         print("Commande FFmpeg :", " ".join(command))
 
+        # Création du fichier et écriture en continue
         self.ffmpeg_process = subprocess.Popen(command, stdin=subprocess.PIPE)
 
         print("Enregistrement démarré :", output_file)
         return True
 
+    def stop_recording(self):
+        self.ffmpeg_process.stdin.write(b"q")
+        self.ffmpeg_process.stdin.flush()
+        self.ffmpeg_process.wait()
+
     def get_audio_format(self, micro_id):
+        # Ici micro_id est déjà une str Python grâce à get_micro_id().
+        # On utilise donc startswith(), et non startsWith() qui est une méthode Qt prévue pour les QByteArray.
         if micro_id.startswith("alsa_input"):
             return "pulse"
         elif micro_id.startswith("hw:"):
