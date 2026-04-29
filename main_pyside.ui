@@ -19,10 +19,21 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="3,2">
     <item>
-     <widget class="QWidget" name="widget_camera" native="true">
+     <widget class="QLabel" name="label_camera_preview">
       <property name="styleSheet">
-       <string notr="true">/*background-color: black;
-border-radius: 12px;*/</string>
+       <string notr="true">color: white;
+border: none;
+border-radius: 10px;
+background-color:black;</string>
+      </property>
+      <property name="text">
+       <string>Aperçu caméra</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
       </property>
      </widget>
     </item>

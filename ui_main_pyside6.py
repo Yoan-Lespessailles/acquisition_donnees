@@ -29,12 +29,16 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout_2 = QHBoxLayout(self.centralwidget)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.widget_camera = QWidget(self.centralwidget)
-        self.widget_camera.setObjectName(u"widget_camera")
-        self.widget_camera.setStyleSheet(u"/*background-color: black;\n"
-"border-radius: 12px;*/")
+        self.label_camera_preview = QLabel(self.centralwidget)
+        self.label_camera_preview.setObjectName(u"label_camera_preview")
+        self.label_camera_preview.setStyleSheet(u"color: white;\n"
+"border: none;\n"
+"border-radius: 10px;\n"
+"background-color:black;")
+        self.label_camera_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label_camera_preview.setWordWrap(True)
 
-        self.horizontalLayout_2.addWidget(self.widget_camera)
+        self.horizontalLayout_2.addWidget(self.label_camera_preview)
 
         self.verticalLayout_3 = QVBoxLayout()
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
@@ -136,6 +140,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        self.label_camera_preview.setText(QCoreApplication.translate("MainWindow", u"Aper\u00e7u cam\u00e9ra", None))
         self.label_select_micro.setText(QCoreApplication.translate("MainWindow", u"Micro", None))
         self.label_select_camera.setText(QCoreApplication.translate("MainWindow", u"Camera", None))
         self.label_sentence.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
