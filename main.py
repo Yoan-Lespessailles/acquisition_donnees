@@ -1,3 +1,5 @@
+import platform
+
 import sys
 # Importe le module système de python
 
@@ -7,7 +9,7 @@ import subprocess
 from datetime import datetime
 # Permet générer un nom de fichier avec la date/heure
 
-from PySide6.QtCore import Slot
+from PySide6.QtCore import Slot, QTimer
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout
 # Gère la boucle d’événements (clics, clavier, affichage…)
@@ -83,14 +85,24 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Détecte quand l'utilisateur change de caméra
         self.select_camera.currentIndexChanged.connect(self.camera_changed)
 
+        # Contient la caméra Qt utilisée pour l'aperçu
+        self.camera = None
+
+        # Contient la session de capture Qt
+        self.capture_session = None
+
+        # Contient le widget vidéo Qt
+        self.video_widget = None
+
+        # Contient le processus FFmpeg en cours
+        self.ffmpeg_process = None
+
+        # Permet de savoir si on est en train d’enregistrer ou non
+        self.is_recording = False
+
         # Prépare la zone vidéo
         self.setup_camera_preview()
 
-        self.ffmpeg_process = None
-        # Contient le processus FFmpeg en cours (si enregistrement actif)
-
-        self.is_recording = False
-        # Permet de savoir si on est en train d’enregistrer ou non
 
     def load_microphones(self):
         # Récupère la liste des micros détectés par Qt
@@ -105,6 +117,15 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             # micro = objet technique stocké en donnée cachée
             self.select_micro.addItem(micro.description(), micro)
     
+
+    def get_micro_id(self) :
+        selected_micro = self.select_micro.currentData()
+        # id() renvoie un QByteArray Qt, c'est-à-dire des données binaires.
+        # On le convertit en str Python pour pouvoir l'utiliser facilement
+        # avec startswith() et dans la commande FFmpeg.
+        return bytes(selected_micro.id()).decode()
+
+
     # AFFICHAGE CONSOLE
     @Slot(int)
     def micro_changed(self, index):
@@ -114,6 +135,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         if selected_micro is not None:
             print("Changement de micro :", selected_micro.description())
+
 
     def load_cameras(self):
         # Récupère la liste des caméras détectées par Qt
@@ -126,6 +148,14 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         for camera in cameras:
             self.select_camera.addItem(camera.description(), camera)    
 
+        
+    def get_camera_id(self) :
+        selected_camera = self.select_camera.currentData()
+        # Même logique que pour le micro : Qt donne un QByteArray,
+        # FFmpeg attend une chaîne Python dans la liste de commande.
+        return bytes(selected_camera.id()).decode()
+
+
     # AFFICHAGE CONSOLE
     @Slot(int)
     def camera_changed(self, index):
@@ -134,42 +164,74 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         
         if selected_camera is not None:
             print("Changement de caméra : ", selected_camera.description())
-            if hasattr(self, "camera"):
+
+            if self.capture_session is None:
+                return
+
+            if self.camera is not None:
                 self.camera.stop()
+
             self.camera = QCamera(selected_camera)
             self.capture_session.setCamera(self.camera)
             self.camera.start()
-
     
     @Slot()
     def button_record_clicked(self):
+
+        selected_micro = self.select_micro.currentData()
+        selected_camera = self.select_camera.currentData()
+
+        if selected_micro is None:
+            print("Aucun micro sélectionné")
+            return
+
+        if selected_camera is None:
+            print("Aucune caméra sélectionnée")
+            return
+
+        # ========== AFFICHAGE INFOS MICRO ET CAMERA ==========
         # Récupère le micro actuellement sélectionné
         selected_micro = self.select_micro.currentData()
         selected_camera = self.select_camera.currentData()
         
-        print("=== DEBUG DEVICES ===")
         print("MICRO OBJECT :", selected_micro)
-        if selected_micro:
-            print("MICRO DESCRIPTION :", selected_micro.description())
-            print("MICRO ID :", selected_micro.id())
+        print("MICRO DESCRIPTION :", selected_micro.description())
+        print("MICRO ID :", selected_micro.id(), "\n")
 
         print("CAMERA OBJECT :", selected_camera)
-        if selected_camera:
-            print("CAMERA DESCRIPTION :", selected_camera.description())
-            print("CAMERA ID :", selected_camera.id())
-        print("======================")
+        print("CAMERA DESCRIPTION :", selected_camera.description())
+        print("CAMERA ID :", selected_camera.id())
+        # ========== FIN AFFICHAGE INFOS MICRO ET CAMERA ==========
 
+        # Si on n'enregistre pas encore, on démarre
+        if not self.is_recording:
+            success = self.start_recording()
 
-        if self.button_record.text() == "Record":
-            self.button_record.setText("Stop Record")
-            self.button_record.setProperty("recording", True)
+            if success:
+                self.is_recording = True
+
+                self.select_micro.setEnabled(False)
+                self.select_camera.setEnabled(False)
+
+                self.button_record.setText("Stop Record")
+                self.button_record.setProperty("recording", True)
+
+        # Si on enregistre déjà, on arrête
         else:
+            self.stop_recording()
+
+            self.is_recording = False
+
+            self.select_micro.setEnabled(True)
+            self.select_camera.setEnabled(True)
+
             self.button_record.setText("Record")
             self.button_record.setProperty("recording", False)
 
-        # Refresh du style
+        # Refresh du style QSS
         self.button_record.style().unpolish(self.button_record)
         self.button_record.style().polish(self.button_record)
+
 
     def setup_camera_preview(self):
         # Crée le widget vidéo qui affichera le retour caméra
@@ -202,11 +264,33 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Lance le retour caméra
         self.camera.start()
 
+
+    # ========== START AND STOP AFFICHAGE CAMERA ==========
+    def start_camera_preview(self):
+        selected_camera = self.select_camera.currentData()
+
+        if selected_camera is not None and self.capture_session is not None:
+            self.camera = QCamera(selected_camera)
+            self.capture_session.setCamera(self.camera)
+            self.camera.start()
+            print("Aperçu caméra Qt relancé")
+
+    def stop_camera_preview(self):
+        if self.camera is not None:
+            self.camera.stop()
+
+            if self.capture_session is not None:
+                self.capture_session.setCamera(None)
+
+            self.camera = None
+
+            print("Aperçu caméra Qt arrêté et caméra libérée")
+    # ========== START AND STOP AFFICHAGE CAMERA ==========
+
+
     def start_recording(self):
         micro_id = self.get_micro_id()
         camera_id = self.get_camera_id()
-
-        audio_format = self.get_audio_format(micro_id)
 
         if micro_id is None:
             print("Aucun micro sélectionné")
@@ -215,25 +299,38 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         if camera_id is None:
             print("Aucune caméra sélectionnée")
             return False
+        
+        audio_format = self.get_audio_format(micro_id)
 
         output_file = datetime.now().strftime("record_%Y%m%d_%H%M%S.mp4")
 
-        # Format : ffmpeg -f v4l2 -i /dev/video1 -f pulse -i alsa_input.pci-0000_00_1f.3.analog-stereo output.mp4
+        # Format : ffmpeg -f v4l2 -i /dev/video1 -f pulse -i alsa_input.pci-0000_00_1f.3.analog-stereo output.mp4 -> sous linux
         command = [
             "ffmpeg",
+            "-y",
             "-f", "v4l2",
             "-i", camera_id,
             "-f", audio_format,
             "-i", micro_id,
-            "output.mp4"
+            output_file
         ]
 
         print("Commande FFmpeg :", " ".join(command))
 
-        self.ffmpeg_process = subprocess.Popen(command, stdin=subprocess.PIPE)
+        # Arrêt de l'aperçu Qt pour libérer la caméra
+        self.stop_camera_preview()
+
+        # On attend 500 ms avant de lancer FFmpeg
+        QTimer.singleShot(500, lambda: self.launch_ffmpeg(command, output_file))
+
+        return True
+
+
+    def launch_ffmpeg(self, command, output_file):
+        self.ffmpeg_process = subprocess.Popen(command,stdin=subprocess.PIPE)
 
         print("Enregistrement démarré :", output_file)
-        return True
+
 
     def get_audio_format(self, micro_id):
         if micro_id.startswith("alsa_input"):
@@ -243,6 +340,26 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         else:
             return "pulse"
     # Pas nécessaire de faire une méthode car pour la vidéo ce sera toujours v4l2
+
+    def stop_recording(self):
+        if self.ffmpeg_process is not None:
+
+            # Vérifie si FFmpeg est encore en cours d'exécution
+            if self.ffmpeg_process.poll() is None:
+                try:
+                    self.ffmpeg_process.stdin.write(b"q")
+                    self.ffmpeg_process.stdin.flush()
+                    self.ffmpeg_process.wait()
+                    print("Enregistrement arrêté")
+                except BrokenPipeError:
+                    print("FFmpeg était déjà arrêté")
+            else:
+                print("FFmpeg était déjà terminé")
+
+            self.ffmpeg_process = None
+
+        # Rebranche la caméra Qt à la session avant de relancer l'aperçu
+        self.start_camera_preview()
 
 # Exécute le bloc uniquement si ce fichier est lancé directement, pas s’il est importé
 if __name__ == "__main__":
