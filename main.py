@@ -1,25 +1,42 @@
-import platform
-
 import sys
-# Importe le module système de python
-
-import subprocess
-# Permet de lancer des programmes externes (ici FFmpeg)
+# Importe le module système de Python
 
 from datetime import datetime
-# Permet générer un nom de fichier avec la date/heure
+# Permet de générer un nom de fichier avec la date/heure
 
-from PySide6.QtCore import Slot, QTimer
+from pathlib import Path
+# Path permet de définir le dossier où enregistrer les vidéos
+
+from PySide6.QtCore import Slot, QTimer, QUrl
+# Slot permet de connecter proprement les boutons aux méthodes
+# QTimer pourra servir pour un compte à rebours, un voyant rouge clignotant, etc.
+# QUrl permet d’indiquer à Qt l’emplacement du fichier vidéo à enregistrer
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout
-# Gère la boucle d’événements (clics, clavier, affichage…)
+# QApplication gère la boucle d’événements
+# QMainWindow est la fenêtre principale
+# QVBoxLayout peut servir à placer dynamiquement le widget vidéo
 
-from PySide6.QtMultimedia import QMediaDevices, QCamera, QMediaCaptureSession
-# QMediaDevices permet d'accéder aux périphériques multimédias : micros, caméras...
+from PySide6.QtMultimedia import (
+    QMediaDevices,
+    QCamera,
+    QMediaCaptureSession,
+    QMediaRecorder,
+    QAudioInput,
+    QMediaFormat,
+)
+# QMediaDevices permet d'accéder aux périphériques multimédias : caméras, micros...
+# QCamera gère la caméra
+# QMediaCaptureSession relie caméra, micro, preview et enregistreur
+# QMediaRecorder permet d'enregistrer la vidéo
+# QAudioInput permet de connecter un micro à la session
+# QMediaFormat permet de choisir le format d'enregistrement
 
 from PySide6.QtMultimediaWidgets import QVideoWidget
+# QVideoWidget permet d'afficher le retour vidéo dans l'interface
 
 from ui_main_pyside6 import Ui_MainWindow
+# Interface générée depuis Qt Designer
 
 class MyWindow(QMainWindow, Ui_MainWindow):
 
@@ -69,24 +86,13 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Active le QSS
         self.button_record.setProperty("recording", False)
 
-        # Remplit la liste des micros disponibles
-        self.load_microphones()
 
-        # Remplit la liste des caméras disponibles
-        self.load_cameras()
-
-        # Connecte le bouton Record à une méthode
-        self.button_record.clicked.connect(self.button_record_clicked)
-       
-        # Détecte quand l'utilisateur change de micro
-        self.select_micro.currentIndexChanged.connect(self.micro_changed)
-        # Quand on sélectionne un micro, on appelle la fonction micro_changed
-
-        # Détecte quand l'utilisateur change de caméra
-        self.select_camera.currentIndexChanged.connect(self.camera_changed)
-
-        # Contient la caméra Qt utilisée pour l'aperçu
+        # ========== ATTRIBUTS RELATIF A LA VISUALISATION ET L'ENREGISTREMENT ==========
+        # Contient la caméra Qt utilisée pour l'aperçu et l'enregistrement
         self.camera = None
+
+        # Contient le micro Qt utilisée pour l'enregistrement
+        self.audioInput = None
 
         # Contient la session de capture Qt
         self.capture_session = None
@@ -94,22 +100,52 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Contient le widget vidéo Qt
         self.video_widget = None
 
-        # Contient le processus FFmpeg en cours
-        self.ffmpeg_process = None
+        # Contient l’objet responsable de l’enregistrement Qt
+        self.recorder = None
 
         # Permet de savoir si on est en train d’enregistrer ou non
         self.is_recording = False
+        #---------------------------------------------------------------------------
+
+        # Remplit la liste des micros disponibles
+        self.load_microphones()
+
+        # Remplit la liste des caméras disponibles
+        self.load_cameras()
 
         # Prépare la zone vidéo
         self.setup_camera_preview()
 
+        # Lance la preview si une caméra existe
+        self.start_camera_preview()
 
+        # Prépare le record
+        self.setup_recording()
+
+        # Connecte le bouton Record à une méthode
+        self.button_record.clicked.connect(self.button_record_clicked)
+       
+        # Détecte quand l'utilisateur change de micro
+        # Quand on sélectionne un micro, on appelle la fonction micro_changed
+        self.select_micro.currentIndexChanged.connect(self.micro_changed)
+
+        # Détecte quand l'utilisateur change de caméra
+        self.select_camera.currentIndexChanged.connect(self.camera_changed)
+
+    # ========== AFFICHAGE DE LA LISTE DEROULANTE DES MICROS ET CAMERAS SUR L'INTERFACE ==========
     def load_microphones(self):
+        # Vide la ComboBox au cas où elle contient déjà des éléments
+        self.select_micro.clear()
+
         # Récupère la liste des micros détectés par Qt
         microphones = QMediaDevices.audioInputs()
         
-        # Vide la ComboBox au cas où elle contient déjà des éléments
-        self.select_micro.clear()
+        # On vérifie que la liste n'est pas vide
+        if microphones :
+            # Crée un objet QAudioInput à partir du premier micro détecté
+            self.audioInput = QAudioInput(microphones[0])
+        else :
+            print("Aucun micro détecté")
 
         # Pour chaque micro trouvé
         for micro in microphones:
@@ -118,101 +154,185 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             self.select_micro.addItem(micro.description(), micro)
     
 
-    def get_micro_id(self) :
-        selected_micro = self.select_micro.currentData()
-        # id() renvoie un QByteArray Qt, c'est-à-dire des données binaires.
-        # On le convertit en str Python pour pouvoir l'utiliser facilement
-        # avec startswith() et dans la commande FFmpeg.
-        return bytes(selected_micro.id()).decode()
-
-
-    # AFFICHAGE CONSOLE
-    @Slot(int)
-    def micro_changed(self, index):
-        # Récupère le micro associé à l'index sélectionné
-        selected_micro = self.select_micro.itemData(index)
-        # itemData() -> donnée technique, itemText() -> texte visible
-
-        if selected_micro is not None:
-            print("Changement de micro :", selected_micro.description())
-
-
     def load_cameras(self):
-        # Récupère la liste des caméras détectées par Qt
-        cameras = QMediaDevices.videoInputs()
-
         # Vide la ComboBox au cas où elle contient déjà des élements
         self.select_camera.clear()
 
+        # Récupère la liste des caméras détectées par Qt
+        cameras = QMediaDevices.videoInputs()
+
+        # On vérifie que la liste n'est pas vide
+        if cameras :
+            # Crée un objet QCamera à partir de la première caméra détectée
+            self.camera = QCamera(cameras[0])
+        else :
+            print("Aucune caméra détectée")
+
         # Pour chaque caméra trouvée
         for camera in cameras:
-            self.select_camera.addItem(camera.description(), camera)    
-
-        
-    def get_camera_id(self) :
-        selected_camera = self.select_camera.currentData()
-        # Même logique que pour le micro : Qt donne un QByteArray,
-        # FFmpeg attend une chaîne Python dans la liste de commande.
-        return bytes(selected_camera.id()).decode()
+            self.select_camera.addItem(camera.description(), camera)
+    
 
 
-    # AFFICHAGE CONSOLE
+    # ========== RECUPERATION DES DONNES DU MICRO ET DE LA CAMERA SELECTIONEE ==========
+    def get_data_micro(self) :
+        return self.select_micro.currentData()
+    
+    def get_data_camera(self) :
+        return self.select_camera.currentData()
+
+
+
+    # ========== PREVIEW CAMERA ==========
+    def setup_camera_preview(self):
+
+        # Crée le widget vidéo qui affichera le retour caméra
+        self.video_widget = QVideoWidget()
+
+        # Crée un layout dans le QWidget vide créé dans Designer
+        layout = QVBoxLayout(self.widget_camera)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.addWidget(self.video_widget)
+
+        # Cette session servira à relier la caméra, le micro, la preview et le recorder
+        self.capture_session = QMediaCaptureSession()
+
+        # Branche la sortie vidéo au QVideoWidget
+        self.capture_session.setVideoOutput(self.video_widget)
+
+
+    def start_camera_preview(self):
+        # Si aucune caméra n'est disponible, on ne peut pas lancer la preview
+        if self.camera is None:
+            print("Aucune caméra disponible pour la preview")
+            return
+
+        # Branche la caméra à la session de capture
+        self.capture_session.setCamera(self.camera)
+
+        # Lance le retour caméra (flux vidéo)
+        self.camera.start()
+
+
+    def setup_recording(self) :
+        # Création de l’objet responsable de l’enregistrement
+        self.recorder = QMediaRecorder()
+
+        # Création d'un format d'enregistrement explicite
+        media_format = QMediaFormat()
+
+        # Définit le conteneur vidéo : fichier .mp4
+        media_format.setFileFormat(QMediaFormat.MPEG4)
+
+        # Définit le codec vidéo : MPEG4, souvent plus simple à encoder que H264/H265
+        media_format.setVideoCodec(QMediaFormat.VideoCodec.MPEG4)
+
+        # Définit le codec audio : AAC, adapté au MP4
+        media_format.setAudioCodec(QMediaFormat.AudioCodec.AAC)
+
+        # Applique le format au recorder
+        self.recorder.setMediaFormat(media_format)
+
+        # Branche le recorder à la session multimédia.
+        self.capture_session.setRecorder(self.recorder)
+
+        # Si un micro existe, on le branche à la session
+        if self.audioInput is not None:
+            self.capture_session.setAudioInput(self.audioInput)
+        else:
+            print("Aucun micro disponible")      
+
+
+    # ========== CHANGEMENT DES PERIPHERIQUES ==========
     @Slot(int)
-    def camera_changed(self, index):
-        # Récupère la caméra associée à l'index sélectionné
-        selected_camera = self.select_camera.itemData(index)
+    # Le _ signifie : que la méthode reçoit la valeur, mais je ne s’en sert pas.
+    def micro_changed(self, _):
+
+        if self.get_data_micro() is not None:
+            print("Changement de micro :", self.get_data_micro().description())
+            self.audioInput = QAudioInput(self.get_data_micro())
+            self.capture_session.setAudioInput(self.audioInput)
+
+    @Slot(int)
+    def camera_changed(self, _):
         
-        if selected_camera is not None:
-            print("Changement de caméra : ", selected_camera.description())
+        # S'il y a une caméra alors on met à jour la visualisation du flux vidéo
+        if self.get_data_camera() is not None:
+            print("Changement de caméra : ", self.get_data_camera().description())
 
-            if self.capture_session is None:
-                return
-
+            # ========== MISE A JOUR DU PREVIEW VIDEO ==========
             if self.camera is not None:
                 self.camera.stop()
 
-            self.camera = QCamera(selected_camera)
-            self.capture_session.setCamera(self.camera)
-            self.camera.start()
-    
+            self.camera = QCamera(self.get_data_camera())
+            self.start_camera_preview()
+
+
+
+    # ========== ENREGISTREMENT DE LA VIDEO ========== 
+    def start_recording(self):
+        
+        # Dossier de destination : /home/dossier_utilisateur/Documents
+        documents_dir = Path.home() / "Documents"
+        
+        # Génère un nom de fichier unique avec la date et l'heure
+        filename = datetime.now().strftime("video_%Y%m%d_%H%M%S.mp4")
+
+        # Construit le chemin complet du fichier vidéo
+        filepath = documents_dir / filename
+
+        # Affiche le chemin pour vérifier où la vidéo sera enregistrée
+        print("Enregistrement dans :", filepath)
+
+        # Indique la destination de l'enregistrement de la vidéo
+        self.recorder.setOutputLocation(QUrl.fromLocalFile(str(filepath)))
+        
+        # Démarre l’enregistrement
+        self.recorder.record()
+
+        return True
+
+
+
+    # ========== STOPPER ENREGISTREMENT DE LA VIDEO ========== 
+    def stop_recording(self):
+        self.recorder.stop()
+
+
+
     @Slot()
     def button_record_clicked(self):
 
-        selected_micro = self.select_micro.currentData()
-        selected_camera = self.select_camera.currentData()
-
-        if selected_micro is None:
+        if self.get_data_micro() is None:
             print("Aucun micro sélectionné")
             return
 
-        if selected_camera is None:
+        if self.get_data_camera() is None:
             print("Aucune caméra sélectionnée")
             return
 
-        # ========== AFFICHAGE INFOS MICRO ET CAMERA ==========
-        # Récupère le micro actuellement sélectionné
-        selected_micro = self.select_micro.currentData()
-        selected_camera = self.select_camera.currentData()
-        
-        print("MICRO OBJECT :", selected_micro)
-        print("MICRO DESCRIPTION :", selected_micro.description())
-        print("MICRO ID :", selected_micro.id(), "\n")
-
-        print("CAMERA OBJECT :", selected_camera)
-        print("CAMERA DESCRIPTION :", selected_camera.description())
-        print("CAMERA ID :", selected_camera.id())
-        # ========== FIN AFFICHAGE INFOS MICRO ET CAMERA ==========
-
-        # Si on n'enregistre pas encore, on démarre
+        # Si on enregistre pas encore, on démarre
         if not self.is_recording:
             success = self.start_recording()
+
+            # ========== AFFICHAGE INFOS MICRO ET CAMERA ==========
+       
+            print("MICRO OBJECT :", self.get_data_micro())
+            print("MICRO DESCRIPTION :", self.get_data_micro().description())
+            print("MICRO ID :", self.get_data_micro().id(), "\n")
+
+            print("CAMERA OBJECT :", self.get_data_camera())
+            print("CAMERA DESCRIPTION :", self.get_data_camera().description())
+            print("CAMERA ID :", self.get_data_camera().id())
 
             if success:
                 self.is_recording = True
 
+                # Empêche l'utilisateur de changer les périphériques pendant l'enregistrement
                 self.select_micro.setEnabled(False)
                 self.select_camera.setEnabled(False)
 
+                # Modifie le texte du bouton et l'aspect QSS
                 self.button_record.setText("Stop Record")
                 self.button_record.setProperty("recording", True)
 
@@ -222,9 +342,11 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
             self.is_recording = False
 
+            # Débloque le changement des périphériques
             self.select_micro.setEnabled(True)
             self.select_camera.setEnabled(True)
 
+            # Modifie le texte du bouton et l'aspect QSS
             self.button_record.setText("Record")
             self.button_record.setProperty("recording", False)
 
@@ -232,134 +354,6 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.button_record.style().unpolish(self.button_record)
         self.button_record.style().polish(self.button_record)
 
-
-    def setup_camera_preview(self):
-        # Crée le widget vidéo qui affichera le retour caméra
-        self.video_widget = QVideoWidget()
-
-        # Crée un layout dans le QWidget vide créé dans Designer
-        layout = QVBoxLayout(self.widget_camera)
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.addWidget(self.video_widget)
-
-        # Crée la session de capture Qt
-        self.capture_session = QMediaCaptureSession()
-
-        # Récupère les caméras détectées par Qt
-        cameras = QMediaDevices.videoInputs()
-
-        if not cameras:
-            print("Aucune caméra détectée")
-            return
-
-        # Prend la première caméra pour le test
-        self.camera = QCamera(cameras[0])
-
-        # Branche la caméra à la session
-        self.capture_session.setCamera(self.camera)
-
-        # Branche la sortie vidéo au QVideoWidget
-        self.capture_session.setVideoOutput(self.video_widget)
-
-        # Lance le retour caméra
-        self.camera.start()
-
-
-    # ========== START AND STOP AFFICHAGE CAMERA ==========
-    def start_camera_preview(self):
-        selected_camera = self.select_camera.currentData()
-
-        if selected_camera is not None and self.capture_session is not None:
-            self.camera = QCamera(selected_camera)
-            self.capture_session.setCamera(self.camera)
-            self.camera.start()
-            print("Aperçu caméra Qt relancé")
-
-    def stop_camera_preview(self):
-        if self.camera is not None:
-            self.camera.stop()
-
-            if self.capture_session is not None:
-                self.capture_session.setCamera(None)
-
-            self.camera = None
-
-            print("Aperçu caméra Qt arrêté et caméra libérée")
-    # ========== START AND STOP AFFICHAGE CAMERA ==========
-
-
-    def start_recording(self):
-        micro_id = self.get_micro_id()
-        camera_id = self.get_camera_id()
-
-        if micro_id is None:
-            print("Aucun micro sélectionné")
-            return False
-
-        if camera_id is None:
-            print("Aucune caméra sélectionnée")
-            return False
-        
-        audio_format = self.get_audio_format(micro_id)
-
-        output_file = datetime.now().strftime("record_%Y%m%d_%H%M%S.mp4")
-
-        # Format : ffmpeg -f v4l2 -i /dev/video1 -f pulse -i alsa_input.pci-0000_00_1f.3.analog-stereo output.mp4 -> sous linux
-        command = [
-            "ffmpeg",
-            "-y",
-            "-f", "v4l2",
-            "-i", camera_id,
-            "-f", audio_format,
-            "-i", micro_id,
-            output_file
-        ]
-
-        print("Commande FFmpeg :", " ".join(command))
-
-        # Arrêt de l'aperçu Qt pour libérer la caméra
-        self.stop_camera_preview()
-
-        # On attend 500 ms avant de lancer FFmpeg
-        QTimer.singleShot(500, lambda: self.launch_ffmpeg(command, output_file))
-
-        return True
-
-
-    def launch_ffmpeg(self, command, output_file):
-        self.ffmpeg_process = subprocess.Popen(command,stdin=subprocess.PIPE)
-
-        print("Enregistrement démarré :", output_file)
-
-
-    def get_audio_format(self, micro_id):
-        if micro_id.startswith("alsa_input"):
-            return "pulse"
-        elif micro_id.startswith("hw:"):
-            return "alsa"
-        else:
-            return "pulse"
-    # Pas nécessaire de faire une méthode car pour la vidéo ce sera toujours v4l2
-
-    def stop_recording(self):
-        if self.ffmpeg_process is not None:
-
-            # Vérifie si FFmpeg est encore en cours d'exécution
-            if self.ffmpeg_process.poll() is None:
-                try:
-                    self.ffmpeg_process.stdin.write(b"q")
-                    self.ffmpeg_process.stdin.flush()
-                    self.ffmpeg_process.wait()
-                    print("Enregistrement arrêté")
-                except BrokenPipeError:
-                    print("FFmpeg était déjà arrêté")
-            else:
-                print("FFmpeg était déjà terminé")
-
-            self.ffmpeg_process = None
-
-        # Rebranche la caméra Qt à la session avant de relancer l'aperçu
-        self.start_camera_preview()
 
 # Exécute le bloc uniquement si ce fichier est lancé directement, pas s’il est importé
 if __name__ == "__main__":
