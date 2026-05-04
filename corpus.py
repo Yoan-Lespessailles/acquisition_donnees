@@ -1,11 +1,10 @@
-template1_fr = {
-  "nom" : ["Papa", "Maman", "Lola", "Théo", "Luc", "Thomas", "Alice", "Patrick", "Bertrand", "Maxime"],
+fr = {
+  "template1" : 
+  {"nom" : ["Papa", "Maman", "Lola", "Théo", "Luc", "Thomas", "Alice", "Patrick", "Bertrand", "Maxime"],
   "verbe" : ["prend", "regarde", "nettoie", "voit", "fabrique", "porte", "achète", "demande", "casse", "découvre"],
   "nombre" : ["trois", "quatre", "six", "sept", "neuf", "dix", "douze", "quatorze", "seize", "vingt-et-un"],
-  "groupe nominal" : ["montagnes sombres", "cuillères fines", "fruits mûrs", "chaussures rouges", "lapins peureux", "grands gâteaux", "ballons ronds", "jeux dangereux", "chats mignons", "fleurs blanches"]
-}
-
-template2_fr = [
+  "groupe_nominal" : ["montagnes sombres", "cuillères fines", "fruits mûrs", "chaussures rouges", "lapins peureux", "grands gâteaux", "ballons ronds", "jeux dangereux", "chats mignons", "fleurs blanches"]},
+  "template2" : [
   "Un oignon brun cuit doucement dans la poêle chaude",
   "Le musicien joyeux joue un air ancien",
   "Une grenouille regarde le feu dans la grotte sombre",
@@ -16,4 +15,7 @@ template2_fr = [
   "Un nageur plonge dans une eau profonde et calme",
   "Le boulanger gagne une médaille pour son pain croustillant",
   "Un joueur lance une balle contre un grand mur gris"
-]
+  ]
+}
+
+

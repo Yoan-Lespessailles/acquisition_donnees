@@ -1,6 +1,10 @@
 import sys
 # Importe le module système de Python
 
+import corpus
+
+import random
+
 from datetime import datetime
 # Permet de générer un nom de fichier avec la date/heure
 
@@ -122,6 +126,12 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Prépare le record
         self.setup_recording()
 
+        # Récupère la liste des templates correspondant à la langue sélectionnée
+        self.collect_template()
+
+        # Affiche la première phrase
+        self.display_text()
+
         # Connecte le bouton Record à une méthode
         self.button_record.clicked.connect(self.button_record_clicked)
        
@@ -131,6 +141,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # Détecte quand l'utilisateur change de caméra
         self.select_camera.currentIndexChanged.connect(self.camera_changed)
+
 
     # ========== AFFICHAGE DE LA LISTE DEROULANTE DES MICROS ET CAMERAS SUR L'INTERFACE ==========
     def load_microphones(self):
@@ -299,7 +310,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.recorder.stop()
 
 
-
+    # ========== DECLENCHEMENT DE L'ENREGISTREMENT VIDEO ========== 
     @Slot()
     def button_record_clicked(self):
 
@@ -341,6 +352,11 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             self.stop_recording()
 
             self.is_recording = False
+            
+            # On supprime la phrase utilisées
+            self.consume_words()
+            # On affiche une nouvelle phrase
+            self.display_text()
 
             # Débloque le changement des périphériques
             self.select_micro.setEnabled(True)
@@ -354,6 +370,63 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.button_record.style().unpolish(self.button_record)
         self.button_record.style().polish(self.button_record)
 
+    # Prépare les données de travail (copies + mélange) en fonction du choix de langue
+    def collect_template(self):
+        # Copie des listes du template 1
+        self.t1_nom = corpus.fr["template1"]["nom"].copy()
+        self.t1_verbe = corpus.fr["template1"]["verbe"].copy()
+        self.t1_nombre = corpus.fr["template1"]["nombre"].copy()
+        self.t1_groupe_nominal = corpus.fr["template1"]["groupe_nominal"].copy()
+
+        # Copie du template 2
+        self.t2 = corpus.fr["template2"].copy()
+
+        # Mélange pour créer des phrases aléatoire (mais avec la même structure)
+        random.shuffle(self.t1_nom)
+        random.shuffle(self.t1_verbe)
+        random.shuffle(self.t1_nombre)
+        random.shuffle(self.t1_groupe_nominal)
+        random.shuffle(self.t2)
+
+    # Affiche la phrase à lire
+    def display_text(self):
+        # Tant qu'il reste des phrases à lire
+        if self.t2:
+            # Priorité au template 1
+            if self.t1_nom:
+                sentence = (
+                    self.t1_nom[0] + " " +
+                    self.t1_verbe[0] + " " +
+                    self.t1_nombre[0] + " " +
+                    self.t1_groupe_nominal[0]
+                )
+            # Sinon, bascule sur le template 2
+            else:
+                sentence = self.t2[0]
+
+            self.label_sentence.setText(sentence)
+
+        # Fin du corpus
+        else:
+            self.label_sentence.setText("Fin de la session d'enregistrement")
+    
+
+    # Consomme les mots/phrases utilisées
+    def consume_words(self):
+        # Tant qu'il reste des phrases
+        if self.t2:
+            # Consommation du template 1 en priorité
+            if self.t1_nom:
+                self.t1_nom.pop(0)
+                self.t1_verbe.pop(0)
+                self.t1_nombre.pop(0)
+                self.t1_groupe_nominal.pop(0)
+            # Puis template 2
+            else:
+                self.t2.pop(0)
+        else:
+            print("Toutes les phrases ont été lues")
+            return
 
 # Exécute le bloc uniquement si ce fichier est lancé directement, pas s’il est importé
 if __name__ == "__main__":
