@@ -34,7 +34,7 @@ from PySide6.QtMultimedia import (
 # QMediaCaptureSession relie caméra, micro, preview et enregistreur
 # QMediaRecorder permet d'enregistrer la vidéo
 # QAudioInput permet de connecter un micro à la session
-# QMediaFormat permet de choisir le format d'enregistrement
+# # QMediaFormat permet de connaître et choisir les formats, codecs vidéo et codecs audio disponibles
 
 from PySide6.QtMultimediaWidgets import QVideoWidget
 # QVideoWidget permet d'afficher le retour vidéo dans l'interface
@@ -107,6 +107,10 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Contient l’objet responsable de l’enregistrement Qt
         self.recorder = None
 
+        # Débit vidéo utilisé par l'enregistreur.
+        # La valeur sera ajustée automatiquement selon la résolution de la caméra.
+        self.video_bitrate = 12_000_000
+
         # Permet de savoir si on est en train d’enregistrer ou non
         self.is_recording = False
         #---------------------------------------------------------------------------
@@ -176,6 +180,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         if cameras :
             # Crée un objet QCamera à partir de la première caméra détectée
             self.camera = QCamera(cameras[0])
+            self.configure_camera_format(cameras[0])
         else :
             print("Aucune caméra détectée")
 
@@ -192,6 +197,67 @@ class MyWindow(QMainWindow, Ui_MainWindow):
     def get_data_camera(self) :
         return self.select_camera.currentData()
 
+
+    # ========== CHOIX AUTOMATIQUE DE LA QUALITE CAMERA ==========
+    def configure_camera_format(self, camera_device):
+        # Si aucune caméra n'est disponible, on ne peut pas choisir de format.
+        if self.camera is None or camera_device is None:
+            return
+
+        # Récupère les formats supportés par la caméra sélectionnée.
+        # Chaque format contient notamment une résolution et un nombre d'images par seconde.
+        formats = camera_device.videoFormats()
+
+        # Si Qt ne donne aucun format précis, on garde les réglages automatiques de la caméra.
+        if not formats:
+            print("Aucun format caméra détaillé disponible")
+            return
+
+        # Pour la lecture labiale, on cherche un bon compromis :
+        # - d'abord au moins 30 FPS si possible, car les mouvements de lèvres sont rapides
+        # - ensuite la meilleure résolution, car les détails autour de la bouche sont importants
+        # - enfin le FPS le plus élevé si plusieurs formats ont une résolution proche
+        def format_score(camera_format):
+            resolution = camera_format.resolution()
+            width = resolution.width()
+            height = resolution.height()
+            pixels = width * height
+            max_fps = camera_format.maxFrameRate()
+            has_good_fps = max_fps >= 30
+
+            return (has_good_fps, pixels, max_fps)
+
+        # Sélectionne le format ayant le meilleur score selon les critères ci-dessus.
+        best_format = max(formats, key=format_score)
+        best_resolution = best_format.resolution()
+        best_width = best_resolution.width()
+        best_height = best_resolution.height()
+        best_fps = best_format.maxFrameRate()
+
+        # Applique le format choisi à la caméra avant de lancer la preview/l'enregistrement.
+        self.camera.setCameraFormat(best_format)
+
+        # Ajuste le débit vidéo selon la résolution choisie.
+        # Plus la résolution est haute, plus il faut de débit pour éviter la pixellisation.
+        pixels = best_width * best_height
+        if pixels >= 1920 * 1080:
+            self.video_bitrate = 20_000_000
+        elif pixels >= 1280 * 720:
+            self.video_bitrate = 12_000_000
+        else:
+            self.video_bitrate = 8_000_000
+
+        print(
+            "Format caméra choisi :",
+            f"{best_width}x{best_height}",
+            f"à {best_fps:.0f} FPS",
+            "- bitrate vidéo :",
+            f"{self.video_bitrate / 1_000_000:.0f} Mbit/s",
+        )
+
+        # Si le recorder existe déjà, on met aussi à jour son débit vidéo.
+        if self.recorder is not None:
+            self.recorder.setVideoBitRate(self.video_bitrate)
 
 
     # ========== PREVIEW CAMERA ==========
@@ -235,14 +301,38 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Définit le conteneur vidéo : fichier .mp4
         media_format.setFileFormat(QMediaFormat.MPEG4)
 
-        # Définit le codec vidéo : MPEG4, souvent plus simple à encoder que H264/H265
-        media_format.setVideoCodec(QMediaFormat.VideoCodec.MPEG4)
+        # Vérification des codecs disponibles en encodage MP4
+        supported_video_codecs = media_format.supportedVideoCodecs(QMediaFormat.ConversionMode.Encode)
+        print(
+            "Codecs vidéo supportés en encodage MP4 :",
+            [codec.name for codec in supported_video_codecs],
+        )
+
+        # Définit le codec vidéo : H264 si l'encodeur est disponible, sinon MPEG4.
+        if QMediaFormat.VideoCodec.H264 in supported_video_codecs:
+            media_format.setVideoCodec(QMediaFormat.VideoCodec.H264)
+        else:
+            print("Encodeur H264 non disponible, fallback vers MPEG4")
+            media_format.setVideoCodec(QMediaFormat.VideoCodec.MPEG4)
 
         # Définit le codec audio : AAC, adapté au MP4
         media_format.setAudioCodec(QMediaFormat.AudioCodec.AAC)
 
         # Applique le format au recorder
         self.recorder.setMediaFormat(media_format)
+        print("Codec vidéo demandé :", self.recorder.mediaFormat().videoCodec().name)
+
+        # On force donc un encodage piloté par le débit avant de définir le bitrate.
+        self.recorder.setEncodingMode(QMediaRecorder.EncodingMode.ConstantBitRateEncoding)
+
+        # Définit le débit vidéo
+        # Pour éviter que Qt choisisse automatiquement un débit trop faible,
+        # on utilise le débit calculé selon la résolution de la caméra.
+        self.recorder.setVideoBitRate(self.video_bitrate)
+
+        # Définit le débit audio AAC.
+        # Sans valeur explicite, le backend FFmpeg peut recevoir un bitrate négatif.
+        self.recorder.setAudioBitRate(128_000)
 
         # Branche le recorder à la session multimédia.
         self.capture_session.setRecorder(self.recorder)
@@ -276,6 +366,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
                 self.camera.stop()
 
             self.camera = QCamera(self.get_data_camera())
+            self.configure_camera_format(self.get_data_camera())
             self.start_camera_preview()
 
 
@@ -334,7 +425,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
             print("CAMERA OBJECT :", self.get_data_camera())
             print("CAMERA DESCRIPTION :", self.get_data_camera().description())
-            print("CAMERA ID :", self.get_data_camera().id())
+            print("CAMERA ID :", self.get_data_camera().id(), "\n")
 
             if success:
                 self.is_recording = True
