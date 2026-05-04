@@ -103,12 +103,16 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Contient l’objet responsable de l’enregistrement Qt
         self.recorder = None
 
+        # Surveille les changements de périphériques audio/vidéo
+        self.media_devices = QMediaDevices()
+
         # Débit vidéo utilisé par l'enregistreur.
         # La valeur sera ajustée automatiquement selon la résolution de la caméra.
         self.video_bitrate = 12_000_000
 
         # Permet de savoir si on est en train d’enregistrer ou non
         self.is_recording = False
+
         #---------------------------------------------------------------------------
 
         # Remplit la liste des micros disponibles
@@ -136,6 +140,12 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Détecte quand l'utilisateur change de caméra
         self.select_camera.currentIndexChanged.connect(self.camera_changed)
 
+        # Détecte quand un micro est branché ou débranché
+        self.media_devices.audioInputsChanged.connect(self.refresh_micro)
+
+        # Détecte quand une caméra est branchée ou débranchée
+        self.media_devices.videoInputsChanged.connect(self.refresh_camera)
+
     # ========== AFFICHAGE DE LA LISTE DEROULANTE DES MICROS ET CAMERAS SUR L'INTERFACE ==========
     def load_microphones(self):
         # Vide la ComboBox au cas où elle contient déjà des éléments
@@ -146,8 +156,10 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         
         # On vérifie que la liste n'est pas vide
         if microphones :
-            # Crée un objet QAudioInput à partir du premier micro détecté
-            self.audioInput = QAudioInput(microphones[0])
+            # Vérification de audioInput
+            if self.audioInput is None :
+                # Crée un objet QAudioInput à partir du premier micro détecté
+                self.audioInput = QAudioInput(microphones[0])
         else :
             print("Aucun micro détecté")
 
@@ -167,9 +179,10 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # On vérifie que la liste n'est pas vide
         if cameras :
-            # Crée un objet QCamera à partir de la première caméra détectée
-            self.camera = QCamera(cameras[0])
-            self.configure_camera_format(cameras[0])
+            if self.camera is None :
+                # Crée un objet QCamera à partir de la première caméra détectée
+                self.camera = QCamera(cameras[0])
+                self.configure_camera_format(cameras[0])
         else :
             print("Aucune caméra détectée")
 
@@ -177,6 +190,120 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         for camera in cameras:
             self.select_camera.addItem(camera.description(), camera)
     
+
+
+    # ========== REFRESH DE LA LISTE DES MICROS ET CAMERAS ==========
+    def refresh_micro(self):
+        # Bloque temporairement les signaux pour éviter de déclencher micro_changed()
+        # pendant le clear(), les addItem() et le setCurrentIndex().
+        self.select_micro.blockSignals(True)
+
+        # Valeur par défaut si aucun micro n'était sélectionné avant le refresh.
+        current_micro_id = None
+
+        # Récupère le micro actuellement sélectionné avant de recharger la liste.
+        current_micro = self.get_data_micro()
+
+        # Si un micro était sélectionné, on mémorise son identifiant technique.
+        if current_micro is not None:
+            current_micro_id = current_micro.id()
+
+        # Recharge la ComboBox avec la nouvelle liste des micros détectés.
+        self.load_microphones()
+
+        # Indique si l'ancien micro a été retrouvé après le refresh.
+        found = False
+
+        # Parcourt tous les micros affichés dans la ComboBox.
+        for index in range(self.select_micro.count()):
+            # Récupère l'objet micro stocké dans l'élément courant.
+            micro = self.select_micro.itemData(index)
+
+            # Si le micro existe et correspond à l'ancien micro, on le resélectionne.
+            if micro is not None and micro.id() == current_micro_id:
+                self.select_micro.setCurrentIndex(index)
+                found = True
+                break
+
+        # Si l'ancien micro n'a pas été retrouvé, on sélectionne le premier micro disponible.
+        if not found and self.select_micro.count() > 0:
+            self.select_micro.setCurrentIndex(0)
+
+            # Comme les signaux sont bloqués, micro_changed() ne sera pas appelé.
+            # Il faut donc mettre à jour manuellement l'objet audio utilisé par Qt.
+            selected_micro = self.select_micro.currentData()
+
+            # Si un micro est bien sélectionné, on crée le nouvel objet QAudioInput.
+            if selected_micro is not None:
+                self.audioInput = QAudioInput(selected_micro)
+                self.capture_session.setAudioInput(self.audioInput)
+
+        # S'il n'y a plus aucun micro disponible, on vide l'objet audio.
+        elif self.select_micro.count() == 0:
+            self.audioInput = None
+
+        # Réactive les signaux après la mise à jour automatique.
+        self.select_micro.blockSignals(False)
+
+
+    def refresh_camera(self):
+        # Bloque temporairement les signaux pour éviter de déclencher camera_changed()
+        # pendant le clear(), les addItem() et le setCurrentIndex().
+        self.select_camera.blockSignals(True)
+
+        # Valeur par défaut si aucune caméra n'était sélectionnée avant le refresh.
+        current_camera_id = None
+
+        # Récupère la caméra actuellement sélectionnée avant de recharger la liste.
+        current_camera = self.get_data_camera()
+
+        # Si une caméra était sélectionnée, on mémorise son identifiant technique.
+        if current_camera is not None:
+            current_camera_id = current_camera.id()
+
+        # Recharge la ComboBox avec la nouvelle liste des caméras détectées.
+        self.load_cameras()
+
+        # Indique si l'ancienne caméra a été retrouvée après le refresh.
+        found = False
+
+        # Parcourt toutes les caméras affichées dans la ComboBox.
+        for index in range(self.select_camera.count()):
+            # Récupère l'objet caméra stocké dans l'élément courant.
+            camera = self.select_camera.itemData(index)
+
+            # Si la caméra existe et correspond à l'ancienne caméra, on la resélectionne.
+            if camera is not None and camera.id() == current_camera_id:
+                self.select_camera.setCurrentIndex(index)
+                found = True
+                break
+
+        # Si l'ancienne caméra n'a pas été retrouvée, on sélectionne la première caméra disponible.
+        if not found and self.select_camera.count() > 0:
+            self.select_camera.setCurrentIndex(0)
+
+            # Comme les signaux sont bloqués, camera_changed() ne sera pas appelé.
+            # Il faut donc mettre à jour manuellement la caméra utilisée par Qt.
+            selected_camera = self.select_camera.currentData()
+
+            # Si une caméra est bien sélectionnée, on remplace la caméra active.
+            if selected_camera is not None:
+                if self.camera is not None:
+                    self.camera.stop()
+
+                self.camera = QCamera(selected_camera)
+                self.configure_camera_format(selected_camera)
+                self.start_camera_preview()
+
+        # S'il n'y a plus aucune caméra disponible, on arrête et vide la caméra active.
+        elif self.select_camera.count() == 0:
+            if self.camera is not None:
+                self.camera.stop()
+
+            self.camera = None
+
+        # Réactive les signaux après la mise à jour automatique.
+        self.select_camera.blockSignals(False)
 
 
     # ========== RECUPERATION DES DONNES DU MICRO ET DE LA CAMERA SELECTIONEE ==========
@@ -388,7 +515,6 @@ class MyWindow(QMainWindow, Ui_MainWindow):
     # ========== STOPPER ENREGISTREMENT DE LA VIDEO ========== 
     def stop_recording(self):
         self.recorder.stop()
-
 
 
     @Slot()
