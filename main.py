@@ -709,14 +709,16 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
     # Prépare les données de travail (copies + mélange) en fonction du choix de langue
     def collect_template(self):
+        code_language = self.language[1]
+
         # Copie des listes du template 1
-        self.t1_nom = corpus.fr["template1"]["nom"].copy()
-        self.t1_verbe = corpus.fr["template1"]["verbe"].copy()
-        self.t1_nombre = corpus.fr["template1"]["nombre"].copy()
-        self.t1_groupe_nominal = corpus.fr["template1"]["groupe_nominal"].copy()
+        self.t1_nom = corpus[code_language]["template1"]["nom"].copy()
+        self.t1_verbe = corpus[code_language]["template1"]["verbe"].copy()
+        self.t1_nombre = corpus[code_language]["template1"]["nombre"].copy()
+        self.t1_groupe_nominal = corpus[code_language]["template1"]["groupe_nominal"].copy()
 
         # Copie du template 2
-        self.t2 = corpus.fr["template2"].copy()
+        self.t2 = corpus[code_language]["template2"].copy()
 
         # Mélange pour créer des phrases aléatoire (mais avec la même structure)
         random.shuffle(self.t1_nom)
