@@ -107,12 +107,24 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Contient l’objet responsable de l’enregistrement Qt
         self.recorder = None
 
+        # Surveille les changements de périphériques audio/vidéo
+        self.media_devices = QMediaDevices()
+
         # Débit vidéo utilisé par l'enregistreur.
         # La valeur sera ajustée automatiquement selon la résolution de la caméra.
         self.video_bitrate = 12_000_000
 
+        # Emplacement du fichier en cours d'enregistrement.
+        # Il sert à relancer automatiquement l'enregistrement si H264 échoue.
+        self.recording_output_location = QUrl()
+
+        # Indique si on a déjà tenté le fallback H264 -> MPEG4 pour l'enregistrement courant.
+        # Cela évite une boucle infinie si MPEG4 échoue aussi.
+        self.h264_fallback_tried = False
+
         # Permet de savoir si on est en train d’enregistrer ou non
         self.is_recording = False
+
         #---------------------------------------------------------------------------
 
         # Remplit la liste des micros disponibles
@@ -146,6 +158,12 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Détecte quand l'utilisateur change de caméra
         self.select_camera.currentIndexChanged.connect(self.camera_changed)
 
+        # Détecte quand un micro est branché ou débranché
+        self.media_devices.audioInputsChanged.connect(self.refresh_micro)
+
+        # Détecte quand une caméra est branchée ou débranchée
+        self.media_devices.videoInputsChanged.connect(self.refresh_camera)
+
 
     # ========== AFFICHAGE DE LA LISTE DEROULANTE DES MICROS ET CAMERAS SUR L'INTERFACE ==========
     def load_microphones(self):
@@ -157,8 +175,10 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         
         # On vérifie que la liste n'est pas vide
         if microphones :
-            # Crée un objet QAudioInput à partir du premier micro détecté
-            self.audioInput = QAudioInput(microphones[0])
+            # Vérification de audioInput
+            if self.audioInput is None :
+                # Crée un objet QAudioInput à partir du premier micro détecté
+                self.audioInput = QAudioInput(microphones[0])
         else :
             print("Aucun micro détecté")
 
@@ -178,9 +198,10 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # On vérifie que la liste n'est pas vide
         if cameras :
-            # Crée un objet QCamera à partir de la première caméra détectée
-            self.camera = QCamera(cameras[0])
-            self.configure_camera_format(cameras[0])
+            if self.camera is None :
+                # Crée un objet QCamera à partir de la première caméra détectée
+                self.camera = QCamera(cameras[0])
+                self.configure_camera_format(cameras[0])
         else :
             print("Aucune caméra détectée")
 
@@ -188,6 +209,120 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         for camera in cameras:
             self.select_camera.addItem(camera.description(), camera)
     
+
+
+    # ========== REFRESH DE LA LISTE DES MICROS ET CAMERAS ==========
+    def refresh_micro(self):
+        # Bloque temporairement les signaux pour éviter de déclencher micro_changed()
+        # pendant le clear(), les addItem() et le setCurrentIndex().
+        self.select_micro.blockSignals(True)
+
+        # Valeur par défaut si aucun micro n'était sélectionné avant le refresh.
+        current_micro_id = None
+
+        # Récupère le micro actuellement sélectionné avant de recharger la liste.
+        current_micro = self.get_data_micro()
+
+        # Si un micro était sélectionné, on mémorise son identifiant technique.
+        if current_micro is not None:
+            current_micro_id = current_micro.id()
+
+        # Recharge la ComboBox avec la nouvelle liste des micros détectés.
+        self.load_microphones()
+
+        # Indique si l'ancien micro a été retrouvé après le refresh.
+        found = False
+
+        # Parcourt tous les micros affichés dans la ComboBox.
+        for index in range(self.select_micro.count()):
+            # Récupère l'objet micro stocké dans l'élément courant.
+            micro = self.select_micro.itemData(index)
+
+            # Si le micro existe et correspond à l'ancien micro, on le resélectionne.
+            if micro is not None and micro.id() == current_micro_id:
+                self.select_micro.setCurrentIndex(index)
+                found = True
+                break
+
+        # Si l'ancien micro n'a pas été retrouvé, on sélectionne le premier micro disponible.
+        if not found and self.select_micro.count() > 0:
+            self.select_micro.setCurrentIndex(0)
+
+            # Comme les signaux sont bloqués, micro_changed() ne sera pas appelé.
+            # Il faut donc mettre à jour manuellement l'objet audio utilisé par Qt.
+            selected_micro = self.select_micro.currentData()
+
+            # Si un micro est bien sélectionné, on crée le nouvel objet QAudioInput.
+            if selected_micro is not None:
+                self.audioInput = QAudioInput(selected_micro)
+                self.capture_session.setAudioInput(self.audioInput)
+
+        # S'il n'y a plus aucun micro disponible, on vide l'objet audio.
+        elif self.select_micro.count() == 0:
+            self.audioInput = None
+
+        # Réactive les signaux après la mise à jour automatique.
+        self.select_micro.blockSignals(False)
+
+
+    def refresh_camera(self):
+        # Bloque temporairement les signaux pour éviter de déclencher camera_changed()
+        # pendant le clear(), les addItem() et le setCurrentIndex().
+        self.select_camera.blockSignals(True)
+
+        # Valeur par défaut si aucune caméra n'était sélectionnée avant le refresh.
+        current_camera_id = None
+
+        # Récupère la caméra actuellement sélectionnée avant de recharger la liste.
+        current_camera = self.get_data_camera()
+
+        # Si une caméra était sélectionnée, on mémorise son identifiant technique.
+        if current_camera is not None:
+            current_camera_id = current_camera.id()
+
+        # Recharge la ComboBox avec la nouvelle liste des caméras détectées.
+        self.load_cameras()
+
+        # Indique si l'ancienne caméra a été retrouvée après le refresh.
+        found = False
+
+        # Parcourt toutes les caméras affichées dans la ComboBox.
+        for index in range(self.select_camera.count()):
+            # Récupère l'objet caméra stocké dans l'élément courant.
+            camera = self.select_camera.itemData(index)
+
+            # Si la caméra existe et correspond à l'ancienne caméra, on la resélectionne.
+            if camera is not None and camera.id() == current_camera_id:
+                self.select_camera.setCurrentIndex(index)
+                found = True
+                break
+
+        # Si l'ancienne caméra n'a pas été retrouvée, on sélectionne la première caméra disponible.
+        if not found and self.select_camera.count() > 0:
+            self.select_camera.setCurrentIndex(0)
+
+            # Comme les signaux sont bloqués, camera_changed() ne sera pas appelé.
+            # Il faut donc mettre à jour manuellement la caméra utilisée par Qt.
+            selected_camera = self.select_camera.currentData()
+
+            # Si une caméra est bien sélectionnée, on remplace la caméra active.
+            if selected_camera is not None:
+                if self.camera is not None:
+                    self.camera.stop()
+
+                self.camera = QCamera(selected_camera)
+                self.configure_camera_format(selected_camera)
+                self.start_camera_preview()
+
+        # S'il n'y a plus aucune caméra disponible, on arrête et vide la caméra active.
+        elif self.select_camera.count() == 0:
+            if self.camera is not None:
+                self.camera.stop()
+
+            self.camera = None
+
+        # Réactive les signaux après la mise à jour automatique.
+        self.select_camera.blockSignals(False)
 
 
     # ========== RECUPERATION DES DONNES DU MICRO ET DE LA CAMERA SELECTIONEE ==========
@@ -291,48 +426,70 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.camera.start()
 
 
-    def setup_recording(self) :
-        # Création de l’objet responsable de l’enregistrement
-        self.recorder = QMediaRecorder()
-
-        # Création d'un format d'enregistrement explicite
+    # ========== FORMAT ET PARAMETRES D'ENREGISTREMENT ==========
+    def create_recording_media_format(self, preferred_video_codec):
+        # Création d'un format d'enregistrement explicite.
         media_format = QMediaFormat()
 
-        # Définit le conteneur vidéo : fichier .mp4
+        # Définit le conteneur vidéo : fichier .mp4.
+        # Ici MPEG4 signifie "conteneur MP4", pas "codec vidéo MPEG4".
         media_format.setFileFormat(QMediaFormat.MPEG4)
 
-        # Vérification des codecs disponibles en encodage MP4
+        # Vérifie les codecs réellement disponibles pour encoder dans un MP4.
         supported_video_codecs = media_format.supportedVideoCodecs(QMediaFormat.ConversionMode.Encode)
         print(
             "Codecs vidéo supportés en encodage MP4 :",
             [codec.name for codec in supported_video_codecs],
         )
 
-        # Définit le codec vidéo : H264 si l'encodeur est disponible, sinon MPEG4.
-        if QMediaFormat.VideoCodec.H264 in supported_video_codecs:
-            media_format.setVideoCodec(QMediaFormat.VideoCodec.H264)
-        else:
-            print("Encodeur H264 non disponible, fallback vers MPEG4")
+        # On tente d'abord le codec demandé.
+        # Dans notre cas, ce sera H264 au premier essai.
+        if preferred_video_codec in supported_video_codecs:
+            media_format.setVideoCodec(preferred_video_codec)
+
+        # Si le codec demandé n'est pas disponible, on bascule vers MPEG4.
+        elif QMediaFormat.VideoCodec.MPEG4 in supported_video_codecs:
+            print("Codec demandé non disponible, fallback vers MPEG4")
             media_format.setVideoCodec(QMediaFormat.VideoCodec.MPEG4)
 
-        # Définit le codec audio : AAC, adapté au MP4
+        # Dernier recours : MotionJPEG, souvent disponible mais plus lourd.
+        else:
+            print("Encodeur MPEG4 non disponible, fallback vers MotionJPEG")
+            media_format.setVideoCodec(QMediaFormat.VideoCodec.MotionJPEG)
+
+        # Définit le codec audio : AAC, adapté au conteneur MP4.
         media_format.setAudioCodec(QMediaFormat.AudioCodec.AAC)
 
-        # Applique le format au recorder
-        self.recorder.setMediaFormat(media_format)
-        print("Codec vidéo demandé :", self.recorder.mediaFormat().videoCodec().name)
+        return media_format
 
-        # On force donc un encodage piloté par le débit avant de définir le bitrate.
+
+    def apply_recorder_bitrates(self):
+        # On force un encodage piloté par le débit avant de définir le bitrate.
         self.recorder.setEncodingMode(QMediaRecorder.EncodingMode.ConstantBitRateEncoding)
 
-        # Définit le débit vidéo
         # Pour éviter que Qt choisisse automatiquement un débit trop faible,
         # on utilise le débit calculé selon la résolution de la caméra.
         self.recorder.setVideoBitRate(self.video_bitrate)
 
         # Définit le débit audio AAC.
-        # Sans valeur explicite, le backend FFmpeg peut recevoir un bitrate négatif.
         self.recorder.setAudioBitRate(128_000)
+
+
+    def setup_recording(self) :
+        # Création de l’objet responsable de l’enregistrement
+        self.recorder = QMediaRecorder()
+
+        # Premier choix : H264, car il est plus adapté au MP4 et plus efficace que MPEG4.
+        media_format = self.create_recording_media_format(QMediaFormat.VideoCodec.H264)
+        self.recorder.setMediaFormat(media_format)
+        print("Codec vidéo demandé :", self.recorder.mediaFormat().videoCodec().name)
+
+        # Applique les bitrates vidéo/audio.
+        self.apply_recorder_bitrates()
+
+        # Surveille les erreurs d'encodage.
+        # Si H264 échoue au moment de record(), on relancera automatiquement en MPEG4.
+        self.recorder.errorOccurred.connect(self.recorder_error_occurred)
 
         # Branche le recorder à la session multimédia.
         self.capture_session.setRecorder(self.recorder)
@@ -386,8 +543,12 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Affiche le chemin pour vérifier où la vidéo sera enregistrée
         print("Enregistrement dans :", filepath)
 
-        # Indique la destination de l'enregistrement de la vidéo
-        self.recorder.setOutputLocation(QUrl.fromLocalFile(str(filepath)))
+        # Indique la destination de l'enregistrement de la vidéo.
+        self.recording_output_location = QUrl.fromLocalFile(str(filepath))
+        self.recorder.setOutputLocation(self.recording_output_location)
+
+        # Réinitialise le fallback pour ce nouvel enregistrement.
+        self.h264_fallback_tried = False
         
         # Démarre l’enregistrement
         self.recorder.record()
@@ -400,6 +561,48 @@ class MyWindow(QMainWindow, Ui_MainWindow):
     def stop_recording(self):
         self.recorder.stop()
 
+
+    def recorder_error_occurred(self, error, error_string):
+        # Affiche l'erreur remontée par Qt/FFmpeg.
+        print("Erreur enregistrement :", error, error_string)
+
+        # Si H264 échoue au démarrage, Qt peut remonter une erreur du type h264_vaapi.
+        # Dans ce cas, on bascule automatiquement vers MPEG4 et on relance l'enregistrement.
+        current_codec = self.recorder.mediaFormat().videoCodec()
+        if current_codec == QMediaFormat.VideoCodec.H264 and not self.h264_fallback_tried:
+            print("H264 a échoué, relance automatique en MPEG4")
+
+            # Marque le fallback comme déjà tenté pour éviter une boucle infinie.
+            self.h264_fallback_tried = True
+
+            # Stoppe proprement le recorder avant de changer son format.
+            self.recorder.stop()
+
+            # Laisse un court délai à Qt pour libérer le fichier H264 raté.
+            # Ensuite seulement, on supprime ce fichier et on relance en MPEG4.
+            QTimer.singleShot(300, self.restart_recording_with_mpeg4)
+
+
+    def restart_recording_with_mpeg4(self):
+        # Récupère le chemin du fichier créé par la tentative H264.
+        failed_filepath = Path(self.recording_output_location.toLocalFile())
+
+        # Supprime le fichier H264 invalide avant de relancer l'enregistrement.
+        # Si le fichier n'existe pas encore, missing_ok=True évite une erreur inutile.
+        failed_filepath.unlink(missing_ok=True)
+        print("Fichier H264 invalide supprimé :", failed_filepath)
+
+        # Remplace le format H264 par un format MPEG4.
+        media_format = self.create_recording_media_format(QMediaFormat.VideoCodec.MPEG4)
+        self.recorder.setMediaFormat(media_format)
+        print("Codec vidéo demandé après fallback :", self.recorder.mediaFormat().videoCodec().name)
+
+        # Réapplique les bitrates après le changement de format.
+        self.apply_recorder_bitrates()
+
+        # Relance l'enregistrement vers le même chemin, maintenant propre.
+        self.recorder.setOutputLocation(self.recording_output_location)
+        self.recorder.record()
 
     # ========== DECLENCHEMENT DE L'ENREGISTREMENT VIDEO ========== 
     @Slot()
