@@ -1,26 +1,34 @@
-import sys
 # Importe le module système de Python
-
-import corpus
+import sys
 
 import random
 
-from datetime import datetime
+from corpus import corpus as corpus_data
+from corpus import language as language_data
+
 # Permet de générer un nom de fichier avec la date/heure
+from datetime import datetime
 
-from pathlib import Path
+
 # Path permet de définir le dossier où enregistrer les vidéos
+from pathlib import Path
 
-from PySide6.QtCore import Slot, QTimer, QUrl
 # Slot permet de connecter proprement les boutons aux méthodes
 # QTimer pourra servir pour un compte à rebours, un voyant rouge clignotant, etc.
 # QUrl permet d’indiquer à Qt l’emplacement du fichier vidéo à enregistrer
+from PySide6.QtCore import Slot, QTimer, QUrl
 
-from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout
 # QApplication gère la boucle d’événements
 # QMainWindow est la fenêtre principale
 # QVBoxLayout peut servir à placer dynamiquement le widget vidéo
+from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout
 
+# QMediaDevices permet d'accéder aux périphériques multimédias : caméras, micros...
+# QCamera gère la caméra
+# QMediaCaptureSession relie caméra, micro, preview et enregistreur
+# QMediaRecorder permet d'enregistrer la vidéo
+# QAudioInput permet de connecter un micro à la session
+# QMediaFormat permet de connaître et choisir les formats, codecs vidéo et codecs audio disponibles
 from PySide6.QtMultimedia import (
     QMediaDevices,
     QCamera,
@@ -29,12 +37,6 @@ from PySide6.QtMultimedia import (
     QAudioInput,
     QMediaFormat,
 )
-# QMediaDevices permet d'accéder aux périphériques multimédias : caméras, micros...
-# QCamera gère la caméra
-# QMediaCaptureSession relie caméra, micro, preview et enregistreur
-# QMediaRecorder permet d'enregistrer la vidéo
-# QAudioInput permet de connecter un micro à la session
-# # QMediaFormat permet de connaître et choisir les formats, codecs vidéo et codecs audio disponibles
 
 from PySide6.QtMultimediaWidgets import QVideoWidget
 # QVideoWidget permet d'afficher le retour vidéo dans l'interface
@@ -129,7 +131,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # ========== ATTRIBUTS RELATIF AU TEXTE ==========
         # Contient la langue sélectionnée 
-        self.language = []
+        self.language = None
 
 
         # Remplit la liste des micros disponibles
@@ -684,14 +686,14 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.select_language.clear()
 
         # Récupère la liste des langues disponibles 
-        languages = corpus.language
+        languages = language_data
 
         # On vérifie que la liste n'est pas vide
         if languages :
             if self.language is None :
                 # On sélectionne la première langue
                 self.language = languages[0]
-                print(f"Langue sélectionnée : {self.language}")
+                print(f"load_language() -> Langue sélectionnée : {self.language}")
 
         else :
             print ("Problème avec la liste des langues")
@@ -702,23 +704,24 @@ class MyWindow(QMainWindow, Ui_MainWindow):
     
     @Slot(int)
     def language_changed(self, index):
-        self.language = corpus.language[index]  
-        print(f"Langue sélectionnée : {self.language}")
+        self.language = language_data[index]  
+        print(f"language_changed -> langue sélectionnée : {self.language}")
 
 
 
     # Prépare les données de travail (copies + mélange) en fonction du choix de langue
     def collect_template(self):
+        print(f"collect_template() -> langue sélectionnée : {self.language}")
         code_language = self.language[1]
 
         # Copie des listes du template 1
-        self.t1_nom = corpus[code_language]["template1"]["nom"].copy()
-        self.t1_verbe = corpus[code_language]["template1"]["verbe"].copy()
-        self.t1_nombre = corpus[code_language]["template1"]["nombre"].copy()
-        self.t1_groupe_nominal = corpus[code_language]["template1"]["groupe_nominal"].copy()
+        self.t1_nom = corpus_data[code_language]["template1"]["nom"].copy()
+        self.t1_verbe = corpus_data[code_language]["template1"]["verbe"].copy()
+        self.t1_nombre = corpus_data[code_language]["template1"]["nombre"].copy()
+        self.t1_groupe_nominal = corpus_data[code_language]["template1"]["groupe_nominal"].copy()
 
         # Copie du template 2
-        self.t2 = corpus[code_language]["template2"].copy()
+        self.t2 = corpus_data[code_language]["template2"].copy()
 
         # Mélange pour créer des phrases aléatoire (mais avec la même structure)
         random.shuffle(self.t1_nom)
