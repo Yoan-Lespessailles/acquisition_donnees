@@ -23,21 +23,19 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(800, 585)
         MainWindow.setStyleSheet(u"")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.horizontalLayout_2 = QHBoxLayout(self.centralwidget)
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.horizontalLayout_3 = QHBoxLayout(self.centralwidget)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.widget_camera = QWidget(self.centralwidget)
         self.widget_camera.setObjectName(u"widget_camera")
         self.widget_camera.setStyleSheet(u"/*background-color: black;\n"
 "border-radius: 12px;*/")
 
-        self.horizontalLayout_2.addWidget(self.widget_camera)
+        self.horizontalLayout_3.addWidget(self.widget_camera)
 
-        self.verticalLayout_3 = QVBoxLayout()
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.area_sentence = QWidget(self.centralwidget)
         self.area_sentence.setObjectName(u"area_sentence")
         self.verticalLayout = QVBoxLayout(self.area_sentence)
@@ -75,6 +73,26 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.area_settings)
 
+        self.area_language = QWidget(self.area_sentence)
+        self.area_language.setObjectName(u"area_language")
+        self.horizontalLayout_2 = QHBoxLayout(self.area_language)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.label_select_language = QLabel(self.area_language)
+        self.label_select_language.setObjectName(u"label_select_language")
+        self.label_select_language.setFont(font)
+
+        self.horizontalLayout_2.addWidget(self.label_select_language)
+
+        self.select_language = QComboBox(self.area_language)
+        self.select_language.setObjectName(u"select_language")
+
+        self.horizontalLayout_2.addWidget(self.select_language)
+
+        self.horizontalLayout_2.setStretch(0, 1)
+        self.horizontalLayout_2.setStretch(1, 5)
+
+        self.verticalLayout.addWidget(self.area_language)
+
         self.label_sentence = QLabel(self.area_sentence)
         self.label_sentence.setObjectName(u"label_sentence")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
@@ -92,10 +110,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.label_sentence)
 
-
-        self.verticalLayout_3.addWidget(self.area_sentence)
-
-        self.area_button = QWidget(self.centralwidget)
+        self.area_button = QWidget(self.area_sentence)
         self.area_button.setObjectName(u"area_button")
         self.horizontalLayout = QHBoxLayout(self.area_button)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -108,13 +123,13 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.button_record)
 
 
-        self.verticalLayout_3.addWidget(self.area_button)
+        self.verticalLayout.addWidget(self.area_button)
 
 
-        self.horizontalLayout_2.addLayout(self.verticalLayout_3)
+        self.horizontalLayout_3.addWidget(self.area_sentence)
 
-        self.horizontalLayout_2.setStretch(0, 3)
-        self.horizontalLayout_2.setStretch(1, 2)
+        self.horizontalLayout_3.setStretch(0, 3)
+        self.horizontalLayout_3.setStretch(1, 2)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
@@ -126,8 +141,8 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(shortcut)
         self.label_select_micro.setBuddy(self.select_micro)
         self.label_select_camera.setBuddy(self.select_camera)
+        self.label_select_language.setBuddy(self.select_camera)
 #endif // QT_CONFIG(shortcut)
-        QWidget.setTabOrder(self.select_micro, self.button_record)
 
         self.retranslateUi(MainWindow)
 
@@ -136,8 +151,9 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.label_select_micro.setText(QCoreApplication.translate("MainWindow", u"Micro", None))
-        self.label_select_camera.setText(QCoreApplication.translate("MainWindow", u"Camera", None))
+        self.label_select_micro.setText(QCoreApplication.translate("MainWindow", u"Micro :", None))
+        self.label_select_camera.setText(QCoreApplication.translate("MainWindow", u"Camera :", None))
+        self.label_select_language.setText(QCoreApplication.translate("MainWindow", u"Language :", None))
         self.label_sentence.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
         self.button_record.setText(QCoreApplication.translate("MainWindow", u"Record", None))
     # retranslateUi

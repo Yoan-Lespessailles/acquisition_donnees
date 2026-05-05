@@ -127,11 +127,19 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         #---------------------------------------------------------------------------
 
+        # ========== ATTRIBUTS RELATIF AU TEXTE ==========
+        # Contient la langue sélectionnée 
+        self.language = []
+
+
         # Remplit la liste des micros disponibles
         self.load_microphones()
 
         # Remplit la liste des caméras disponibles
         self.load_cameras()
+
+        # Remplit la liste des langues disponibles
+        self.load_language()
 
         # Prépare la zone vidéo
         self.setup_camera_preview()
@@ -157,6 +165,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # Détecte quand l'utilisateur change de caméra
         self.select_camera.currentIndexChanged.connect(self.camera_changed)
+
+        # Détecte quand l'utilisateur change de langue
+        self.select_language.currentIndexChanged.connect(self.language_changed)
 
         # Détecte quand un micro est branché ou débranché
         self.media_devices.audioInputsChanged.connect(self.refresh_micro)
@@ -503,7 +514,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
     # ========== CHANGEMENT DES PERIPHERIQUES ==========
     @Slot(int)
-    # Le _ signifie : que la méthode reçoit la valeur, mais je ne s’en sert pas.
+    # Le _ signifie : que la méthode reçoit la valeur, mais ne s’en sert pas.
     def micro_changed(self, _):
 
         if self.get_data_micro() is not None:
@@ -664,6 +675,38 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.button_record.style().unpolish(self.button_record)
         self.button_record.style().polish(self.button_record)
 
+
+
+
+    # ========== GESTION DU TEXTE AFFICHE ==========
+    def load_language(self):
+        # Vide la ComboBox au cas où elle contient déjà des élements
+        self.select_language.clear()
+
+        # Récupère la liste des langues disponibles 
+        languages = corpus.language
+
+        # On vérifie que la liste n'est pas vide
+        if languages :
+            if self.language is None :
+                # On sélectionne la première langue
+                self.language = languages[0]
+                print(f"Langue sélectionnée : {self.language}")
+
+        else :
+            print ("Problème avec la liste des langues")
+
+        # Pour chaque langue dans la liste
+        for language in languages:
+            self.select_language.addItem(language[0])
+    
+    @Slot(int)
+    def language_changed(self, index):
+        self.language = corpus.language[index]  
+        print(f"Langue sélectionnée : {self.language}")
+
+
+
     # Prépare les données de travail (copies + mélange) en fonction du choix de langue
     def collect_template(self):
         # Copie des listes du template 1
@@ -681,6 +724,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         random.shuffle(self.t1_nombre)
         random.shuffle(self.t1_groupe_nominal)
         random.shuffle(self.t2)
+
 
     # Affiche la phrase à lire
     def display_text(self):

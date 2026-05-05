@@ -1,3 +1,8 @@
+language = [
+  ("Français", "fr"), 
+  ("Anglais", "en")
+]
+
 fr = {
   "template1" : 
   {"nom" : ["Papa", "Maman", "Lola", "Théo", "Luc", "Thomas", "Alice", "Patrick", "Bertrand", "Maxime"],
