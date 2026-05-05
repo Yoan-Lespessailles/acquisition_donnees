@@ -6,7 +6,7 @@ language = [
 corpus = { 
     "fr" : {
         "template1" : {
-            "nom" : ["Papa", "Maman", "Lola", "Théo", "Luc", "Thomas", "Alice", "Patrick", "Bertrand", "Maxime"],
+            "sujet" : ["Papa", "Maman", "Lola", "Théo", "Luc", "Thomas", "Alice", "Patrick", "Bertrand", "Maxime"],
             "verbe" : ["prend", "regarde", "nettoie", "voit", "fabrique", "porte", "achète", "demande", "casse", "découvre"],
             "nombre" : ["trois", "quatre", "six", "sept", "neuf", "dix", "douze", "quatorze", "seize", "vingt-et-un"],
             "groupe_nominal" : ["montagnes sombres", "cuillères fines", "fruits mûrs", "chaussures rouges", "lapins peureux", "grands gâteaux", "ballons ronds", "jeux dangereux", "chats mignons", "fleurs blanches"]

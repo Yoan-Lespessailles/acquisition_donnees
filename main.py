@@ -715,7 +715,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         code_language = self.language[1]
 
         # Copie des listes du template 1
-        self.t1_nom = corpus_data[code_language]["template1"]["nom"].copy()
+        self.t1_nom = corpus_data[code_language]["template1"]["sujet"].copy()
         self.t1_verbe = corpus_data[code_language]["template1"]["verbe"].copy()
         self.t1_nombre = corpus_data[code_language]["template1"]["nombre"].copy()
         self.t1_groupe_nominal = corpus_data[code_language]["template1"]["groupe_nominal"].copy()
