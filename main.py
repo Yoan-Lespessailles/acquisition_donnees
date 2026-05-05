@@ -110,6 +110,14 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # La valeur sera ajustée automatiquement selon la résolution de la caméra.
         self.video_bitrate = 12_000_000
 
+        # Emplacement du fichier en cours d'enregistrement.
+        # Il sert à relancer automatiquement l'enregistrement si H264 échoue.
+        self.recording_output_location = QUrl()
+
+        # Indique si on a déjà tenté le fallback H264 -> MPEG4 pour l'enregistrement courant.
+        # Cela évite une boucle infinie si MPEG4 échoue aussi.
+        self.h264_fallback_tried = False
+
         # Permet de savoir si on est en train d’enregistrer ou non
         self.is_recording = False
 
@@ -407,48 +415,70 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.camera.start()
 
 
-    def setup_recording(self) :
-        # Création de l’objet responsable de l’enregistrement
-        self.recorder = QMediaRecorder()
-
-        # Création d'un format d'enregistrement explicite
+    # ========== FORMAT ET PARAMETRES D'ENREGISTREMENT ==========
+    def create_recording_media_format(self, preferred_video_codec):
+        # Création d'un format d'enregistrement explicite.
         media_format = QMediaFormat()
 
-        # Définit le conteneur vidéo : fichier .mp4
+        # Définit le conteneur vidéo : fichier .mp4.
+        # Ici MPEG4 signifie "conteneur MP4", pas "codec vidéo MPEG4".
         media_format.setFileFormat(QMediaFormat.MPEG4)
 
-        # Vérification des codecs disponibles en encodage MP4
+        # Vérifie les codecs réellement disponibles pour encoder dans un MP4.
         supported_video_codecs = media_format.supportedVideoCodecs(QMediaFormat.ConversionMode.Encode)
         print(
             "Codecs vidéo supportés en encodage MP4 :",
             [codec.name for codec in supported_video_codecs],
         )
 
-        # Définit le codec vidéo : H264 si l'encodeur est disponible, sinon MPEG4.
-        if QMediaFormat.VideoCodec.H264 in supported_video_codecs:
-            media_format.setVideoCodec(QMediaFormat.VideoCodec.H264)
-        else:
-            print("Encodeur H264 non disponible, fallback vers MPEG4")
+        # On tente d'abord le codec demandé.
+        # Dans notre cas, ce sera H264 au premier essai.
+        if preferred_video_codec in supported_video_codecs:
+            media_format.setVideoCodec(preferred_video_codec)
+
+        # Si le codec demandé n'est pas disponible, on bascule vers MPEG4.
+        elif QMediaFormat.VideoCodec.MPEG4 in supported_video_codecs:
+            print("Codec demandé non disponible, fallback vers MPEG4")
             media_format.setVideoCodec(QMediaFormat.VideoCodec.MPEG4)
 
-        # Définit le codec audio : AAC, adapté au MP4
+        # Dernier recours : MotionJPEG, souvent disponible mais plus lourd.
+        else:
+            print("Encodeur MPEG4 non disponible, fallback vers MotionJPEG")
+            media_format.setVideoCodec(QMediaFormat.VideoCodec.MotionJPEG)
+
+        # Définit le codec audio : AAC, adapté au conteneur MP4.
         media_format.setAudioCodec(QMediaFormat.AudioCodec.AAC)
 
-        # Applique le format au recorder
-        self.recorder.setMediaFormat(media_format)
-        print("Codec vidéo demandé :", self.recorder.mediaFormat().videoCodec().name)
+        return media_format
 
-        # On force donc un encodage piloté par le débit avant de définir le bitrate.
+
+    def apply_recorder_bitrates(self):
+        # On force un encodage piloté par le débit avant de définir le bitrate.
         self.recorder.setEncodingMode(QMediaRecorder.EncodingMode.ConstantBitRateEncoding)
 
-        # Définit le débit vidéo
         # Pour éviter que Qt choisisse automatiquement un débit trop faible,
         # on utilise le débit calculé selon la résolution de la caméra.
         self.recorder.setVideoBitRate(self.video_bitrate)
 
         # Définit le débit audio AAC.
-        # Sans valeur explicite, le backend FFmpeg peut recevoir un bitrate négatif.
         self.recorder.setAudioBitRate(128_000)
+
+
+    def setup_recording(self) :
+        # Création de l’objet responsable de l’enregistrement
+        self.recorder = QMediaRecorder()
+
+        # Premier choix : H264, car il est plus adapté au MP4 et plus efficace que MPEG4.
+        media_format = self.create_recording_media_format(QMediaFormat.VideoCodec.H264)
+        self.recorder.setMediaFormat(media_format)
+        print("Codec vidéo demandé :", self.recorder.mediaFormat().videoCodec().name)
+
+        # Applique les bitrates vidéo/audio.
+        self.apply_recorder_bitrates()
+
+        # Surveille les erreurs d'encodage.
+        # Si H264 échoue au moment de record(), on relancera automatiquement en MPEG4.
+        self.recorder.errorOccurred.connect(self.recorder_error_occurred)
 
         # Branche le recorder à la session multimédia.
         self.capture_session.setRecorder(self.recorder)
@@ -502,8 +532,12 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Affiche le chemin pour vérifier où la vidéo sera enregistrée
         print("Enregistrement dans :", filepath)
 
-        # Indique la destination de l'enregistrement de la vidéo
-        self.recorder.setOutputLocation(QUrl.fromLocalFile(str(filepath)))
+        # Indique la destination de l'enregistrement de la vidéo.
+        self.recording_output_location = QUrl.fromLocalFile(str(filepath))
+        self.recorder.setOutputLocation(self.recording_output_location)
+
+        # Réinitialise le fallback pour ce nouvel enregistrement.
+        self.h264_fallback_tried = False
         
         # Démarre l’enregistrement
         self.recorder.record()
@@ -515,6 +549,49 @@ class MyWindow(QMainWindow, Ui_MainWindow):
     # ========== STOPPER ENREGISTREMENT DE LA VIDEO ========== 
     def stop_recording(self):
         self.recorder.stop()
+
+
+    def recorder_error_occurred(self, error, error_string):
+        # Affiche l'erreur remontée par Qt/FFmpeg.
+        print("Erreur enregistrement :", error, error_string)
+
+        # Si H264 échoue au démarrage, Qt peut remonter une erreur du type h264_vaapi.
+        # Dans ce cas, on bascule automatiquement vers MPEG4 et on relance l'enregistrement.
+        current_codec = self.recorder.mediaFormat().videoCodec()
+        if current_codec == QMediaFormat.VideoCodec.H264 and not self.h264_fallback_tried:
+            print("H264 a échoué, relance automatique en MPEG4")
+
+            # Marque le fallback comme déjà tenté pour éviter une boucle infinie.
+            self.h264_fallback_tried = True
+
+            # Stoppe proprement le recorder avant de changer son format.
+            self.recorder.stop()
+
+            # Laisse un court délai à Qt pour libérer le fichier H264 raté.
+            # Ensuite seulement, on supprime ce fichier et on relance en MPEG4.
+            QTimer.singleShot(300, self.restart_recording_with_mpeg4)
+
+
+    def restart_recording_with_mpeg4(self):
+        # Récupère le chemin du fichier créé par la tentative H264.
+        failed_filepath = Path(self.recording_output_location.toLocalFile())
+
+        # Supprime le fichier H264 invalide avant de relancer l'enregistrement.
+        # Si le fichier n'existe pas encore, missing_ok=True évite une erreur inutile.
+        failed_filepath.unlink(missing_ok=True)
+        print("Fichier H264 invalide supprimé :", failed_filepath)
+
+        # Remplace le format H264 par un format MPEG4.
+        media_format = self.create_recording_media_format(QMediaFormat.VideoCodec.MPEG4)
+        self.recorder.setMediaFormat(media_format)
+        print("Codec vidéo demandé après fallback :", self.recorder.mediaFormat().videoCodec().name)
+
+        # Réapplique les bitrates après le changement de format.
+        self.apply_recorder_bitrates()
+
+        # Relance l'enregistrement vers le même chemin, maintenant propre.
+        self.recorder.setOutputLocation(self.recording_output_location)
+        self.recorder.record()
 
 
     @Slot()
