@@ -20,6 +20,12 @@
    <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="3,2">
     <item>
      <widget class="QWidget" name="widget_camera" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="styleSheet">
        <string notr="true">/*background-color: black;
 border-radius: 12px;*/</string>
@@ -28,6 +34,12 @@ border-radius: 12px;*/</string>
     </item>
     <item>
      <widget class="QWidget" name="area_sentence" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QWidget" name="area_settings" native="true">

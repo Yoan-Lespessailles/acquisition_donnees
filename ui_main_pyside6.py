@@ -31,6 +31,11 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.widget_camera = QWidget(self.centralwidget)
         self.widget_camera.setObjectName(u"widget_camera")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.widget_camera.sizePolicy().hasHeightForWidth())
+        self.widget_camera.setSizePolicy(sizePolicy)
         self.widget_camera.setStyleSheet(u"/*background-color: black;\n"
 "border-radius: 12px;*/")
 
@@ -38,6 +43,11 @@ class Ui_MainWindow(object):
 
         self.area_sentence = QWidget(self.centralwidget)
         self.area_sentence.setObjectName(u"area_sentence")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.area_sentence.sizePolicy().hasHeightForWidth())
+        self.area_sentence.setSizePolicy(sizePolicy1)
         self.verticalLayout = QVBoxLayout(self.area_sentence)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.area_settings = QWidget(self.area_sentence)
@@ -95,9 +105,6 @@ class Ui_MainWindow(object):
 
         self.label_sentence = QLabel(self.area_sentence)
         self.label_sentence.setObjectName(u"label_sentence")
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_sentence.sizePolicy().hasHeightForWidth())
         self.label_sentence.setSizePolicy(sizePolicy)
         font1 = QFont()
