@@ -127,6 +127,30 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Permet de savoir si on est en train d’enregistrer ou non
         self.is_recording = False
 
+        # Le rond rouge est actuellement masqué
+        self.blink_visible = False
+
+        # Timer du clignotement du rond rouge
+        self.blink_timer = QTimer()
+
+        # Le clignotement est paramétré sur 500ms 
+        self.blink_timer.setInterval(500)
+
+        # Toutes les 500ms la méthode blink_dot est appelée
+        self.blink_timer.timeout.connect(self.blink_dot)
+
+        # Temps écoulé en secondes
+        self.record_seconds = 0
+
+        # Timer du chrono
+        self.record_timer = QTimer()
+
+        # Mise à jour du timer paramétré toutes les secondes 
+        self.record_timer.setInterval(1000)
+
+        # Toutes les secondes la méthode update_record_timer est appelée
+        self.record_timer.timeout.connect(self.update_record_timer) 
+
         #---------------------------------------------------------------------------
 
         # ========== ATTRIBUTS RELATIF AU TEXTE ==========
@@ -417,13 +441,25 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Crée un layout dans le QWidget vide créé dans Designer
         layout = QVBoxLayout(self.widget_camera)
         layout.setContentsMargins(0, 0, 0, 0)
+        # Ajoute le widget vidéo dans le layout
         layout.addWidget(self.video_widget)
+        
+        # Cache le point rouge et le timer (visibles uniquement lors de l'enregistrement)
+        self.label_record_timer.hide()
+        self.label_record_dot.hide()
+
+        # Place le point rouge et le timeur au premier plan
+        self.label_record_timer.raise_()
+        self.label_record_dot.raise_()
 
         # Cette session servira à relier la caméra, le micro, la preview et le recorder
         self.capture_session = QMediaCaptureSession()
 
         # Branche la sortie vidéo au QVideoWidget
         self.capture_session.setVideoOutput(self.video_widget)
+
+        # Positionne le point rouge et le timer à leurs places
+        self.reposition_record_overlay()
 
 
     def start_camera_preview(self):
@@ -437,6 +473,91 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # Lance le retour caméra (flux vidéo)
         self.camera.start()
+
+
+
+    # ========== RECORDING'S SIGNS ==========
+    def reposition_record_overlay(self):
+        # Evite que les éléments soient collés au bord de fenêtre
+        margin = 12
+
+        # Positionne le timer dans le coin supérieur gauche (Left, Top)
+        self.label_record_timer.move(margin, margin)
+
+        # Récupère la largeur du rond rouge
+        dot_width = self.label_record_dot.width()
+
+        # Positionne le rond rouge dans le coin supérieur droit
+        self.label_record_dot.move(self.widget_camera.width() - dot_width - margin, margin)
+
+        # Replace les overlays au-dessus de la vidéo après chaque redimensionnement pour éviter les mauvaises surprises
+        self.label_record_timer.raise_()
+        self.label_record_dot.raise_()
+
+
+    # Une méthode resizeEvent existe déjà dans QMainWindow, on la redéfinit
+    def resizeEvent(self, event):
+
+        # Exécute le comportement normal de redimensionnement de Qt (mise à jour des layouts, widgets, affichage, etc.)
+        super().resizeEvent(event)
+
+        # Repositionne les overlays lorsque la fenêtre change de taille
+        self.reposition_record_overlay()
+
+
+    def show_recording(self):
+        # Le timer et le point rouges sont rendus visibles
+        self.label_record_timer.show()
+        self.label_record_dot.show()
+
+        # Déclenchement du clignotement
+        self.blink_visible = True
+
+        # Le timer est mis en marche
+        self.blink_timer.start()
+        self.reposition_record_overlay()
+
+
+    def hide_recording(self):
+        # Le timer est stoppé
+        self.blink_timer.stop()
+
+        # Le timer et le point rouges sont masqués
+        self.label_record_timer.hide()
+        self.label_record_dot.hide()
+
+
+    def set_timer_text(self, text):
+        # Met à jour le timer affiché
+        self.label_record_timer.setText(text)
+        
+        # Ajuste automatiquement la taille du label timer
+        self.label_record_timer.adjustSize()
+
+        # Repositionnement des éléments dans le cas ou la taille du timer change
+        self.reposition_record_overlay()
+
+
+    def blink_dot(self):
+        # Inversion de l'état de l'attribut pour le clignotement 
+        self.blink_visible = not self.blink_visible
+        # Alterne entre visible et non visible en fonction de l'état de l'attribut blink_visible
+        self.label_record_dot.setVisible(self.blink_visible)
+
+
+    def update_record_timer(self):
+        # A chaque appel de la méthode, on rajoute une seconde au compteur
+        self.record_seconds+=1
+
+        # Convertit en minutes / secondes
+        minutes = self.record_seconds // 60
+        seconds = self.record_seconds % 60
+
+        # Formatage du texte à afficher
+        timer_text = f"REC. {minutes:02}:{seconds:02}"
+
+        # Mise à jour du timer vidéo 
+        self.set_timer_text(timer_text)
 
 
     # ========== FORMAT ET PARAMETRES D'ENREGISTREMENT ==========
@@ -566,13 +687,32 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Démarre l’enregistrement
         self.recorder.record()
 
+        # Montre que l'enregistrement a commencé
+        self.show_recording()
+
+        # Compteur de secondes mis à 0
+        self.record_seconds = 0
+
+        # Affichage du timer et mise à 0
+        self.set_timer_text("REC. 00:00")
+
+        # Lancement du timer
+        self.record_timer.start()
+
         return True
 
 
 
     # ========== STOPPER ENREGISTREMENT DE LA VIDEO ========== 
     def stop_recording(self):
+        # Record stoppé
         self.recorder.stop()
+
+        # Affichage masqué
+        self.hide_recording()
+
+        # Timer stoppé
+        self.record_timer.stop()
 
 
     def recorder_error_occurred(self, error, error_string):

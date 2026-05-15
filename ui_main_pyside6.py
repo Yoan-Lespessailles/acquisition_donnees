@@ -17,29 +17,52 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QHBoxLayout, QLabel,
     QMainWindow, QMenuBar, QPushButton, QSizePolicy,
-    QStatusBar, QVBoxLayout, QWidget)
+    QStackedWidget, QStatusBar, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(800, 585)
+        MainWindow.resize(868, 514)
         MainWindow.setStyleSheet(u"")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout_3 = QHBoxLayout(self.centralwidget)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.widget_camera = QWidget(self.centralwidget)
-        self.widget_camera.setObjectName(u"widget_camera")
+        self.stackedWidget = QStackedWidget(self.centralwidget)
+        self.stackedWidget.setObjectName(u"stackedWidget")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.widget_camera.sizePolicy().hasHeightForWidth())
-        self.widget_camera.setSizePolicy(sizePolicy)
-        self.widget_camera.setStyleSheet(u"/*background-color: black;\n"
-"border-radius: 12px;*/")
+        sizePolicy.setHeightForWidth(self.stackedWidget.sizePolicy().hasHeightForWidth())
+        self.stackedWidget.setSizePolicy(sizePolicy)
+        self.page_video = QWidget()
+        self.page_video.setObjectName(u"page_video")
+        self.video_widget = QWidget(self.page_video)
+        self.video_widget.setObjectName(u"video_widget")
+        self.video_widget.setGeometry(QRect(330, 180, 120, 80))
+        sizePolicy.setHeightForWidth(self.video_widget.sizePolicy().hasHeightForWidth())
+        self.video_widget.setSizePolicy(sizePolicy)
+        self.stackedWidget.addWidget(self.page_video)
+        self.page_overlay = QWidget()
+        self.page_overlay.setObjectName(u"page_overlay")
+        self.label_record_timer = QLabel(self.page_overlay)
+        self.label_record_timer.setObjectName(u"label_record_timer")
+        self.label_record_timer.setGeometry(QRect(200, 110, 66, 18))
+        self.label_record_timer.setStyleSheet(u"color: white;\n"
+"background-color: rgba(0, 0, 0, 120);\n"
+"border-radius: 6px;\n"
+"padding: 4px 8px;")
+        self.label_record_dot = QLabel(self.page_overlay)
+        self.label_record_dot.setObjectName(u"label_record_dot")
+        self.label_record_dot.setGeometry(QRect(280, 230, 20, 20))
+        self.label_record_dot.setMinimumSize(QSize(20, 20))
+        self.label_record_dot.setMaximumSize(QSize(20, 20))
+        self.label_record_dot.setStyleSheet(u"background-color: red;\n"
+"border-radius: 10px;")
+        self.stackedWidget.addWidget(self.page_overlay)
 
-        self.horizontalLayout_3.addWidget(self.widget_camera)
+        self.horizontalLayout_3.addWidget(self.stackedWidget)
 
         self.area_sentence = QWidget(self.centralwidget)
         self.area_sentence.setObjectName(u"area_sentence")
@@ -140,7 +163,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 800, 23))
+        self.menubar.setGeometry(QRect(0, 0, 868, 23))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -153,11 +176,16 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
+        self.stackedWidget.setCurrentIndex(0)
+
+
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        self.label_record_timer.setText("")
+        self.label_record_dot.setText("")
         self.label_select_micro.setText(QCoreApplication.translate("MainWindow", u"Micro :", None))
         self.label_select_camera.setText(QCoreApplication.translate("MainWindow", u"Camera :", None))
         self.label_select_language.setText(QCoreApplication.translate("MainWindow", u"Language :", None))
