@@ -1,6 +1,6 @@
 language = [
-  ("Français", "fr"), 
-  ("Anglais", "en")
+  ["Français", "fr", "SVO"], 
+  ["Anglais", "en", "SVO"]
 ]
 
 corpus = { 
@@ -23,8 +23,28 @@ corpus = {
             "Le boulanger gagne une médaille pour son pain croustillant",
             "Un joueur lance une balle contre un grand mur gris"
         ]
-    }
+    },
 
+    "en" : {
+	    "template1" : {
+		    "sujet" : ["Mum", "Dad", "Alice", "Peter", "George", "Laura", "Hannah", "William", "Rose", "Jack"],
+		    "verbe" : ["sees", "finds", "takes", "brings", "chooses", "watches", "hears", "shares", "loves", "measures"],
+		    "nombre" : ["two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "twelve"],
+		    "groupe_nominal" : ["small bags", "red boxes", "green chairs", "thin feathers", "white shells", "yellow toys", "blue flowers", "quiet deer", "poor tourists", "large visions"]
+	    },
+	    "template2" : [
+		    "The young nurse measures a quiet blue flower near the wall.",
+		    "George shares twelve yellow toys with three poor tourists.",
+		    "Alice watches five white shells beside the small box.",
+		    "William brings seven green chairs through the garden.",
+		    "Rose hears a clear voice during the evening.",
+		    "Dad chooses two large bags for the new shop.",
+		    "Mum finds eight red feathers under the table.",
+		    "Peter takes nine thin books from the kitchen.",
+		    "Laura loves the warm air after a bright shower.",
+		    "Jack sees four pure jewels in the old drawer."
+	    ]
+    }
     
 
 }

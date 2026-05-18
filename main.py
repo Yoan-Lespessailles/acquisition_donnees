@@ -16,7 +16,7 @@ from pathlib import Path
 # Slot permet de connecter proprement les boutons aux méthodes
 # QTimer pourra servir pour un compte à rebours, un voyant rouge clignotant, etc.
 # QUrl permet d’indiquer à Qt l’emplacement du fichier vidéo à enregistrer
-from PySide6.QtCore import Slot, QTimer, QUrl
+from PySide6.QtCore import Slot, QTimer, QUrl, Qt
 
 # QApplication gère la boucle d’événements
 # QMainWindow est la fenêtre principale
@@ -157,6 +157,10 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Contient la langue sélectionnée 
         self.language = None
 
+        self.sentence_num = 20
+
+        self.sentence_cpt = 1
+        #---------------------------------------------------------------------------
 
         # Remplit la liste des micros disponibles
         self.load_microphones()
@@ -370,6 +374,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         return self.select_camera.currentData()
 
 
+
     # ========== CHOIX AUTOMATIQUE DE LA QUALITE CAMERA ==========
     def configure_camera_format(self, camera_device):
         # Si aucune caméra n'est disponible, on ne peut pas choisir de format.
@@ -432,15 +437,20 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             self.recorder.setVideoBitRate(self.video_bitrate)
 
 
+
     # ========== PREVIEW CAMERA ==========
     def setup_camera_preview(self):
 
         # Crée le widget vidéo qui affichera le retour caméra
         self.video_widget = QVideoWidget()
 
+        # Remplit la zone de preview en elevant les bandes noires
+        self.video_widget.setAspectRatioMode(Qt.AspectRatioMode.KeepAspectRatioByExpanding)
+
         # Crée un layout dans le QWidget vide créé dans Designer
-        layout = QVBoxLayout(self.widget_camera)
+        layout = QVBoxLayout(self.area_preview)
         layout.setContentsMargins(0, 0, 0, 0)
+        
         # Ajoute le widget vidéo dans le layout
         layout.addWidget(self.video_widget)
         
@@ -448,18 +458,11 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.label_record_timer.hide()
         self.label_record_dot.hide()
 
-        # Place le point rouge et le timeur au premier plan
-        self.label_record_timer.raise_()
-        self.label_record_dot.raise_()
-
         # Cette session servira à relier la caméra, le micro, la preview et le recorder
         self.capture_session = QMediaCaptureSession()
 
         # Branche la sortie vidéo au QVideoWidget
         self.capture_session.setVideoOutput(self.video_widget)
-
-        # Positionne le point rouge et le timer à leurs places
-        self.reposition_record_overlay()
 
 
     def start_camera_preview(self):
@@ -476,36 +479,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
 
 
-    # ========== RECORDING'S SIGNS ==========
-    def reposition_record_overlay(self):
-        # Evite que les éléments soient collés au bord de fenêtre
-        margin = 12
-
-        # Positionne le timer dans le coin supérieur gauche (Left, Top)
-        self.label_record_timer.move(margin, margin)
-
-        # Récupère la largeur du rond rouge
-        dot_width = self.label_record_dot.width()
-
-        # Positionne le rond rouge dans le coin supérieur droit
-        self.label_record_dot.move(self.widget_camera.width() - dot_width - margin, margin)
-
-        # Replace les overlays au-dessus de la vidéo après chaque redimensionnement pour éviter les mauvaises surprises
-        self.label_record_timer.raise_()
-        self.label_record_dot.raise_()
-
-
-    # Une méthode resizeEvent existe déjà dans QMainWindow, on la redéfinit
-    def resizeEvent(self, event):
-
-        # Exécute le comportement normal de redimensionnement de Qt (mise à jour des layouts, widgets, affichage, etc.)
-        super().resizeEvent(event)
-
-        # Repositionne les overlays lorsque la fenêtre change de taille
-        self.reposition_record_overlay()
-
-
+    # ========== SIGNES DE RECORD ==========
     def show_recording(self):
+
         # Le timer et le point rouges sont rendus visibles
         self.label_record_timer.show()
         self.label_record_dot.show()
@@ -515,7 +491,6 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # Le timer est mis en marche
         self.blink_timer.start()
-        self.reposition_record_overlay()
 
 
     def hide_recording(self):
@@ -531,12 +506,6 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Met à jour le timer affiché
         self.label_record_timer.setText(text)
         
-        # Ajuste automatiquement la taille du label timer
-        self.label_record_timer.adjustSize()
-
-        # Repositionnement des éléments dans le cas ou la taille du timer change
-        self.reposition_record_overlay()
-
 
     def blink_dot(self):
         # Inversion de l'état de l'attribut pour le clignotement 
@@ -558,6 +527,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # Mise à jour du timer vidéo 
         self.set_timer_text(timer_text)
+
 
 
     # ========== FORMAT ET PARAMETRES D'ENREGISTREMENT ==========
@@ -757,6 +727,8 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.recorder.setOutputLocation(self.recording_output_location)
         self.recorder.record()
 
+
+
     # ========== DECLENCHEMENT DE L'ENREGISTREMENT VIDEO ========== 
     @Slot()
     def button_record_clicked(self):
@@ -805,6 +777,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             # On affiche une nouvelle phrase
             self.display_text()
 
+            # On met à jours le compteur de phrases
+            self.counter_display()
+
             # Débloque le changement des périphériques
             self.select_micro.setEnabled(True)
             self.select_camera.setEnabled(True)
@@ -842,11 +817,11 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         for language in languages:
             self.select_language.addItem(language[0])
     
+
     @Slot(int)
     def language_changed(self, index):
         self.language = language_data[index]  
         print(f"language_changed -> langue sélectionnée : {self.language}")
-
 
 
     # Prépare les données de travail (copies + mélange) en fonction du choix de langue
@@ -855,7 +830,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         code_language = self.language[1]
 
         # Copie des listes du template 1
-        self.t1_nom = corpus_data[code_language]["template1"]["sujet"].copy()
+        self.t1_sujet = corpus_data[code_language]["template1"]["sujet"].copy()
         self.t1_verbe = corpus_data[code_language]["template1"]["verbe"].copy()
         self.t1_nombre = corpus_data[code_language]["template1"]["nombre"].copy()
         self.t1_groupe_nominal = corpus_data[code_language]["template1"]["groupe_nominal"].copy()
@@ -864,11 +839,17 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.t2 = corpus_data[code_language]["template2"].copy()
 
         # Mélange pour créer des phrases aléatoire (mais avec la même structure)
-        random.shuffle(self.t1_nom)
+        random.shuffle(self.t1_sujet)
         random.shuffle(self.t1_verbe)
         random.shuffle(self.t1_nombre)
         random.shuffle(self.t1_groupe_nominal)
         random.shuffle(self.t2)
+
+        # Remise du cpt de phrases à 1
+        self.sentence_cpt = 1
+
+        # Réactivation du bouton record (dans le cas où 20 phrases ont déjà été enregistrées dans une langue)
+        self.button_record.setEnabled(True)
 
 
     # Affiche la phrase à lire
@@ -876,40 +857,99 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Tant qu'il reste des phrases à lire
         if self.t2:
             # Priorité au template 1
-            if self.t1_nom:
-                sentence = (
-                    self.t1_nom[0] + " " +
-                    self.t1_verbe[0] + " " +
-                    self.t1_nombre[0] + " " +
-                    self.t1_groupe_nominal[0]
-                )
+            if self.t1_sujet:
+                self.template1_order(self.language[2])
             # Sinon, bascule sur le template 2
             else:
-                sentence = self.t2[0]
+                self.sentence = self.t2[-1]
 
-            self.label_sentence.setText(sentence)
+            self.label_sentence.setText(self.sentence)
 
         # Fin du corpus
         else:
             self.label_sentence.setText("Fin de la session d'enregistrement")
+
+            # Désactivation du bouton record
+            self.button_record.setEnabled(False)
     
+
+    def template1_order(self, order):
+        # Sujet – Verbe – Objet
+        if order == "SVO":
+            self.sentence = (
+                self.t1_sujet[-1] + " " +
+                self.t1_verbe[-1] + " " +
+                self.t1_nombre[-1] + " " +
+                self.t1_groupe_nominal[-1]
+            )
+        # Sujet – Objet – Verbe
+        elif order == "SOV":
+            self.sentence = (
+                self.t1_sujet[-1] + " " +
+                self.t1_nombre[-1] + " " +
+                self.t1_groupe_nominal[-1] + " " +
+                self.t1_verbe[-1]
+            )
+        # Verbe – Sujet – Objet
+        elif order == "VSO":
+            self.sentence = (
+                self.t1_verbe[-1] + " " +
+                self.t1_sujet[-1] + " " +
+                self.t1_nombre[-1] + " " +
+                self.t1_groupe_nominal[-1] 
+            )
+        # Verbe – Objet – Sujet
+        elif order == "VOS":
+            self.sentence = (
+                self.t1_verbe[-1] + " " +
+                self.t1_nombre[-1] + " " +
+                self.t1_groupe_nominal[-1] + " " +
+                self.t1_sujet[-1]
+            )
+        # Objet – Verbe – Sujet
+        elif order == "OVS":
+            self.sentence = (
+                self.t1_nombre[-1] + " " +
+                self.t1_groupe_nominal[-1] + " " +
+                self.t1_verbe[-1] + " " +
+                self.t1_sujet[-1]
+            )
+        # Objet – Sujet – Verbe
+        else :
+            self.sentence = (
+                self.t1_nombre[-1] + " " +
+                self.t1_groupe_nominal[-1] + " " +
+                self.t1_sujet[-1] + " " +
+                self.t1_verbe[-1]
+            )
+
 
     # Consomme les mots/phrases utilisées
     def consume_words(self):
         # Tant qu'il reste des phrases
         if self.t2:
             # Consommation du template 1 en priorité
-            if self.t1_nom:
-                self.t1_nom.pop(0)
-                self.t1_verbe.pop(0)
-                self.t1_nombre.pop(0)
-                self.t1_groupe_nominal.pop(0)
+            if self.t1_sujet:
+                self.t1_sujet.pop()
+                self.t1_verbe.pop()
+                self.t1_nombre.pop()
+                self.t1_groupe_nominal.pop()
             # Puis template 2
             else:
-                self.t2.pop(0)
+                self.t2.pop()
         else:
             print("Toutes les phrases ont été lues")
             return
+
+
+    # ========== GESTION DU COMPTEUR ==========
+    def counter_display(self):
+        # Incrémentation du compteur
+        self.sentence_cpt+=1
+
+        self.label_cpt_sentence.setText(f"{self.sentence_cpt}/{self.sentence_num}")
+
+
 
 # Exécute le bloc uniquement si ce fichier est lancé directement, pas s’il est importé
 if __name__ == "__main__":
