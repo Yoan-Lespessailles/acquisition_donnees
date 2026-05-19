@@ -159,7 +159,11 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         self.sentence_num = 20
 
-        self.sentence_cpt = 1
+        self.sentence_cpt = 0
+
+        # Appel de la fonction pour affiche le compteur
+        self.update_sentence_counter()
+
         #---------------------------------------------------------------------------
 
         # Remplit la liste des micros disponibles
@@ -777,8 +781,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             # On affiche une nouvelle phrase
             self.display_text()
 
-            # On met à jours le compteur de phrases
-            self.counter_display()
+            if self.sentence_cpt < self.sentence_num :
+                # On met à jours le compteur de phrases si on ne dépasse pas le nombre de phrases
+                self.update_sentence_counter()
 
             # Débloque le changement des périphériques
             self.select_micro.setEnabled(True)
@@ -820,8 +825,15 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
     @Slot(int)
     def language_changed(self, index):
+        # Changement de langue
         self.language = language_data[index]  
         print(f"language_changed -> langue sélectionnée : {self.language}")
+
+        # Mise à jours des phrases
+        self.collect_template()
+
+        # Affiche de la phrase
+        self.display_text()
 
 
     # Prépare les données de travail (copies + mélange) en fonction du choix de langue
@@ -845,8 +857,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         random.shuffle(self.t1_groupe_nominal)
         random.shuffle(self.t2)
 
-        # Remise du cpt de phrases à 1
-        self.sentence_cpt = 1
+        # Remise du cpt de phrases à 0 puis appel de la fonction dédiée
+        self.sentence_cpt = 0
+        self.update_sentence_counter()
 
         # Réactivation du bouton record (dans le cas où 20 phrases ont déjà été enregistrées dans une langue)
         self.button_record.setEnabled(True)
@@ -854,23 +867,23 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
     # Affiche la phrase à lire
     def display_text(self):
-        # Tant qu'il reste des phrases à lire
-        if self.t2:
-            # Priorité au template 1
-            if self.t1_sujet:
-                self.template1_order(self.language[2])
-            # Sinon, bascule sur le template 2
-            else:
-                self.sentence = self.t2[-1]
+        # Tant qu'il reste des éléments dans le Template 1
+        if self.t1_sujet:
+            # language[2] correspond à l'ordre syntaxique (ex : SVO)
+            self.template1_order(self.language[2])
 
-            self.label_sentence.setText(self.sentence)
-
+        # Sinon, on passe au Template 2
+        elif self.t2:
+            self.sentence = self.t2[-1]
+        
         # Fin du corpus
         else:
-            self.label_sentence.setText("Fin de la session d'enregistrement")
+            self.sentence = "Fin de la session d'enregistrement"
 
             # Désactivation du bouton record
             self.button_record.setEnabled(False)
+        
+        self.label_sentence.setText(self.sentence)
     
 
     def template1_order(self, order):
@@ -926,24 +939,24 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
     # Consomme les mots/phrases utilisées
     def consume_words(self):
-        # Tant qu'il reste des phrases
-        if self.t2:
-            # Consommation du template 1 en priorité
-            if self.t1_sujet:
-                self.t1_sujet.pop()
-                self.t1_verbe.pop()
-                self.t1_nombre.pop()
-                self.t1_groupe_nominal.pop()
-            # Puis template 2
-            else:
-                self.t2.pop()
+        # Consommation du Template 1 en priorité
+        if self.t1_sujet:
+            self.t1_sujet.pop()
+            self.t1_verbe.pop()
+            self.t1_nombre.pop()
+            self.t1_groupe_nominal.pop()
+        # Puis consommation du Template 2
+        elif self.t2:
+            self.t2.pop()
+        # Lorsque tout est consommé
         else:
             print("Toutes les phrases ont été lues")
             return
 
 
+
     # ========== GESTION DU COMPTEUR ==========
-    def counter_display(self):
+    def update_sentence_counter(self):
         # Incrémentation du compteur
         self.sentence_cpt+=1
 
