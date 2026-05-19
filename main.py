@@ -1,7 +1,5 @@
-# Importe le module système de Python
-import sys
-
-import random
+# Importe le module système de Python (sys)
+import sys, random , whisper, string
 
 from corpus import corpus as corpus_data
 from corpus import language as language_data
@@ -163,6 +161,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # Appel de la fonction pour affiche le compteur
         self.update_sentence_counter()
+
+        # On charge le modèle une seule fois
+        self.whisper_model = whisper.load_model("small")
 
         #---------------------------------------------------------------------------
 
@@ -608,6 +609,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         else:
             print("Aucun micro disponible")      
 
+        # Cette méthode sera appelée automatiquement quand l'enregistreur démarre, s'arrête ou change d'état.
+        self.recorder.recorderStateChanged.connect(self.recorder_state_changed)
+
 
     # ========== CHANGEMENT DES PERIPHERIQUES ==========
     @Slot(int)
@@ -775,15 +779,6 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             self.stop_recording()
 
             self.is_recording = False
-            
-            # On supprime la phrase utilisées
-            self.consume_words()
-            # On affiche une nouvelle phrase
-            self.display_text()
-
-            if self.sentence_cpt < self.sentence_num :
-                # On met à jours le compteur de phrases si on ne dépasse pas le nombre de phrases
-                self.update_sentence_counter()
 
             # Débloque le changement des périphériques
             self.select_micro.setEnabled(True)
@@ -796,7 +791,6 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Refresh du style QSS
         self.button_record.style().unpolish(self.button_record)
         self.button_record.style().polish(self.button_record)
-
 
 
 
@@ -963,6 +957,59 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.label_cpt_sentence.setText(f"{self.sentence_cpt}/{self.sentence_num}")
 
 
+
+    # ========== VERIFICATION DE L'AUDIO ==========
+    def recorder_state_changed(self, state):
+        # On vérifie si le recorder vient de passer à l'état "arrêté".
+        if state == QMediaRecorder.RecorderState.StoppedState:
+            self.transcribe_recording()
+
+    def transcribe_recording(self):
+        #Convertit le QUrl utilisé par Qt en chemin local classique avec .toLocalFile()
+        # Exemple : QUrl("file:///home/user/Documents/video.mp4") devient : "/home/user/Documents/video.mp4"
+        video_path = self.recording_output_location.toLocalFile()
+
+        # Lance la transcription Whisper sur le fichier vidéo enregistré en fonction de la langue sélectionnée
+        result = self.whisper_model.transcribe(video_path, language=self.language[1])
+
+        # On enregistre le texte dans une variable
+        recognized_text = result["text"]
+
+        self.validate_recording_result(recognized_text)
+
+    
+    def normalize_text(self, text):
+        # Supprime les espaces au début et à la fin
+        text = text.strip()
+
+        # Supprime la ponctuation
+        text = text.translate(str.maketrans("", "", string.punctuation))
+
+        return text
+
+
+    def validate_recording_result(self, text):
+        expected_text = self.sentence
+
+        recognized_text = self.normalize_text(text)
+
+        print("Texte attendu :", expected_text)
+        print("Texte reconnu :", recognized_text)
+
+        if expected_text == recognized_text:
+            print("Correspondance : OK")
+
+            # On supprime la phrase utilisées
+            self.consume_words()
+            # On affiche une nouvelle phrase
+            self.display_text()
+
+            if self.sentence_cpt < self.sentence_num :
+                # On met à jours le compteur de phrases si on ne dépasse pas le nombre de phrases
+                self.update_sentence_counter()
+
+        else:
+            print("Correspondance : ERREUR")
 
 # Exécute le bloc uniquement si ce fichier est lancé directement, pas s’il est importé
 if __name__ == "__main__":
