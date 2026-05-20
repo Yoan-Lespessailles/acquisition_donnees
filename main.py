@@ -651,7 +651,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.data_dir.mkdir(exist_ok=True)
 
         # Le dossier de langue est le dossier de stockage
-        file_register = Path(self.language_selected[1]) / self.data_dir
+        file_register = self.data_dir / Path(self.language_selected[1])
 
         # Crée le dossier code_langue de la langue dans le dossier data s'il n'existe pas déjà.
         file_register.mkdir(exist_ok=True)
