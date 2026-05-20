@@ -1,14 +1,11 @@
 # Importe le module système de Python
-import sys
-
-import random
+import sys, random, json
 
 from corpus import corpus as corpus_data
 from corpus import language as language_data
 
 # Permet de générer un nom de fichier avec la date/heure
 from datetime import datetime
-
 
 # Path permet de définir le dossier où enregistrer les vidéos
 from pathlib import Path
@@ -41,7 +38,7 @@ from PySide6.QtMultimedia import (
 from PySide6.QtMultimediaWidgets import QVideoWidget
 # QVideoWidget permet d'afficher le retour vidéo dans l'interface
 
-from ui_main_pyside6 import Ui_MainWindow
+from ui.ui_main_pyside6 import Ui_MainWindow
 # Interface générée depuis Qt Designer
 
 class MyWindow(QMainWindow, Ui_MainWindow):
@@ -154,8 +151,14 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         #---------------------------------------------------------------------------
 
         # ========== ATTRIBUTS RELATIF AU TEXTE ==========
+        # Dossier contenant les fichiers JSON de corpus
+        self.corpus_dir = Path("corpus")
+
         # Contient la langue sélectionnée 
-        self.language = None
+        self.language_selected = None
+
+        # Lise des langues disponibles    
+        self.languages = []
 
         self.sentence_num = 20
 
@@ -163,6 +166,10 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # Appel de la fonction pour affiche le compteur
         self.update_sentence_counter()
+
+        # Récupère le dossier dans lequel se trouve le fichier Python actuel.
+        # Exemple : /home/ylespessailles/stage/projet_stage/data
+        self.data_dir = Path(__file__).resolve().parent / Path("data")
 
         #---------------------------------------------------------------------------
 
@@ -639,14 +646,24 @@ class MyWindow(QMainWindow, Ui_MainWindow):
     # ========== ENREGISTREMENT DE LA VIDEO ========== 
     def start_recording(self):
         
-        # Dossier de destination : /home/dossier_utilisateur/Documents
-        documents_dir = Path.home() / "Documents"
-        
+        # Crée le dossier "data" s'il n'existe pas déjà.
+        # Si le dossier existe déjà, aucune erreur n'est déclenchée.
+        self.data_dir.mkdir(exist_ok=True)
+
+        # Le dossier de langue est le dossier de stockage
+        file_register = Path(self.language_selected[1]) / self.data_dir
+
+        # Crée le dossier code_langue de la langue dans le dossier data s'il n'existe pas déjà.
+        file_register.mkdir(exist_ok=True)
+
+        # Crée le nom du fichier
+        self.file_name=f"{self.language_selected[1]}_{datetime.now().strftime("%Y%m%d_%H%M%S")}"
+
         # Génère un nom de fichier unique avec la date et l'heure
-        filename = datetime.now().strftime("video_%Y%m%d_%H%M%S.mp4")
+        filename = f"{self.file_name}.mp4"
 
         # Construit le chemin complet du fichier vidéo
-        filepath = documents_dir / filename
+        filepath = file_register / filename
 
         # Affiche le chemin pour vérifier où la vidéo sera enregistrée
         print("Enregistrement dans :", filepath)
@@ -805,29 +822,52 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Vide la ComboBox au cas où elle contient déjà des élements
         self.select_language.clear()
 
-        # Récupère la liste des langues disponibles 
-        languages = language_data
+        # Parcourt tous les fichiers .json du dossier corpus
+        for json_file in self.corpus_dir.glob("*.json"):
+            try:
+                # Ouvre le fichier JSON en lecture avec l'encodage UTF-8 (pour la prise en charge des accents)
+                with open(json_file, "r", encoding="utf-8") as file:
+                    data = json.load(file)
+
+                # Récupère la valeur de la clé voulue, s'il n'existe pas renvoie None
+                language_name = data.get("language_name")
+                language_code = data.get("language_code")
+                language_data = (language_name,language_code)
+
+                # Si la clé existe, on l'ajoute à la liste
+                if language_name:
+                    self.languages.append(language_data)
+            
+            except json.JSONDecodeError:
+                # Cette erreur arrive si le fichier existe mais que son contenu
+                # n'est pas un JSON valide.
+                print(f"Erreur JSON dans le fichier : {json_file}")
+
+            except Exception as e:
+                # Cette sécurité permet d'afficher les autres erreurs possibles
+                # sans faire planter toute l'application.
+                print(f"Erreur lors de la lecture de {json_file} : {e}")
 
         # On vérifie que la liste n'est pas vide
-        if languages :
-            if self.language is None :
+        if self.languages :
+            if self.language_selected is None :
                 # On sélectionne la première langue
-                self.language = languages[0]
-                print(f"load_language() -> Langue sélectionnée : {self.language}")
+                self.language_selected = self.languages[0]
+                print(f"load_language() -> Langue sélectionnée : {self.language_selected}")
 
         else :
             print ("Problème avec la liste des langues")
 
-        # Pour chaque langue dans la liste
-        for language in languages:
+        # Pour chaque langue dans la liste, on les affiche dans la ComboBox
+        for language in self.languages:
             self.select_language.addItem(language[0])
     
 
     @Slot(int)
     def language_changed(self, index):
         # Changement de langue
-        self.language = language_data[index]  
-        print(f"language_changed -> langue sélectionnée : {self.language}")
+        self.language_selected = self.languages[index]
+        print(f"language_changed -> langue sélectionnée : {self.language_selected}")
 
         # Mise à jours des phrases
         self.collect_template()
@@ -838,43 +878,59 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
     # Prépare les données de travail (copies + mélange) en fonction du choix de langue
     def collect_template(self):
-        print(f"collect_template() -> langue sélectionnée : {self.language}")
-        code_language = self.language[1]
+        print(f"collect_template() -> langue sélectionnée : {self.language_selected}")
+        code_language = self.language_selected[1]
+
+        for json_file in self.corpus_dir.glob(f"*{code_language}.json"):
+            try:
+                # Ouvre le fichier JSON en lecture avec l'encodage UTF-8 (pour la prise en charge des accents)
+                with open(json_file, "r", encoding="utf-8") as file:
+                    self.corpus_data = json.load(file)
+            
+            except json.JSONDecodeError:
+                # Cette erreur arrive si le fichier existe mais que son contenu
+                # n'est pas un JSON valide.
+                print(f"Erreur JSON dans le fichier : {json_file}")
+
+            except Exception as e:
+                # Cette sécurité permet d'afficher les autres erreurs possibles
+                # sans faire planter toute l'application.
+                print(f"Erreur lors de la lecture de {json_file} : {e}")
 
         # Copie des listes du template 1
-        self.t1_sujet = corpus_data[code_language]["template1"]["sujet"].copy()
-        self.t1_verbe = corpus_data[code_language]["template1"]["verbe"].copy()
-        self.t1_nombre = corpus_data[code_language]["template1"]["nombre"].copy()
-        self.t1_groupe_nominal = corpus_data[code_language]["template1"]["groupe_nominal"].copy()
+        # self.t1_sujet = corpus_data[code_language]["template1"]["sujet"].copy()
+        # self.t1_verbe = corpus_data[code_language]["template1"]["verbe"].copy()
+        # self.t1_nombre = corpus_data[code_language]["template1"]["nombre"].copy()
+        # self.t1_groupe_nominal = corpus_data[code_language]["template1"]["groupe_nominal"].copy()
 
-        # Copie du template 2
-        self.t2 = corpus_data[code_language]["template2"].copy()
+        # # Copie du template 2
+        # self.t2 = corpus_data[code_language]["template2"].copy()
 
-        # Mélange pour créer des phrases aléatoire (mais avec la même structure)
-        random.shuffle(self.t1_sujet)
-        random.shuffle(self.t1_verbe)
-        random.shuffle(self.t1_nombre)
-        random.shuffle(self.t1_groupe_nominal)
-        random.shuffle(self.t2)
+        # # Mélange pour créer des phrases aléatoire (mais avec la même structure)
+        random.shuffle(self.corpus_data["template_1"]["subject"])
+        random.shuffle(self.corpus_data["template_1"]["verb"])
+        random.shuffle(self.corpus_data["template_1"]["number"])
+        random.shuffle(self.corpus_data["template_1"]["nominal_group"])
+        random.shuffle(self.corpus_data["template_2"]["sentences"])
 
         # Remise du cpt de phrases à 0 puis appel de la fonction dédiée
         self.sentence_cpt = 0
         self.update_sentence_counter()
 
-        # Réactivation du bouton record (dans le cas où 20 phrases ont déjà été enregistrées dans une langue)
+        # Réactivation du bouton record (dans le cas où toutes les phrases ont déjà été enregistrées dans une langue)
         self.button_record.setEnabled(True)
 
 
     # Affiche la phrase à lire
     def display_text(self):
         # Tant qu'il reste des éléments dans le Template 1
-        if self.t1_sujet:
-            # language[2] correspond à l'ordre syntaxique (ex : SVO)
-            self.template1_order(self.language[2])
+        if self.corpus_data["template_1"]["subject"]:
+            # Appel de la fonction pour prendre en compte l'ordre syntaxique (ex : SVO)
+            self.template_1_order()
 
         # Sinon, on passe au Template 2
-        elif self.t2:
-            self.sentence = self.t2[-1]
+        elif self.corpus_data["template_2"]["sentences"]:
+            self.sentence = self.corpus_data["template_2"]["sentences"][-1]
         
         # Fin du corpus
         else:
@@ -886,68 +942,24 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.label_sentence.setText(self.sentence)
     
 
-    def template1_order(self, order):
-        # Sujet – Verbe – Objet
-        if order == "SVO":
-            self.sentence = (
-                self.t1_sujet[-1] + " " +
-                self.t1_verbe[-1] + " " +
-                self.t1_nombre[-1] + " " +
-                self.t1_groupe_nominal[-1]
-            )
-        # Sujet – Objet – Verbe
-        elif order == "SOV":
-            self.sentence = (
-                self.t1_sujet[-1] + " " +
-                self.t1_nombre[-1] + " " +
-                self.t1_groupe_nominal[-1] + " " +
-                self.t1_verbe[-1]
-            )
-        # Verbe – Sujet – Objet
-        elif order == "VSO":
-            self.sentence = (
-                self.t1_verbe[-1] + " " +
-                self.t1_sujet[-1] + " " +
-                self.t1_nombre[-1] + " " +
-                self.t1_groupe_nominal[-1] 
-            )
-        # Verbe – Objet – Sujet
-        elif order == "VOS":
-            self.sentence = (
-                self.t1_verbe[-1] + " " +
-                self.t1_nombre[-1] + " " +
-                self.t1_groupe_nominal[-1] + " " +
-                self.t1_sujet[-1]
-            )
-        # Objet – Verbe – Sujet
-        elif order == "OVS":
-            self.sentence = (
-                self.t1_nombre[-1] + " " +
-                self.t1_groupe_nominal[-1] + " " +
-                self.t1_verbe[-1] + " " +
-                self.t1_sujet[-1]
-            )
-        # Objet – Sujet – Verbe
-        else :
-            self.sentence = (
-                self.t1_nombre[-1] + " " +
-                self.t1_groupe_nominal[-1] + " " +
-                self.t1_sujet[-1] + " " +
-                self.t1_verbe[-1]
-            )
+    def template_1_order(self):
+        self.sentence=""
+        for list in self.corpus_data["template_1"]["structure"] :
+            self.sentence += self.corpus_data["template_1"][list][-1]
+            self.sentence += " "
+        
+        self.sentence.strip()
 
 
     # Consomme les mots/phrases utilisées
     def consume_words(self):
         # Consommation du Template 1 en priorité
-        if self.t1_sujet:
-            self.t1_sujet.pop()
-            self.t1_verbe.pop()
-            self.t1_nombre.pop()
-            self.t1_groupe_nominal.pop()
+        if self.corpus_data["template_1"]["subject"]:
+            for list in self.corpus_data["template_1"]["structure"]:
+                self.corpus_data["template_1"][list].pop()
         # Puis consommation du Template 2
-        elif self.t2:
-            self.t2.pop()
+        elif self.corpus_data["template_2"]["sentences"]:
+            self.corpus_data["template_2"]["sentences"].pop()
         # Lorsque tout est consommé
         else:
             print("Toutes les phrases ont été lues")
