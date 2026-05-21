@@ -1,9 +1,6 @@
 # Importe le module système de Python
 import sys, random, json
 
-from corpus import corpus as corpus_data
-from corpus import language as language_data
-
 # Permet de générer un nom de fichier avec la date/heure
 from datetime import datetime
 
