@@ -28,7 +28,7 @@ from config_loader import load_config
 CONFIG = load_config()
 
 # Fonction utilitaire pour créer le chemin de sauvegarde vidéo.
-from utils.file_utils import build_video_filepath
+from utils.file_utils import build_recording_filepaths
 
 # Fonction utilitaire pour les formats vidéos.
 from utils.media_utils import (
@@ -88,6 +88,9 @@ class MediaManager:
         # Débit vidéo courant.
         self.video_bitrate = CONFIG["recording"]["video_bitrate_medium"]
 
+        # Débit audio courant
+        self.audio_bitrate = CONFIG["recording"]["audio_bitrate"]
+
         # Emplacement du fichier vidéo en cours d'enregistrement.
         self.recording_output_location = QUrl()
 
@@ -96,6 +99,21 @@ class MediaManager:
 
         # Nom de base du fichier courant, sans extension.
         self.file_name = ""
+
+        # Chemin d'enregistrement du fichier vidéo
+        self.video_filepath = None
+
+        # Chemin d'enregistrement du fichier d'annotation
+        self.annotation_filepath = None
+
+        # Largeur de la vidéo choisie.
+        self.video_width = None
+
+        # Hauteur de la vidéo choisie.
+        self.video_height = None
+
+        # FPS du format caméra choisi.
+        self.video_fps = None
 
 
     def setup(self):
@@ -435,6 +453,10 @@ class MediaManager:
         else:
             self.video_bitrate = 8_000_000
 
+        self.video_width = best_width
+        self.video_height = best_height
+        self.video_fps = best_fps
+
         print(
             "Format caméra choisi :",
             f"{best_width}x{best_height}",
@@ -511,7 +533,7 @@ class MediaManager:
         self.recorder.setVideoBitRate(self.video_bitrate) # type: ignore
 
         # Définit le débit audio AAC.
-        self.recorder.setAudioBitRate(128_000) # type: ignore
+        self.recorder.setAudioBitRate(self.audio_bitrate) # type: ignore
 
     # -----------------------------------------------------------------
 
@@ -557,13 +579,13 @@ class MediaManager:
         """
 
         # Construit le nom de fichier et le chemin complet.
-        self.file_name, filepath = build_video_filepath(CONFIG["paths"]["data_dir"], language_code)
+        self.file_name, self.video_filepath, self.annotation_filepath = build_recording_filepaths(CONFIG["paths"]["data_dir"], language_code)
 
         # Affiche le chemin pour vérifier où la vidéo sera enregistrée
-        print("Enregistrement dans :", filepath)
+        print("Enregistrement dans :", self.video_filepath)
 
         # Indique la destination de l'enregistrement de la vidéo.
-        self.recording_output_location = QUrl.fromLocalFile(str(filepath))
+        self.recording_output_location = QUrl.fromLocalFile(str(self.video_filepath))
         self.recorder.setOutputLocation(self.recording_output_location) # type: ignore
 
         # Réinitialise le fallback pour ce nouvel enregistrement.
@@ -611,12 +633,13 @@ class MediaManager:
     
     def restart_recording_with_mpeg4(self):
         # Récupère le chemin du fichier créé par la tentative H264.
-        failed_filepath = Path(self.recording_output_location.toLocalFile())
+        failed_filepath = self.video_filepath
 
-        # Supprime le fichier H264 invalide avant de relancer l'enregistrement.
-        # Si le fichier n'existe pas encore, missing_ok=True évite une erreur inutile.
-        failed_filepath.unlink(missing_ok=True)
-        print("Fichier H264 invalide supprimé :", failed_filepath)
+        if self.video_filepath is not None:
+            # Supprime le fichier H264 invalide avant de relancer l'enregistrement.
+            # Si le fichier n'existe pas encore, missing_ok=True évite une erreur inutile.
+            failed_filepath.unlink(missing_ok=True) # type: ignore
+            print("Fichier H264 invalide supprimé :", failed_filepath)
 
         # Remplace le format H264 par un format MPEG4.
         media_format = create_recording_media_format(QMediaFormat.VideoCodec.MPEG4)

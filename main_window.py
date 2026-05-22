@@ -16,6 +16,9 @@ from corpus_manager import CorpusManager
 # Gestion de l'affichage REC : chrono + point rouge clignotant.
 from recording_indicator import RecordingIndicator
 
+# Gestion du fichier d'annotations
+from annotation_manager import AnnotationManager
+
 class MyWindow(QMainWindow, Ui_MainWindow):
     """
     Fenêtre principale de l'application.
@@ -121,6 +124,8 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # Gère l'affichage du timer REC et du point rouge.
         self.recording_indicator = RecordingIndicator(self.label_record_timer, self.label_record_dot)
+
+        self.annotation_manager = AnnotationManager()
 
     # -----------------------------------------------------------------
 
@@ -249,7 +254,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             return False
 
         # Vérifie qu'une langue est sélectionnée.
-        if self.corpus_manager.get_selected_language_code() is None:
+        if self.corpus_manager.language_selected is None: # type: ignore
             print("Aucune langue sélectionnée")
             return False
 
@@ -299,7 +304,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             return
 
         # Récupère le code de langue courant.
-        language_code = self.corpus_manager.get_selected_language_code()
+        language_code = self.corpus_manager.language_selected[1] # type: ignore
 
         # Demande au MediaManager de démarrer l'enregistrement.
         recording_started = self.media_manager.start_recording(language_code)
@@ -364,6 +369,44 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Arrête et masque l'indicateur REC.
         self.recording_indicator.stop()
         self.recording_indicator.hide()
+
+       
+        file_name = self.media_manager.file_name
+        video_path = self.media_manager.recording_output_location.toLocalFile()
+        annotation_file_path = self.media_manager.annotation_filepath
+        
+        sentence = self.corpus_manager.current_sentence
+        template_type = self.corpus_manager.current_template_type
+        language_code = self.corpus_manager.language_selected[1] # type: ignore
+        language_name = self.corpus_manager.language_selected[0] # type: ignore
+
+        selected_camera = self.media_manager.get_selected_camera()
+        selected_microphone = self.media_manager.get_selected_microphone()
+        camera_name = selected_camera.description() if selected_camera is not None else "unknown"
+        microphone_name = selected_microphone.description() if selected_microphone is not None else "unknown"
+
+        video_width = self.media_manager.video_width
+        video_height = self.media_manager.video_height
+        video_fps = self.media_manager.video_fps
+        video_bitrate = self.media_manager.video_bitrate
+        audio_bitrate = self.media_manager.audio_bitrate
+
+        self.annotation_manager.save_annotation(
+            annotation_file_path, 
+            file_name,
+            video_path,
+            language_code,
+            language_name,
+            sentence,
+            template_type,
+            camera_name,
+            microphone_name,
+            video_width,
+            video_height,
+            video_fps,
+            video_bitrate,
+            audio_bitrate
+            )
 
         # Supprime du corpus la phrase qui vient d'être lue.
         self.corpus_manager.consume_current_sentence()

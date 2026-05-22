@@ -39,6 +39,9 @@ class CorpusManager:
 
         # Phrase actuellement affichée.
         self.current_sentence = ""
+
+        # Template de la phrase actuellement affichée.
+        self.current_template_type = ""
         
 
     def load_languages(self):
@@ -209,10 +212,12 @@ class CorpusManager:
         # Tant qu'il reste des éléments dans le Template 1.
         if self.corpus_data["template_1"]["subject"]:
             self.current_sentence = self.build_template_1_sentence()
+            self.current_template_type = "template_1"
 
         # Sinon, on passe au Template 2.
         elif self.corpus_data["template_2"]["sentences"]:
             self.current_sentence = self.corpus_data["template_2"]["sentences"][-1]
+            self.current_template_type = "template_2"
 
         # Sinon, la session est terminée.
         else:
@@ -313,23 +318,3 @@ class CorpusManager:
         displayed_count = min(self.sentence_count + 1,self.sentence_total)
 
         return f"{displayed_count}/{self.sentence_total}"
-    
-
-    def get_selected_language_code(self):
-        """
-        Retourne le code de la langue sélectionnée.
-
-        Exemple :
-            "fr"
-            "en"
-
-        Retourne None si aucune langue n'est sélectionnée.
-        """
-
-        # Si aucune langue n'a encore été sélectionnée, on ne peut pas retourner de code.
-        if self.language_selected is None:
-            return None
-
-        # language_selected contient normalement un tuple :
-        # ("Français", "fr") ou ("Anglais", "en")
-        return self.language_selected[1]

@@ -1,41 +1,43 @@
 from datetime import datetime
 from pathlib import Path
 
-def build_video_filepath(data_dir: Path, language_code: str) -> tuple[str, Path]:
+def build_recording_filepaths(data_dir: Path, language_code: str):
     """
-    Construit le nom de fichier et le chemin complet d'une vidéo.
+    Construit les chemins de sauvegarde d'un enregistrement.
 
-    La vidéo est enregistrée dans un sous-dossier correspondant à la langue.
+    Un enregistrement correspond à :
+        - une vidéo .mp4 ;
+        - un fichier d'annotation .csv portant le même nom.
 
     Exemple :
-        data/fr/fr_20260521_101530.mp4
-        data/en/en_20260521_101530.mp4
-
-    Paramètres :
-        data_dir : dossier racine de sauvegarde des vidéos.
-        language_code : code de la langue sélectionnée, par exemple "fr" ou "en".
+        data/fr/videos/fr_20260522_143012.mp4
+        data/fr/annotations/fr_20260522_143012.csv
 
     Retourne :
-        - le nom de fichier sans extension ;
-        - le chemin complet du fichier vidéo avec extension .mp4.
+        - le nom de base sans extension ;
+        - le chemin complet de la vidéo ;
+        - le chemin complet de l'annotation.
     """
 
-    # Crée le dossier racine data s'il n'existe pas déjà.
-    data_dir.mkdir(parents=True, exist_ok=True)
-
-    # Construit le sous-dossier correspondant à la langue.
+    # Dossier de la langue.
     language_dir = data_dir / language_code
 
-    # Crée le dossier de langue s'il n'existe pas déjà.
-    language_dir.mkdir(parents=True, exist_ok=True)
+    # Sous-dossier des vidéos.
+    video_dir = language_dir / "videos"
 
-    # Génère un timestamp pour obtenir un nom de fichier unique.
+    # Sous-dossier des annotations.
+    annotation_dir = language_dir / "annotations"
+
+    # Crée les dossiers nécessaires.
+    video_dir.mkdir(parents=True, exist_ok=True)
+    annotation_dir.mkdir(parents=True, exist_ok=True)
+
+    # Génère un nom de base commun à la vidéo et à l'annotation.
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    file_name = f"{language_code}_{timestamp}"
 
-    # Construit le nom de base du fichier.
-    file_base_name = f"{language_code}_{timestamp}"
+    # Construit les chemins complets.
+    video_filepath = video_dir / f"{file_name}.mp4"
+    annotation_filepath = annotation_dir / f"{file_name}.csv"
 
-    # Ajoute l'extension .mp4 et construit le chemin complet.
-    video_filepath = language_dir / f"{file_base_name}.mp4"
-
-    return file_base_name, video_filepath
+    return file_name, video_filepath, annotation_filepath
