@@ -1,0 +1,12 @@
+paths:
+  data_dir: data
+  corpus_dir: corpus
+
+recording:
+  audio_bitrate: 128000
+  video_bitrate_low: 8000000
+  video_bitrate_medium: 12000000
+  video_bitrate_high: 20000000
+
+sentence:
+  total: 20

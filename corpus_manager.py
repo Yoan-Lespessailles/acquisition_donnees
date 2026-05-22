@@ -1,7 +1,8 @@
 import json
 import random
 
-import config
+from config_loader import load_config
+CONFIG = load_config()
 
 class CorpusManager:
     """
@@ -19,10 +20,10 @@ class CorpusManager:
         """
 
         # Dossier contenant les fichiers JSON de corpus
-        self.corpus_dir = config.CORPUS_DIR
+        self.corpus_dir = CONFIG["paths"]["corpus_dir"]
 
         # Nombre total de phrases prévues pour une session.
-        self.sentence_total = config.SENTENCE_NUMBER
+        self.sentence_total = CONFIG["sentence"]["total"]
 
         # Compteur de phrases affichées / enregistrées.
         self.sentence_count = 0

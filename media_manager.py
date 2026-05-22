@@ -23,7 +23,9 @@ from PySide6.QtMultimedia import (
 from PySide6.QtMultimediaWidgets import QVideoWidget
 
 # Constantes du projet : DATA_DIR, bitrates, etc.
-import config
+from config_loader import load_config
+
+CONFIG = load_config()
 
 # Fonction utilitaire pour créer le chemin de sauvegarde vidéo.
 from utils.file_utils import build_video_filepath
@@ -84,7 +86,7 @@ class MediaManager:
         self.media_devices = QMediaDevices()
 
         # Débit vidéo courant.
-        self.video_bitrate = config.VIDEO_BITRATE_MEDIUM
+        self.video_bitrate = CONFIG["recording"]["video_bitrate_medium"]
 
         # Emplacement du fichier vidéo en cours d'enregistrement.
         self.recording_output_location = QUrl()
@@ -555,7 +557,7 @@ class MediaManager:
         """
 
         # Construit le nom de fichier et le chemin complet.
-        self.file_name, filepath = build_video_filepath(config.DATA_DIR, language_code)
+        self.file_name, filepath = build_video_filepath(CONFIG["paths"]["data_dir"], language_code)
 
         # Affiche le chemin pour vérifier où la vidéo sera enregistrée
         print("Enregistrement dans :", filepath)
