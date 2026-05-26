@@ -2,7 +2,7 @@
 from PySide6.QtWidgets import QMainWindow
 
 # Slot permet de déclarer explicitement certaines méthodes connectées aux signaux Qt.
-from PySide6.QtCore import Slot
+from PySide6.QtCore import Slot, QTimer, Qt
 
 # Interface générée depuis Qt Designer.
 from ui.ui_main_pyside6 import Ui_MainWindow
@@ -21,7 +21,6 @@ from annotation_manager import AnnotationManager
 
 from utils.media_utils import extract_video_metadata
 
-from PySide6.QtCore import QTimer
 
 class MyWindow(QMainWindow, Ui_MainWindow):
     """
@@ -86,15 +85,64 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             background-color: #ABABAB ;
             color: #F0F0F0;
             }
+
+            #button_test_micro[testing="false"], #button_test_micro[testing="true"] {
+                color: black;
+                border: none;
+                border-radius: 10px;
+
+                padding: 6px 12px;
+                text-align: center;
+            }
+
+            #button_test_micro[testing="false"] {
+                background-color: #2ECC71
+            }
+                           
+            #button_test_micro[testing="false"]:hover {
+                background-color: #0FBD5A
+            }
+                           
+            #button_test_micro[testing="false"]:pressed {
+                background-color: #02A849
+            }
+                           
+            #button_test_micro[testing="true"] {
+                background-color: #FFE857
+            }
+                           
+            #button_test_micro[testing="true"]:hover {
+                background-color: #FFE200
+            }
+                           
+            #button_test_micro[testing="true"]:pressed {
+                background-color: #DBC200
+            }
+                           
+            #progressbar_micro_level {
+                border: 1px solid #555555;
+                border-radius: 6px;
+                background-color: #E5E5E5;
+            }
+
+            #progressbar_micro_level::chunk {
+                background-color: #2ECC71;
+                border-radius: 5px;
+            }
         
         """)
 
-        #ABABAB
+        # Centre le bouton horizontalement dans le layout de area_micro_test.
+        self.area_micro_test.layout().setAlignment(self.button_test_micro, Qt.AlignmentFlag.AlignHCenter) # type: ignore
+
+        # Enlève le texte sur la progressbar
+        self.progressbar_micro_level.setTextVisible(False)
 
         # Active le QSS
         self.button_record.setProperty("recording", False)
-    
-      # Indique si un enregistrement est actuellement en cours.
+        self.button_test_micro.setProperty("testing", False)
+
+        # Indique si un enregistrement est actuellement en cours.
         self.is_recording = False
 
         # Initialise les gestionnaires spécialisés.
@@ -145,25 +193,26 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.button_record.clicked.connect(self.button_record_clicked)
 
         # Changement de micro sélectionné.
-        self.select_micro.currentIndexChanged.connect(
-            self.media_manager.change_microphone
-        )
+        self.select_micro.currentIndexChanged.connect(self.media_manager.change_microphone)
 
         # Changement de caméra sélectionnée.
-        self.select_camera.currentIndexChanged.connect(
-            self.media_manager.change_camera
-        )
+        self.select_camera.currentIndexChanged.connect(self.media_manager.change_camera)
 
         # Changement de langue sélectionnée.
-        self.select_language.currentIndexChanged.connect(
-            self.language_changed
-        )
+        self.select_language.currentIndexChanged.connect(self.language_changed)
 
         # Détection automatique d'un changement dans la liste des micros.
         self.media_manager.media_devices.audioInputsChanged.connect(self.media_manager.refresh_microphones)
 
         # Détection automatique d'un changement dans la liste des caméras.
         self.media_manager.media_devices.videoInputsChanged.connect(self.media_manager.refresh_cameras)
+
+        # Bouton de test micro
+        self.button_test_micro.clicked.connect(self.button_test_micro_clicked)
+
+        # Quand MediaManager calcule un nouveau niveau micro,
+        # on met à jour la ProgressBar.
+        self.media_manager.micro_level_changed.connect(self.update_micro_level)
 
     # -----------------------------------------------------------------
 
@@ -287,6 +336,10 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             - consomme la phrase courante ;
             - affiche la phrase suivante.
         """
+
+        # Si l'utilisateur n'a pas désactiver le test micro, on l'arrête pour éviter des conflits
+        if self.media_manager.micro_test_is_running:
+            self.media_manager.stop_micro_test()
 
         # Si aucun enregistrement n'est en cours, on démarre.
         if not self.is_recording:
@@ -435,5 +488,73 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Affiche la phrase suivante.
         self.display_current_sentence()
 
+    # -----------------------------------------------------------------
+
+
+    # ========== BOUTON DE TEST MICRO ==========
+    @Slot()
+    def button_test_micro_clicked(self):
+        """
+        Démarre ou arrête le test micro selon l'état actuel du MediaManager.
+        """
+
+        # Si le test micro est déjà en cours, on l'arrête.
+        if self.media_manager.micro_test_is_running:
+            self.media_manager.stop_micro_test()
+            self.button_test_micro.setText("Tester le micro")
+
+            self.button_test_micro.setProperty("testing", False)
+
+            # Force Qt à recalculer le style du bouton.
+            self.update_style(self.button_test_micro)
+
+            # Débloque la sélection de micro
+            self.select_micro.setEnabled(True)
+
+            return
+
+        # Sinon, on récupère le micro sélectionné.
+        micro = self.media_manager.get_selected_microphone()
+
+        # On démarre le test micro.
+        self.media_manager.start_micro_test(micro)
+        self.button_test_micro.setText("Arrêter le test micro")
+
+        self.button_test_micro.setProperty("testing", True)
+        
+        # Force Qt à recalculer le style du bouton.
+        self.update_style(self.button_test_micro)
+        
+        # Bloque la sélection de micro
+        self.select_micro.setEnabled(False)
+    
+
+    @Slot(int)
+    def update_micro_level(self, level):
+        """
+        Met à jour la barre de niveau micro avec la valeur reçue.
+        """
+
+        self.progressbar_micro_level.setValue(level)
 
     # -----------------------------------------------------------------
+
+    def update_style(self, widget):
+        """
+        Force Qt à réappliquer le style QSS d'un widget.
+
+        Cette méthode est utile quand on change une propriété dynamique
+        utilisée dans le QSS, par exemple :
+
+        self.button_test_micro.setProperty("testing", True)
+
+        Qt ne rafraîchit pas toujours automatiquement le style après ce type
+        de changement. On force donc le widget à être "dé-stylé", puis
+        "re-stylé".
+        """
+
+        # Retire temporairement le style actuellement appliqué au widget.
+        widget.style().unpolish(widget)
+
+        # Réapplique le style au widget en tenant compte de ses propriétés actuelles.
+        widget.style().polish(widget)

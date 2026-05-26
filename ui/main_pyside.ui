@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>868</width>
-    <height>514</height>
+    <width>820</width>
+    <height>595</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -131,32 +131,98 @@ border-radius: 10px;</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QWidget" name="area_settings" native="true">
-         <layout class="QVBoxLayout" name="verticalLayout_2">
+        <widget class="QWidget" name="area_micro" native="true">
+         <layout class="QVBoxLayout" name="verticalLayout_7">
           <item>
-           <widget class="QLabel" name="label_select_micro">
-            <property name="font">
-             <font>
-              <family>Roboto</family>
-             </font>
-            </property>
-            <property name="text">
-             <string>Micro :</string>
-            </property>
-            <property name="buddy">
-             <cstring>select_micro</cstring>
-            </property>
+           <widget class="QWidget" name="area_micro_selection" native="true">
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <item>
+              <widget class="QLabel" name="label_micro">
+               <property name="font">
+                <font>
+                 <family>Roboto</family>
+                </font>
+               </property>
+               <property name="text">
+                <string>Micro :</string>
+               </property>
+               <property name="buddy">
+                <cstring>select_micro</cstring>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="select_micro">
+               <property name="font">
+                <font>
+                 <family>Roboto</family>
+                </font>
+               </property>
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="select_micro">
-            <property name="font">
-             <font>
-              <family>Roboto</family>
-             </font>
-            </property>
+           <widget class="QWidget" name="area_micro_test" native="true">
+            <layout class="QVBoxLayout" name="verticalLayout_6">
+             <item>
+              <widget class="QPushButton" name="button_test_micro">
+               <property name="font">
+                <font>
+                 <family>Roboto</family>
+                </font>
+               </property>
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
+               <property name="tabletTracking">
+                <bool>false</bool>
+               </property>
+               <property name="contextMenuPolicy">
+                <enum>Qt::ContextMenuPolicy::NoContextMenu</enum>
+               </property>
+               <property name="text">
+                <string>Test micro</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_micro_state">
+               <property name="font">
+                <font>
+                 <family>Roboto</family>
+                </font>
+               </property>
+               <property name="text">
+                <string>Niveau du micro :</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QProgressBar" name="progressbar_micro_level">
+               <property name="font">
+                <font>
+                 <family>Roboto</family>
+                </font>
+               </property>
+               <property name="value">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="widget" native="true">
+         <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
            <widget class="QLabel" name="label_select_camera">
             <property name="font">
@@ -178,6 +244,9 @@ border-radius: 10px;</string>
              <font>
               <family>Roboto</family>
              </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
             </property>
            </widget>
           </item>
@@ -203,7 +272,11 @@ border-radius: 10px;</string>
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="select_language"/>
+           <widget class="QComboBox" name="select_language">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -273,6 +346,9 @@ border-radius: 10px;</string>
               <family>Roboto</family>
              </font>
             </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
             <property name="styleSheet">
              <string notr="true"/>
             </property>
@@ -294,7 +370,7 @@ border-radius: 10px;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>868</width>
+     <width>820</width>
      <height>23</height>
     </rect>
    </property>
@@ -303,6 +379,10 @@ border-radius: 10px;</string>
  </widget>
  <tabstops>
   <tabstop>select_micro</tabstop>
+  <tabstop>button_test_micro</tabstop>
+  <tabstop>select_camera</tabstop>
+  <tabstop>select_language</tabstop>
+  <tabstop>button_record</tabstop>
  </tabstops>
  <resources/>
  <connections/>

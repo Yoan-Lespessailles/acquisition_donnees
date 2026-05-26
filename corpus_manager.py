@@ -23,7 +23,11 @@ class CorpusManager:
         self.corpus_dir = CONFIG["paths"]["corpus_dir"]
 
         # Nombre total de phrases prévues pour une session.
-        self.sentence_total = CONFIG["sentence"]["total"]
+        # Dépend de la manière dont on veut utiliser le corpus
+        self.sentence_total = 0
+
+        # Récupère le mode choisi dans la configuration.
+        self.sentence_mode = CONFIG["sentence"]["mode"]
 
         # Compteur de phrases affichées / enregistrées.
         self.sentence_count = 0
@@ -127,13 +131,18 @@ class CorpusManager:
         if not corpus_loaded:
             return False
 
+        if not CONFIG["sentence"]["only_generated"] :
+            self.sentence_total = CONFIG["sentence"]["total"]
+        else :
+            self.sentence_total = self.total_sentences()
+
         self.shuffle_corpus()
         self.reset_session()
 
         self.current_sentence = self.get_current_sentence()
 
         return True
-    
+
 
     def load_selected_language_corpus(self):
         """
@@ -168,20 +177,71 @@ class CorpusManager:
         return False
     
 
-    def shuffle_corpus(self):
+    def total_sentences(self):
         """
-        Mélange les listes de travail du corpus chargé.
+        Calcule le nombre total de phrases disponibles selon le mode choisi.
+
+        Modes disponibles :
+            0 : utilise le template 1 et le template 2 ;
+            1 : utilise uniquement le template 1 ;
+            2 : utilise uniquement le template 2.
         """
 
+        # Si aucun corpus n'est chargé, on ne peut pas compter les phrases.
+        if self.corpus_data is None:
+            print("Impossible de compter : aucun corpus chargé")
+            return 0
+
+        # Compte le nombre de phrases générables avec le template 1.
+        # On compte la liste "subject", car chaque phrase générée consomme
+        # un sujet, un verbe, un nombre et un groupe nominal.
+        total_template_1 = len(self.corpus_data["template_1"]["subject"])
+
+        # Compte le nombre de phrases naturelles disponibles dans le template 2.
+        total_template_2 = len(self.corpus_data["template_2"]["sentences"])
+
+        # Mode 0 : on utilise les deux templates.
+        if self.sentence_mode == 0:
+            return total_template_1 + total_template_2
+
+        # Mode 1 : on utilise uniquement le template 1.
+        if self.sentence_mode == 1:
+            return total_template_1
+
+        # Mode 2 : on utilise uniquement le template 2.
+        if self.sentence_mode == 2:
+            return total_template_2
+
+        # Si le mode est invalide, on évite de planter sans explication.
+        print(f"Mode de génération inconnu : {self.sentence_mode}")
+        return 0
+    
+
+    def shuffle_corpus(self):
+        """
+        Mélange les listes de travail du corpus chargé selon le mode sélectionné.
+
+        Modes disponibles :
+            0 : utilise le template 1 et le template 2 ;
+            1 : utilise uniquement le template 1 ;
+            2 : utilise uniquement le template 2.
+        """
+
+        # Si aucun corpus n'est chargé, on ne peut pas mélanger les listes.
         if self.corpus_data is None:
             print("Impossible de mélanger : aucun corpus chargé")
             return False
 
-        random.shuffle(self.corpus_data["template_1"]["subject"])
-        random.shuffle(self.corpus_data["template_1"]["verb"])
-        random.shuffle(self.corpus_data["template_1"]["number"])
-        random.shuffle(self.corpus_data["template_1"]["nominal_group"])
-        random.shuffle(self.corpus_data["template_2"]["sentences"])
+        # Si le mode utilise le template 1, on mélange ses quatre listes.
+        if self.sentence_mode in (0, 1):
+            random.shuffle(self.corpus_data["template_1"]["subject"])
+            random.shuffle(self.corpus_data["template_1"]["verb"])
+            random.shuffle(self.corpus_data["template_1"]["number"])
+            random.shuffle(self.corpus_data["template_1"]["nominal_group"])
+
+        # Si le mode utilise le template 2, on mélange sa liste de phrases.
+        if self.sentence_mode in (0, 2):
+            random.shuffle(self.corpus_data["template_2"]["sentences"])
 
         return True
     
@@ -197,31 +257,38 @@ class CorpusManager:
 
     def get_current_sentence(self):
         """
-        Retourne la phrase courante à afficher.
+        Retourne la phrase courante à afficher selon le mode sélectionné.
 
-        Priorité :
-            1. Template 1 tant qu'il reste des mots.
-            2. Template 2 ensuite.
-            3. Message de fin si tout est consommé.
+        Modes disponibles :
+            0 : utilise le template 1 puis le template 2 ;
+            1 : utilise uniquement le template 1 ;
+            2 : utilise uniquement le template 2.
         """
 
         # Vérifie qu'un corpus est chargé.
         if self.corpus_data is None:
             return "Aucun corpus chargé"
 
-        # Tant qu'il reste des éléments dans le Template 1.
-        if self.corpus_data["template_1"]["subject"]:
+        # Mode 0 ou 1 :
+        # on utilise le template 1 si ce mode l'autorise
+        # et s'il reste encore des éléments disponibles.
+        if self.sentence_mode in (0, 1) and self.corpus_data["template_1"]["subject"]:
             self.current_sentence = self.build_template_1_sentence()
             self.current_template_type = "template_1"
+            return self.current_sentence
 
-        # Sinon, on passe au Template 2.
-        elif self.corpus_data["template_2"]["sentences"]:
+        # Mode 0 ou 2 :
+        # on utilise le template 2 si ce mode l'autorise
+        # et s'il reste encore des phrases disponibles.
+        if self.sentence_mode in (0, 2) and self.corpus_data["template_2"]["sentences"]:
             self.current_sentence = self.corpus_data["template_2"]["sentences"][-1]
             self.current_template_type = "template_2"
+            return self.current_sentence
 
-        # Sinon, la session est terminée.
-        else:
-            self.current_sentence = "Fin de la session d'enregistrement"
+        # Si aucun contenu compatible avec le mode choisi n'est disponible,
+        # la session est terminée.
+        self.current_sentence = "Fin de la session d'enregistrement"
+        self.current_template_type = None
 
         return self.current_sentence
 
@@ -252,6 +319,13 @@ class CorpusManager:
     def consume_current_sentence(self):
         """
         Supprime du corpus les mots ou la phrase qui viennent d'être utilisés.
+
+        La consommation dépend du type de phrase actuellement affiché :
+            - template_1 : on supprime un élément dans chaque liste du template 1 ;
+            - template_2 : on supprime la phrase utilisée dans la liste du template 2.
+
+        Le mode de session est déjà pris en compte dans get_current_sentence().
+        Ici, on consomme simplement ce qui a réellement été affiché.
         """
 
         # Vérifie qu'un corpus est chargé.
@@ -264,14 +338,21 @@ class CorpusManager:
             print("Toutes les phrases ont été lues")
             return False
 
-        # Consommation du Template 1 en priorité.
-        if self.corpus_data["template_1"]["subject"]:
+        # Si la phrase courante vient du template 1,
+        # on retire le dernier élément de chaque liste utilisée pour construire la phrase.
+        if self.current_template_type == "template_1":
             for list_name in self.corpus_data["template_1"]["structure"]:
                 self.corpus_data["template_1"][list_name].pop()
 
-        # Puis consommation du Template 2.
-        elif self.corpus_data["template_2"]["sentences"]:
+        # Si la phrase courante vient du template 2,
+        # on retire la phrase naturelle actuellement utilisée.
+        elif self.current_template_type == "template_2":
             self.corpus_data["template_2"]["sentences"].pop()
+
+        # Si aucun template courant n'est défini, on évite de consommer au hasard.
+        else:
+            print("Impossible de consommer : aucun type de template courant défini")
+            return False
 
         # Une phrase vient d'être consommée.
         self.sentence_count += 1
@@ -284,12 +365,18 @@ class CorpusManager:
 
     def is_session_finished(self):
         """
-        Indique si toutes les phrases du corpus ont été utilisées.
+        Indique si toutes les phrases autorisées par le mode sélectionné
+        ont été utilisées.
+
+        Modes disponibles :
+            0 : utilise le template 1 et le template 2 ;
+            1 : utilise uniquement le template 1 ;
+            2 : utilise uniquement le template 2.
 
         Retourne :
             True si la session est terminée ;
             False s'il reste encore au moins une phrase à lire.
-        """
+    """
 
         # Si aucun corpus n'est chargé, on considère que la session est terminée.
         # Cela évite d'autoriser un enregistrement sans phrase disponible.
@@ -302,8 +389,24 @@ class CorpusManager:
         # Vérifie s'il reste des phrases naturelles dans le template 2.
         template_2_has_sentences = bool(self.corpus_data["template_2"]["sentences"])
 
-        # La session est terminée uniquement s'il ne reste rien dans les deux templates.
-        return not template_1_has_sentences and not template_2_has_sentences
+        # Mode 0 : la session utilise les deux templates.
+        # Elle est terminée uniquement quand les deux sont vides.
+        if self.sentence_mode == 0:
+            return not template_1_has_sentences and not template_2_has_sentences
+
+        # Mode 1 : la session utilise uniquement le template 1.
+        # Elle est terminée dès que le template 1 est vide.
+        if self.sentence_mode == 1:
+            return not template_1_has_sentences
+
+        # Mode 2 : la session utilise uniquement le template 2.
+        # Elle est terminée dès que le template 2 est vide.
+        if self.sentence_mode == 2:
+            return not template_2_has_sentences
+
+        # Si le mode est invalide, on bloque la session par sécurité.
+        print(f"Mode de génération inconnu : {self.sentence_mode}")
+        return True
     
     
     def get_sentence_counter_text(self):

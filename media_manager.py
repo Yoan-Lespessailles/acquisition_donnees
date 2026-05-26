@@ -1,15 +1,30 @@
-# Path permet de définir le dossier où enregistrer les vidéos
+# Permet de manipuler proprement les chemins de fichiers et de dossiers.
 from pathlib import Path
 
-# QTimer sert au fallback H264 -> MPEG4 après un court délai.
+# math sert au calcul RMS du niveau sonore.
+# struct sert à convertir les données audio brutes en échantillons numériques.
+import math
+import struct
+
+# QObject permet à MediaManager d'utiliser les signaux Qt.
+# QTimer permet d'exécuter régulièrement certaines actions, comme :
+# - lire le niveau du micro toutes les 50 ms ;
+# - gérer le fallback H264 -> MPEG4 après un court délai.
 # QUrl permet de convertir un chemin local en format accepté par Qt.
-# Qt sert à configurer le mode d'affichage de la preview vidéo.
-from PySide6.QtCore import QTimer, QUrl, Qt
+# Qt sert à configurer certains comportements d'affichage.
+# Signal permet à MediaManager d'envoyer des informations à l'interface sans dépendre directement des widgets.
+from PySide6.QtCore import QObject, QTimer, QUrl, Qt, Signal
 
 # QVBoxLayout permet d'insérer dynamiquement le widget vidéo dans la zone prévue par Qt Designer.
 from PySide6.QtWidgets import QVBoxLayout
 
-# Classes Qt Multimedia utilisées pour gérer caméra, micro, session et enregistrement.
+# Classes Qt Multimedia utilisées pour :
+# - lister les périphériques audio/vidéo ;
+# - gérer la caméra ;
+# - gérer le micro ;
+# - connecter caméra, micro, preview et enregistreur ;
+# - enregistrer les vidéos ;
+# - tester le niveau sonore du micro.
 from PySide6.QtMultimedia import (
     QMediaDevices,
     QCamera,
@@ -17,46 +32,57 @@ from PySide6.QtMultimedia import (
     QMediaRecorder,
     QAudioInput,
     QMediaFormat,
+    QAudioFormat,
+    QAudioSource
 )
 
 # QVideoWidget affiche le retour caméra dans l'interface.
 from PySide6.QtMultimediaWidgets import QVideoWidget
 
-# Constantes du projet : DATA_DIR, bitrates, etc.
+# Charge la configuration globale du projet : chemins, bitrates, paramètres vidéo, etc.
 from config_loader import load_config
 
 CONFIG = load_config()
 
-# Fonction utilitaire pour créer le chemin de sauvegarde vidéo.
+# Crée les chemins de sauvegarde des fichiers générés pendant l'enregistrement.
 from utils.file_utils import build_recording_filepaths
 
-# Fonction utilitaire pour les formats vidéos.
+# Fonctions utilitaires liées aux formats vidéo :
+# - choix du meilleur format caméra ;
+# - création du format d'enregistrement.
 from utils.media_utils import (
     get_camera_format_score,
     create_recording_media_format,
 )
 
 
-class MediaManager:
+class MediaManager(QObject):
     """
-    Gère toute la chaîne Qt Multimedia :
-    - micros ;
-    - caméras ;
+    Gère la partie multimédia de l'application :
+    - liste des micros ;
+    - liste des caméras ;
     - preview vidéo ;
-    - session de capture ;
+    - session de capture Qt ;
     - enregistrement audio/vidéo ;
+    - test du niveau sonore du micro ;
     - fallback codec H264 vers MPEG4.
     """
+
+    # Signal envoyé à l'interface quand un nouveau niveau micro est calculé.
+    # La valeur envoyée est un entier compris entre 0 et 100.
+    micro_level_changed = Signal(int)
 
     def __init__(self, select_micro, select_camera, area_preview):
         """
         Initialise le gestionnaire multimédia.
 
         Paramètres :
-            select_micro : ComboBox contenant la liste des micros.
-            select_camera : ComboBox contenant la liste des caméras.
+            select_micro : ComboBox contenant la liste des micros disponibles.
+            select_camera : ComboBox contenant la liste des caméras disponibles.
             area_preview : QWidget dans lequel afficher la preview vidéo.
         """
+
+        super().__init__()
 
         # ComboBox de sélection du micro.
         self.select_micro = select_micro
@@ -114,6 +140,23 @@ class MediaManager:
 
         # FPS du format caméra choisi.
         self.video_fps = None
+
+          # Indique si le test micro est actuellement actif.
+        self.micro_test_is_running = False
+
+        # Source audio Qt utilisée pour lire le flux du micro.
+        self.audio_source = None
+
+        # Flux de lecture retourné par QAudioSource.start().
+        self.audio_io_device = None
+
+        # Format audio réellement utilisé pendant le test.
+        self.audio_format = None
+
+        # Timer qui permet de lire régulièrement le niveau du micro.
+        self.micro_level_timer = QTimer()
+        self.micro_level_timer.setInterval(50)
+        self.micro_level_timer.timeout.connect(self.process_micro_level)
 
 
     def setup(self):
@@ -653,4 +696,144 @@ class MediaManager:
         self.recorder.setOutputLocation(self.recording_output_location) # type: ignore
         self.recorder.record() # type: ignore
     
-     # -----------------------------------------------------------------
+    # -----------------------------------------------------------------
+
+    # ========== TEST MICRO ==========
+    def start_micro_test(self, audio_device):
+        """
+        Démarre le test du micro sélectionné.
+        audio_device doit venir de select_micro.currentData().
+        """
+
+        # Si un test micro est déjà actif, on l'arrête proprement avant d'en relancer un.
+        if self.micro_test_is_running:
+            self.stop_micro_test()
+
+        # Si aucun micro n'est sélectionné, on ne fait rien.
+        if audio_device is None:
+            self.micro_level_changed.emit(0)
+            return
+
+        # Format audio simple pour mesurer le volume.
+        audio_format = QAudioFormat()
+        audio_format.setSampleRate(44100)
+        audio_format.setChannelCount(1)
+        audio_format.setSampleFormat(QAudioFormat.SampleFormat.Int16)
+
+        # Si le micro ne supporte pas ce format, on prend son format préféré.
+        if not audio_device.isFormatSupported(audio_format):
+            audio_format = audio_device.preferredFormat()
+
+        # On garde le format utilisé pour savoir comment interpréter les données.
+        self.audio_format = audio_format
+
+        # Création de la source audio avec le micro sélectionné.
+        self.audio_source = QAudioSource(audio_device, self.audio_format)
+
+        # Démarre la capture audio.
+        self.audio_io_device = self.audio_source.start()
+
+        # Si Qt n'arrive pas à ouvrir le flux, on remet la barre à zéro.
+        if self.audio_io_device is None:
+            self.micro_level_changed.emit(0)
+            return
+
+        # Active la lecture périodique du niveau sonore.
+        self.micro_level_timer.start()
+
+        # Indique que le test micro est actif.
+        self.micro_test_is_running = True
+
+    
+    def stop_micro_test(self):
+        """
+        Arrête proprement le test micro.
+        """
+
+        # Arrête le timer de mesure.
+        self.micro_level_timer.stop()
+
+        # Arrête la source audio si elle existe.
+        if self.audio_source is not None:
+            self.audio_source.stop()
+            self.audio_source = None
+
+        # Nettoie les références.
+        self.audio_io_device = None
+        self.audio_format = None
+
+        # Indique que le test micro n'est plus actif.
+        self.micro_test_is_running = False
+
+        # Remet la barre à zéro.
+        self.micro_level_changed.emit(0)
+
+
+    def process_micro_level(self):
+        """
+        Lit les données audio disponibles et calcule le niveau du micro.
+        """
+
+        # Si le flux audio n'existe pas, on quitte.
+        if self.audio_io_device is None:
+            return
+
+        # Nombre d'octets actuellement disponibles dans le flux.
+        bytes_available = self.audio_io_device.bytesAvailable()
+
+        # S'il n'y a rien à lire, on quitte.
+        if bytes_available <= 0:
+            return
+
+        # Lecture des données audio brutes.
+        audio_data = self.audio_io_device.read(bytes_available)
+
+        # Si aucune donnée n'a été lue, on quitte.
+        if not audio_data:
+            return
+
+        # Calcule un niveau entre 0 et 100.
+        level = self.calculate_audio_level(audio_data)
+
+        # Envoie le niveau à l'interface.
+        self.micro_level_changed.emit(level)
+    
+    
+    def calculate_audio_level(self, audio_data):
+        """
+        Calcule un niveau sonore de 0 à 100 à partir de données audio Int16.
+        """
+
+        # On part sur des échantillons Int16, donc 2 octets par échantillon.
+        sample_count = len(audio_data) // 2
+
+        # S'il n'y a pas assez de données, le niveau est nul.
+        if sample_count == 0:
+            return 0
+
+        # On tronque les données pour éviter un nombre impair d'octets.
+        usable_audio_data = audio_data[:sample_count * 2]
+
+        # Conversion des octets en entiers signés 16 bits.
+        samples = struct.unpack("<" + "h" * sample_count, usable_audio_data)
+
+        # Calcul du RMS, qui représente mieux le volume moyen qu'un simple pic.
+        square_sum = 0
+
+        for sample in samples:
+            square_sum += sample * sample
+
+        rms = math.sqrt(square_sum / sample_count)
+
+        # Valeur maximale possible pour un échantillon Int16.
+        max_int16 = 32767
+
+        # Conversion en pourcentage.
+        level = int((rms / max_int16) * 100)
+
+        # Sécurité : on limite entre 0 et 100.
+        level = max(0, min(level, 100))
+
+        return level
+    
+    # -----------------------------------------------------------------

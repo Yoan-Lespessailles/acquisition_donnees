@@ -16,14 +16,15 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QHBoxLayout, QLabel,
-    QMainWindow, QMenuBar, QPushButton, QSizePolicy,
-    QSpacerItem, QStatusBar, QVBoxLayout, QWidget)
+    QMainWindow, QMenuBar, QProgressBar, QPushButton,
+    QSizePolicy, QSpacerItem, QStatusBar, QVBoxLayout,
+    QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(868, 514)
+        MainWindow.resize(820, 595)
         MainWindow.setStyleSheet(u"")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -93,38 +94,83 @@ class Ui_MainWindow(object):
         self.area_menu.setSizePolicy(sizePolicy)
         self.verticalLayout = QVBoxLayout(self.area_menu)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.area_settings = QWidget(self.area_menu)
-        self.area_settings.setObjectName(u"area_settings")
-        self.verticalLayout_2 = QVBoxLayout(self.area_settings)
+        self.area_micro = QWidget(self.area_menu)
+        self.area_micro.setObjectName(u"area_micro")
+        self.verticalLayout_7 = QVBoxLayout(self.area_micro)
+        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.area_micro_selection = QWidget(self.area_micro)
+        self.area_micro_selection.setObjectName(u"area_micro_selection")
+        self.verticalLayout_2 = QVBoxLayout(self.area_micro_selection)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.label_select_micro = QLabel(self.area_settings)
-        self.label_select_micro.setObjectName(u"label_select_micro")
+        self.label_micro = QLabel(self.area_micro_selection)
+        self.label_micro.setObjectName(u"label_micro")
         font1 = QFont()
         font1.setFamilies([u"Roboto"])
-        self.label_select_micro.setFont(font1)
+        self.label_micro.setFont(font1)
 
-        self.verticalLayout_2.addWidget(self.label_select_micro)
+        self.verticalLayout_2.addWidget(self.label_micro)
 
-        self.select_micro = QComboBox(self.area_settings)
+        self.select_micro = QComboBox(self.area_micro_selection)
         self.select_micro.setObjectName(u"select_micro")
         self.select_micro.setFont(font1)
+        self.select_micro.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
         self.verticalLayout_2.addWidget(self.select_micro)
 
-        self.label_select_camera = QLabel(self.area_settings)
+
+        self.verticalLayout_7.addWidget(self.area_micro_selection)
+
+        self.area_micro_test = QWidget(self.area_micro)
+        self.area_micro_test.setObjectName(u"area_micro_test")
+        self.verticalLayout_6 = QVBoxLayout(self.area_micro_test)
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.button_test_micro = QPushButton(self.area_micro_test)
+        self.button_test_micro.setObjectName(u"button_test_micro")
+        self.button_test_micro.setFont(font1)
+        self.button_test_micro.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.button_test_micro.setTabletTracking(False)
+        self.button_test_micro.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
+
+        self.verticalLayout_6.addWidget(self.button_test_micro)
+
+        self.label_micro_state = QLabel(self.area_micro_test)
+        self.label_micro_state.setObjectName(u"label_micro_state")
+        self.label_micro_state.setFont(font1)
+
+        self.verticalLayout_6.addWidget(self.label_micro_state)
+
+        self.progressbar_micro_level = QProgressBar(self.area_micro_test)
+        self.progressbar_micro_level.setObjectName(u"progressbar_micro_level")
+        self.progressbar_micro_level.setFont(font1)
+        self.progressbar_micro_level.setValue(0)
+
+        self.verticalLayout_6.addWidget(self.progressbar_micro_level)
+
+
+        self.verticalLayout_7.addWidget(self.area_micro_test)
+
+
+        self.verticalLayout.addWidget(self.area_micro)
+
+        self.widget = QWidget(self.area_menu)
+        self.widget.setObjectName(u"widget")
+        self.verticalLayout_5 = QVBoxLayout(self.widget)
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.label_select_camera = QLabel(self.widget)
         self.label_select_camera.setObjectName(u"label_select_camera")
         self.label_select_camera.setFont(font1)
 
-        self.verticalLayout_2.addWidget(self.label_select_camera)
+        self.verticalLayout_5.addWidget(self.label_select_camera)
 
-        self.select_camera = QComboBox(self.area_settings)
+        self.select_camera = QComboBox(self.widget)
         self.select_camera.setObjectName(u"select_camera")
         self.select_camera.setFont(font1)
+        self.select_camera.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
-        self.verticalLayout_2.addWidget(self.select_camera)
+        self.verticalLayout_5.addWidget(self.select_camera)
 
 
-        self.verticalLayout.addWidget(self.area_settings)
+        self.verticalLayout.addWidget(self.widget)
 
         self.area_language = QWidget(self.area_menu)
         self.area_language.setObjectName(u"area_language")
@@ -138,6 +184,7 @@ class Ui_MainWindow(object):
 
         self.select_language = QComboBox(self.area_language)
         self.select_language.setObjectName(u"select_language")
+        self.select_language.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
         self.horizontalLayout_2.addWidget(self.select_language)
 
@@ -185,6 +232,7 @@ class Ui_MainWindow(object):
         self.button_record.setObjectName(u"button_record")
         self.button_record.setEnabled(True)
         self.button_record.setFont(font1)
+        self.button_record.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.button_record.setStyleSheet(u"")
 
         self.horizontalLayout.addWidget(self.button_record)
@@ -200,16 +248,20 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 868, 23))
+        self.menubar.setGeometry(QRect(0, 0, 820, 23))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
         MainWindow.setStatusBar(self.statusbar)
 #if QT_CONFIG(shortcut)
-        self.label_select_micro.setBuddy(self.select_micro)
+        self.label_micro.setBuddy(self.select_micro)
         self.label_select_camera.setBuddy(self.select_camera)
         self.label_select_language.setBuddy(self.select_camera)
 #endif // QT_CONFIG(shortcut)
+        QWidget.setTabOrder(self.select_micro, self.button_test_micro)
+        QWidget.setTabOrder(self.button_test_micro, self.select_camera)
+        QWidget.setTabOrder(self.select_camera, self.select_language)
+        QWidget.setTabOrder(self.select_language, self.button_record)
 
         self.retranslateUi(MainWindow)
 
@@ -220,7 +272,9 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.label_record_timer.setText("")
         self.label_record_dot.setText("")
-        self.label_select_micro.setText(QCoreApplication.translate("MainWindow", u"Micro :", None))
+        self.label_micro.setText(QCoreApplication.translate("MainWindow", u"Micro :", None))
+        self.button_test_micro.setText(QCoreApplication.translate("MainWindow", u"Test micro", None))
+        self.label_micro_state.setText(QCoreApplication.translate("MainWindow", u"Niveau du micro :", None))
         self.label_select_camera.setText(QCoreApplication.translate("MainWindow", u"Camera :", None))
         self.label_select_language.setText(QCoreApplication.translate("MainWindow", u"Language :", None))
         self.label_cpt_sentence.setText("")
