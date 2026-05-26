@@ -1,6 +1,9 @@
 import av
+
 from av.audio.stream import AudioStream
 from av.video.stream import VideoStream
+
+from pathlib import Path
 
 from PySide6.QtMultimedia import QMediaFormat
 
@@ -98,6 +101,11 @@ def extract_video_metadata(video_filepath):
     Retourne :
         un dictionnaire contenant les informations utiles pour l'annotation.
     """
+    
+
+    # Convertit le chemin reçu en objet Path.
+    # Cela permet de ne pas avoir d'erreurs de Pylance
+    video_filepath = Path(video_filepath)
 
     # Ouvre le fichier vidéo.
     container = av.open(str(video_filepath))
@@ -105,8 +113,8 @@ def extract_video_metadata(video_filepath):
     # Récupère la taille réelle du fichier vidéo en octets.
     file_size_bytes = video_filepath.stat().st_size
 
-    # Récupère le nom du format/conteneur détecté par PyAV.
-    format_name = container.format.name if container.format is not None else None
+    # Récupère le format enregistré à partir de l'extension du fichier.
+    video_format = video_filepath.suffix.replace(".", "").lower()
 
     # Récupère la durée globale du conteneur.
     # PyAV exprime souvent la durée en microsecondes via container.duration.
@@ -164,7 +172,7 @@ def extract_video_metadata(video_filepath):
 
     return {
         "file_size_bytes": file_size_bytes,
-        "format_name": format_name,
+        "video_format": video_format,
 
         "duration_seconds": duration_seconds,
 

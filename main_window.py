@@ -21,6 +21,8 @@ from annotation_manager import AnnotationManager
 
 from utils.media_utils import extract_video_metadata
 
+from PySide6.QtCore import QTimer
+
 class MyWindow(QMainWindow, Ui_MainWindow):
     """
     Fenêtre principale de l'application.
@@ -372,7 +374,21 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.recording_indicator.stop()
         self.recording_indicator.hide()
 
+
+        # Attend un peu avant de lire le fichier MP4.
+        # Cela laisse le temps à Qt de finaliser le conteneur vidéo.
+        QTimer.singleShot(500, self.finalize_recording)
+
+
        
+    def finalize_recording(self):
+        """
+        Finalise le traitement après l'arrêt de l'enregistrement.
+
+        Cette méthode est appelée après un court délai pour laisser le temps
+        au fichier MP4 d'être complètement écrit.
+        """
+        
         file_name = self.media_manager.file_name
         video_path = self.media_manager.recording_output_location.toLocalFile()
         annotation_file_path = self.media_manager.annotation_filepath
@@ -400,7 +416,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             camera_name,
             microphone_name,
             video_metadata["file_size_bytes"],
-            video_metadata["format_name"],
+            video_metadata["video_format"],
             video_metadata["duration_seconds"],
             video_metadata["video_codec"],
             video_metadata["video_width"],
@@ -418,5 +434,6 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # Affiche la phrase suivante.
         self.display_current_sentence()
+
 
     # -----------------------------------------------------------------

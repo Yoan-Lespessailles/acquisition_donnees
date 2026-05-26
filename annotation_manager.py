@@ -23,9 +23,9 @@ class AnnotationManager:
             "machine_name",
             "operating_system",
             "video_path",
-            "file_path",
+            "annotation_path",
             "file_size_bytes",
-            "format_name",
+            "video_format",
             "camera_name",
             "microphone_name",
             "duration_seconds",
@@ -42,7 +42,7 @@ class AnnotationManager:
             "language_name",
             "sentence",
             "template_type",
-            "recorded_at"
+            "recorded_at",
             "status"
         ]
     
@@ -58,7 +58,7 @@ class AnnotationManager:
         camera_name,
         microphone_name,
         file_size_bytes,
-        format_name,
+        video_format,
         duration_seconds,
         video_codec,
         video_width,
@@ -87,7 +87,7 @@ class AnnotationManager:
             microphone_name : nom du micro utilisé pour l'enregistrement.
 
             file_size_bytes : taille réelle du fichier vidéo en octets.
-            format_name : format/conteneur détecté dans le fichier vidéo.
+            video_format : format/conteneur détecté dans le fichier vidéo.
             duration_seconds : durée réelle de la vidéo en secondes.
 
             video_codec : codec vidéo réellement utilisé dans le fichier.
@@ -125,10 +125,10 @@ class AnnotationManager:
                 "file_name": file_name,
                 "machine_name": self.machine_name,
                 "operating_system": self.operating_system,
-                "video_path": video_path,
-                "file_path": str(annotation_file_path),
+                "video_path": str(video_path),
+                "annotation_path": str(annotation_file_path),
                 "file_size_bytes": file_size_bytes,
-                "format_name": format_name,
+                "video_format": video_format,
                 "camera_name": camera_name,
                 "microphone_name": microphone_name,
                 "duration_seconds": duration_seconds,

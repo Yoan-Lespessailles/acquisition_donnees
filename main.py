@@ -1,3 +1,9 @@
+# Important :
+# PyAV doit être importé avant PySide6.QtMultimedia.
+# Sinon, certaines bibliothèques natives multimédia peuvent être chargées
+# dans un ordre qui provoque une erreur libgobject / glib.
+import av
+
 import sys
 
 from PySide6.QtWidgets import QApplication
