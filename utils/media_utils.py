@@ -1,4 +1,10 @@
+import av
+from av.audio.stream import AudioStream
+from av.video.stream import VideoStream
+
 from PySide6.QtMultimedia import QMediaFormat
+
+
 
 def get_camera_format_score(camera_format):
     """
@@ -80,3 +86,96 @@ def create_recording_media_format(preferred_video_codec):
     media_format.setAudioCodec(QMediaFormat.AudioCodec.AAC)
 
     return media_format
+
+
+def extract_video_metadata(video_filepath):
+    """
+    Extrait les métadonnées réelles d'un fichier vidéo avec PyAV.
+
+    Paramètres :
+        video_filepath : chemin du fichier vidéo à analyser.
+
+    Retourne :
+        un dictionnaire contenant les informations utiles pour l'annotation.
+    """
+
+    # Ouvre le fichier vidéo.
+    container = av.open(str(video_filepath))
+
+    # Récupère la taille réelle du fichier vidéo en octets.
+    file_size_bytes = video_filepath.stat().st_size
+
+    # Récupère le nom du format/conteneur détecté par PyAV.
+    format_name = container.format.name if container.format is not None else None
+
+    # Récupère la durée globale du conteneur.
+    # PyAV exprime souvent la durée en microsecondes via container.duration.
+    duration_seconds = None
+    if container.duration is not None:
+        duration_seconds = round(container.duration / 1_000_000, 3)
+
+    # Recherche la première piste vidéo.
+    # container.streams.video est typé par PyAV comme une liste de VideoStream.
+    # Cela évite les fausses erreurs de l'IDE sur .width, .height, etc.
+    if container.streams.video:
+        video_stream: VideoStream | None = container.streams.video[0]
+    else:
+        video_stream = None
+
+    # Recherche la première piste audio.
+    # container.streams.audio est typé par PyAV comme une liste de AudioStream.
+    # Cela évite les fausses erreurs de l'IDE sur .channels, .sample_rate, etc.
+    if container.streams.audio:
+        audio_stream: AudioStream | None = container.streams.audio[0]
+    else:
+        audio_stream = None
+
+    # Métadonnées vidéo.
+    video_codec = None
+    video_width = None
+    video_height = None
+    video_fps = None
+    video_bitrate = None
+
+    if video_stream is not None:
+        video_codec = video_stream.codec_context.name
+        video_width = video_stream.width
+        video_height = video_stream.height
+        video_bitrate = video_stream.codec_context.bit_rate
+
+        # average_rate peut être une fraction, par exemple 30/1 ou 30000/1001.
+        if video_stream.average_rate is not None:
+            video_fps = float(video_stream.average_rate)
+
+    # Métadonnées audio.
+    audio_codec = None
+    audio_sample_rate = None
+    audio_channels = None
+    audio_bitrate = None
+
+    if audio_stream is not None:
+        audio_codec = audio_stream.codec_context.name
+        audio_sample_rate = audio_stream.codec_context.sample_rate
+        audio_channels = audio_stream.codec_context.channels
+        audio_bitrate = audio_stream.codec_context.bit_rate
+
+    # Ferme le conteneur proprement.
+    container.close()
+
+    return {
+        "file_size_bytes": file_size_bytes,
+        "format_name": format_name,
+
+        "duration_seconds": duration_seconds,
+
+        "video_codec": video_codec,
+        "video_width": video_width,
+        "video_height": video_height,
+        "video_fps": video_fps,
+        "video_bitrate": video_bitrate,
+
+        "audio_codec": audio_codec,
+        "audio_sample_rate": audio_sample_rate,
+        "audio_channels": audio_channels,
+        "audio_bitrate": audio_bitrate,
+    }

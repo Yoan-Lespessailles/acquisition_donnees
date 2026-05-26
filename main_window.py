@@ -19,6 +19,8 @@ from recording_indicator import RecordingIndicator
 # Gestion du fichier d'annotations
 from annotation_manager import AnnotationManager
 
+from utils.media_utils import extract_video_metadata
+
 class MyWindow(QMainWindow, Ui_MainWindow):
     """
     Fenêtre principale de l'application.
@@ -385,11 +387,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         camera_name = selected_camera.description() if selected_camera is not None else "unknown"
         microphone_name = selected_microphone.description() if selected_microphone is not None else "unknown"
 
-        video_width = self.media_manager.video_width
-        video_height = self.media_manager.video_height
-        video_fps = self.media_manager.video_fps
-        video_bitrate = self.media_manager.video_bitrate
-        audio_bitrate = self.media_manager.audio_bitrate
+        video_metadata = extract_video_metadata(self.media_manager.video_filepath)
 
         self.annotation_manager.save_annotation(
             annotation_file_path, 
@@ -401,11 +399,18 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             template_type,
             camera_name,
             microphone_name,
-            video_width,
-            video_height,
-            video_fps,
-            video_bitrate,
-            audio_bitrate
+            video_metadata["file_size_bytes"],
+            video_metadata["format_name"],
+            video_metadata["duration_seconds"],
+            video_metadata["video_codec"],
+            video_metadata["video_width"],
+            video_metadata["video_height"],
+            video_metadata["video_fps"],
+            video_metadata["video_bitrate"],
+            video_metadata["audio_codec"],
+            video_metadata["audio_sample_rate"],
+            video_metadata["audio_channels"],
+            video_metadata["audio_bitrate"]
             )
 
         # Supprime du corpus la phrase qui vient d'être lue.
