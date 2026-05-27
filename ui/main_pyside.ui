@@ -153,6 +153,12 @@ border-radius: 10px;</string>
              </item>
              <item>
               <widget class="QComboBox" name="select_micro">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="font">
                 <font>
                  <family>Roboto</family>
@@ -171,6 +177,12 @@ border-radius: 10px;</string>
             <layout class="QVBoxLayout" name="verticalLayout_6">
              <item>
               <widget class="QPushButton" name="button_test_micro">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="font">
                 <font>
                  <family>Roboto</family>
@@ -204,6 +216,12 @@ border-radius: 10px;</string>
              </item>
              <item>
               <widget class="QProgressBar" name="progressbar_micro_level">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="font">
                 <font>
                  <family>Roboto</family>
@@ -211,6 +229,9 @@ border-radius: 10px;</string>
                </property>
                <property name="value">
                 <number>0</number>
+               </property>
+               <property name="textVisible">
+                <bool>false</bool>
                </property>
               </widget>
              </item>
@@ -240,6 +261,12 @@ border-radius: 10px;</string>
           </item>
           <item>
            <widget class="QComboBox" name="select_camera">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="font">
              <font>
               <family>Roboto</family>
@@ -255,7 +282,7 @@ border-radius: 10px;</string>
        </item>
        <item>
         <widget class="QWidget" name="area_language" native="true">
-         <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,5">
+         <layout class="QVBoxLayout" name="verticalLayout_8" stretch="0,0">
           <item>
            <widget class="QLabel" name="label_select_language">
             <property name="font">
@@ -273,6 +300,17 @@ border-radius: 10px;</string>
           </item>
           <item>
            <widget class="QComboBox" name="select_language">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <family>Roboto</family>
+             </font>
+            </property>
             <property name="cursor">
              <cursorShape>PointingHandCursor</cursorShape>
             </property>
@@ -340,6 +378,12 @@ border-radius: 10px;</string>
            <widget class="QPushButton" name="button_record">
             <property name="enabled">
              <bool>true</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
             <property name="font">
              <font>

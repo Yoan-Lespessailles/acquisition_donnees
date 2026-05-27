@@ -112,6 +112,8 @@ class Ui_MainWindow(object):
 
         self.select_micro = QComboBox(self.area_micro_selection)
         self.select_micro.setObjectName(u"select_micro")
+        sizePolicy.setHeightForWidth(self.select_micro.sizePolicy().hasHeightForWidth())
+        self.select_micro.setSizePolicy(sizePolicy)
         self.select_micro.setFont(font1)
         self.select_micro.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
@@ -126,6 +128,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
         self.button_test_micro = QPushButton(self.area_micro_test)
         self.button_test_micro.setObjectName(u"button_test_micro")
+        sizePolicy.setHeightForWidth(self.button_test_micro.sizePolicy().hasHeightForWidth())
+        self.button_test_micro.setSizePolicy(sizePolicy)
         self.button_test_micro.setFont(font1)
         self.button_test_micro.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.button_test_micro.setTabletTracking(False)
@@ -141,8 +145,11 @@ class Ui_MainWindow(object):
 
         self.progressbar_micro_level = QProgressBar(self.area_micro_test)
         self.progressbar_micro_level.setObjectName(u"progressbar_micro_level")
+        sizePolicy.setHeightForWidth(self.progressbar_micro_level.sizePolicy().hasHeightForWidth())
+        self.progressbar_micro_level.setSizePolicy(sizePolicy)
         self.progressbar_micro_level.setFont(font1)
         self.progressbar_micro_level.setValue(0)
+        self.progressbar_micro_level.setTextVisible(False)
 
         self.verticalLayout_6.addWidget(self.progressbar_micro_level)
 
@@ -164,6 +171,8 @@ class Ui_MainWindow(object):
 
         self.select_camera = QComboBox(self.widget)
         self.select_camera.setObjectName(u"select_camera")
+        sizePolicy.setHeightForWidth(self.select_camera.sizePolicy().hasHeightForWidth())
+        self.select_camera.setSizePolicy(sizePolicy)
         self.select_camera.setFont(font1)
         self.select_camera.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
@@ -174,22 +183,23 @@ class Ui_MainWindow(object):
 
         self.area_language = QWidget(self.area_menu)
         self.area_language.setObjectName(u"area_language")
-        self.horizontalLayout_2 = QHBoxLayout(self.area_language)
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.verticalLayout_8 = QVBoxLayout(self.area_language)
+        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.label_select_language = QLabel(self.area_language)
         self.label_select_language.setObjectName(u"label_select_language")
         self.label_select_language.setFont(font1)
 
-        self.horizontalLayout_2.addWidget(self.label_select_language)
+        self.verticalLayout_8.addWidget(self.label_select_language)
 
         self.select_language = QComboBox(self.area_language)
         self.select_language.setObjectName(u"select_language")
+        sizePolicy.setHeightForWidth(self.select_language.sizePolicy().hasHeightForWidth())
+        self.select_language.setSizePolicy(sizePolicy)
+        self.select_language.setFont(font1)
         self.select_language.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
-        self.horizontalLayout_2.addWidget(self.select_language)
+        self.verticalLayout_8.addWidget(self.select_language)
 
-        self.horizontalLayout_2.setStretch(0, 1)
-        self.horizontalLayout_2.setStretch(1, 5)
 
         self.verticalLayout.addWidget(self.area_language)
 
@@ -231,6 +241,8 @@ class Ui_MainWindow(object):
         self.button_record = QPushButton(self.area_button)
         self.button_record.setObjectName(u"button_record")
         self.button_record.setEnabled(True)
+        sizePolicy.setHeightForWidth(self.button_record.sizePolicy().hasHeightForWidth())
+        self.button_record.setSizePolicy(sizePolicy)
         self.button_record.setFont(font1)
         self.button_record.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.button_record.setStyleSheet(u"")

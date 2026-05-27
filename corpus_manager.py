@@ -131,10 +131,7 @@ class CorpusManager:
         if not corpus_loaded:
             return False
 
-        if not CONFIG["sentence"]["only_generated"] :
-            self.sentence_total = CONFIG["sentence"]["total"]
-        else :
-            self.sentence_total = self.total_sentences()
+        self.sentence_total = self.total_sentences()
 
         self.shuffle_corpus()
         self.reset_session()

@@ -1,8 +1,12 @@
 # QMainWindow est la classe de base de la fenêtre principale.
-from PySide6.QtWidgets import QMainWindow
+from PySide6.QtWidgets import QMainWindow, QSizePolicy
 
 # Slot permet de déclarer explicitement certaines méthodes connectées aux signaux Qt.
 from PySide6.QtCore import Slot, QTimer, Qt
+
+# QFontMetrics permet de mesurer la place prise par un texte avec une police donnée.
+# On l'utilise pour choisir automatiquement une taille de police qui rentre dans un QLabel.
+from PySide6.QtGui import QFontMetrics
 
 # Interface générée depuis Qt Designer.
 from ui.ui_main_pyside6 import Ui_MainWindow
@@ -47,6 +51,8 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Charge l'interface créée avec Qt Designer
         self.setupUi(self)
 
+        # Le QSS garde les couleurs, bordures et espacements.
+        # Les tailles de police restent gérées en Python par le système responsive.
         self.setStyleSheet("""
                            
             #button_record[recording="false"], #button_record[recording="true"]{   
@@ -54,7 +60,6 @@ class MyWindow(QMainWindow, Ui_MainWindow):
                 border: none;
                 border-radius: 10px;
                 padding: 12px;
-                font-size: 16px;
             }
 
             #button_record[recording="false"]:hover {
@@ -132,11 +137,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         
         """)
 
-        # Centre le bouton horizontalement dans le layout de area_micro_test.
-        self.area_micro_test.layout().setAlignment(self.button_test_micro, Qt.AlignmentFlag.AlignHCenter) # type: ignore
-
-        # Enlève le texte sur la progressbar
-        self.progressbar_micro_level.setTextVisible(False)
+        # Configure les tailles, alignements et comportements responsive.
+        # Cette méthode prépare les widgets, puis applique un premier calcul de taille.
+        self.configure_responsive_ui()
 
         # Active le QSS
         self.button_record.setProperty("recording", False)
@@ -156,6 +159,238 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # Affiche la première phrase si un corpus est disponible.
         self.display_current_sentence()
+
+
+    def configure_responsive_ui(self):
+        """
+        Configure l'interface pour que les textes suivent la taille de la fenêtre.
+        """
+
+        # Widgets texte simples : ils partagent une taille de police de base.
+        # On les garde séparés des ComboBox et boutons car ces widgets ont aussi
+        # besoin d'une hauteur minimale adaptée.
+        self._standard_text_widgets = [
+            self.label_select_language,
+            self.label_micro,
+            self.label_select_camera,
+            self.label_micro_state,
+            self.label_cpt_sentence,
+            self.label_record_timer,
+        ]
+
+        # ComboBox qui doivent suivre la taille de la fenêtre.
+        # La police et la hauteur sont recalculées ensemble.
+        self._responsive_combo_boxes = [
+            self.select_micro,
+            self.select_camera,
+            self.select_language,
+        ]
+
+        # Boutons responsives.
+        # button_record est traité plus bas avec une taille plus imposante.
+        self._responsive_buttons = [
+            self.button_test_micro,
+            self.button_record,
+        ]
+
+        # Les labels courts peuvent revenir à la ligne si la fenêtre devient étroite.
+        # Leur QSizePolicy leur permet de s'étendre horizontalement sans imposer
+        # une largeur fixe au layout.
+        for label in self._standard_text_widgets :
+            label.setWordWrap(True)
+            label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+
+        # La phrase à lire est l'élément principal de l'interface :
+        # elle prend l'espace disponible et reste centrée dans sa zone.
+        self.label_sentence.setWordWrap(True)
+        self.label_sentence.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label_sentence.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Expanding,
+        )
+        self.label_sentence.setMinimumHeight(70)
+
+        # Hauteurs minimales de départ.
+        # Elles seront ensuite ajustées plus finement dans update_responsive_text_sizes().
+        self.button_test_micro.setMinimumHeight(34)
+        self.button_record.setMinimumHeight(48)
+        self.progressbar_micro_level.setFixedHeight(20)
+
+
+        # Centre le bouton de test micro dans sa zone si le layout existe bien.
+        layout_micro_test = self.area_micro_test.layout()
+        if layout_micro_test is not None:
+            layout_micro_test.setAlignment(
+                self.button_test_micro,
+                Qt.AlignmentFlag.AlignHCenter,
+            )
+
+        # Premier calcul responsive.
+        # Il sera refait après l'affichage réel de la fenêtre dans showEvent().
+        self.update_responsive_text_sizes()
+
+
+    def resizeEvent(self, event):
+        """
+        Recalcule les tailles de texte à chaque redimensionnement de la fenêtre.
+        """
+
+        super().resizeEvent(event)
+        if hasattr(self, "_standard_text_widgets"):
+            # Chaque changement de taille de fenêtre relance le calcul des polices.
+            self.update_responsive_text_sizes()
+
+
+    def showEvent(self, event):
+        """
+        Applique le responsive une fois que Qt connaît la géométrie réelle.
+        """
+
+        super().showEvent(event)
+        if hasattr(self, "_standard_text_widgets"):
+            # Au lancement, Qt ne connaît pas toujours les tailles finales des widgets
+            # pendant __init__. singleShot(0, ...) reporte le calcul juste après le
+            # premier passage de layout, lorsque les dimensions sont stabilisées.
+            QTimer.singleShot(0, self.update_responsive_text_sizes)
+
+
+    def update_responsive_text_sizes(self):
+        """
+        Adapte les tailles de police aux dimensions actuelles de la fenêtre.
+        """
+
+        # Echelle globale basée sur la taille initiale créée dans Qt Designer.
+        # La valeur est bornée pour éviter des textes trop petits ou trop grands.
+        scale = max(0.75, min(1.45, min(self.width() / 820, self.height() / 595)))
+
+        # Tailles de police calculées par catégorie de widgets.
+        # Le bouton principal d'enregistrement est volontairement plus grand.
+        standard_size = round(10 * scale)
+        counter_size = round(9 * scale)
+        combo_size = round(10 * scale)
+        test_button_size = round(11 * scale)
+        record_button_size = round(14 * scale)
+        record_dot_size = max(12, round(20 * scale))
+
+        # Labels standards : police de base, avec une taille légèrement plus discrète
+        # pour le compteur de phrases.
+        for widget in self._standard_text_widgets:
+            font_size = standard_size
+            if widget is self.label_cpt_sentence:
+                font_size = counter_size
+
+            self.set_widget_font_size(widget, font_size)
+
+        # ComboBox : on adapte la police mais aussi la hauteur, sinon le texte peut
+        # sembler compressé verticalement lorsque la police augmente.
+        for combo_box in self._responsive_combo_boxes:
+            self.set_widget_font_size(combo_box, combo_size)
+            combo_box.setMinimumHeight(max(26, round(30 * scale)))
+
+        # Boutons : le bouton d'enregistrement reçoit une taille plus imposante
+        # que le bouton de test micro pour rester visuellement prioritaire.
+        for button in self._responsive_buttons:
+            if button is self.button_record:
+                font_size = record_button_size
+                button.setMinimumHeight(max(44, round(56 * scale)))
+            else:
+                font_size = test_button_size
+                button.setMinimumHeight(max(32, round(38 * scale)))
+
+            self.set_widget_font_size(button, font_size)
+
+        # Le rond rouge REC suit aussi la taille de la fenêtre.
+        self.set_record_dot_size(record_dot_size)
+
+        # La phrase principale est ajustée selon l'espace réellement disponible
+        # dans son QLabel, pas seulement selon la taille globale de la fenêtre.
+        self.fit_label_text(
+            self.label_sentence,
+            min_size=max(10, round(12 * scale)),
+            max_size=max(18, round(28 * scale)),
+        )
+
+
+    def set_widget_font_size(self, widget, point_size):
+        """
+        Applique une taille de police sans changer la famille ni le gras existants.
+        """
+
+        font = widget.font()
+
+        # Evite de réappliquer exactement la même taille à chaque resize.
+        if font.pointSize() == point_size:
+            return
+
+        font.setPointSize(point_size)
+        widget.setFont(font)
+
+
+    def set_record_dot_size(self, size):
+        """
+        Ajuste le rond rouge d'enregistrement en gardant une forme circulaire.
+        """
+
+        # setFixedSize force la largeur et la hauteur à rester identiques.
+        self.label_record_dot.setFixedSize(size, size)
+
+        # Le rayon vaut la moitié de la taille : le QLabel reste donc un cercle.
+        self.label_record_dot.setStyleSheet(
+            f"background-color: red; border-radius: {size // 2}px;"
+        )
+
+
+    def fit_label_text(self, label, min_size, max_size):
+        """
+        Choisit la plus grande taille de police qui tient dans le QLabel.
+        """
+
+        text = label.text()
+        if not text:
+            # Si le label est vide, on garde la taille maximale possible.
+            self.set_widget_font_size(label, max_size)
+            return
+
+        # contentsRect correspond à la zone réellement utilisable par le texte.
+        # On retire quelques pixels pour éviter que le texte colle aux bords.
+        contents = label.contentsRect()
+        available_width = max(20, contents.width() - 8)
+        available_height = max(20, contents.height() - 8)
+
+        # Flags utilisés par QFontMetrics pour mesurer le texte comme Qt l'affichera :
+        # centré et autorisé à revenir à la ligne.
+        text_flags = (
+            Qt.TextFlag.TextWordWrap.value
+            | Qt.AlignmentFlag.AlignCenter.value
+        )
+
+        best_size = min_size
+
+        # On teste les tailles de la plus grande à la plus petite.
+        # La première qui tient dans la hauteur disponible devient la taille retenue.
+        for point_size in range(max_size, min_size - 1, -1):
+            font = label.font()
+            font.setPointSize(point_size)
+            font.setBold(True)
+            metrics = QFontMetrics(font)
+            text_rect = metrics.boundingRect(
+                0,
+                0,
+                available_width,
+                10000,
+                text_flags,
+                text,
+            )
+
+            if text_rect.height() <= available_height:
+                best_size = point_size
+                break
+
+        # Applique la taille retenue à la phrase principale.
+        font = label.font()
+        font.setPointSize(best_size)
+        font.setBold(True)
+        label.setFont(font)
 
        
     # ========== INITIALISATION DES GESTIONNAIRES ==========
@@ -238,6 +473,10 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             self.button_record.setEnabled(False)
             self.label_sentence.setText("Aucun corpus disponible")
             self.label_cpt_sentence.setText("0/0")
+
+            # Le message d'erreur remplace une phrase normale :
+            # on relance donc le calcul pour adapter sa taille au label.
+            self.update_responsive_text_sizes()
             return
 
         # Sélectionne la première langue par défaut.
@@ -282,6 +521,10 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # Affiche le compteur.
         self.label_cpt_sentence.setText(self.corpus_manager.get_sentence_counter_text())
+
+        # Le texte peut avoir une longueur très différente d'une phrase à l'autre.
+        # On recalcule donc la taille de police après chaque changement de phrase.
+        self.update_responsive_text_sizes()
 
         # Lorsque toutes les phrases sont consommées, on désactive le bouton.
         self.button_record.setEnabled(not self.corpus_manager.is_session_finished())       
@@ -340,6 +583,13 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Si l'utilisateur n'a pas désactiver le test micro, on l'arrête pour éviter des conflits
         if self.media_manager.micro_test_is_running:
             self.media_manager.stop_micro_test()
+
+            # Remet la propriété QSS du bouton de test dans son état inactif.
+            self.button_test_micro.setProperty("testing", False)
+
+            # Force Qt à recalculer le style du bouton.
+            self.update_style(self.button_test_micro)
+
 
         # Si aucun enregistrement n'est en cours, on démarre.
         if not self.is_recording:
