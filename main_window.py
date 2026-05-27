@@ -23,8 +23,6 @@ from recording_indicator import RecordingIndicator
 # Gestion du fichier d'annotations
 from annotation_manager import AnnotationManager
 
-from utils.media_utils import extract_video_metadata
-
 
 class MyWindow(QMainWindow, Ui_MainWindow):
     """
@@ -692,45 +690,11 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         au fichier MP4 d'être complètement écrit.
         """
         
-        file_name = self.media_manager.file_name
-        video_path = self.media_manager.recording_output_location.toLocalFile()
-        annotation_file_path = self.media_manager.annotation_filepath
-        
-        sentence = self.corpus_manager.current_sentence
-        template_type = self.corpus_manager.current_template_type
-        language_code = self.corpus_manager.language_selected[1] # type: ignore
-        language_name = self.corpus_manager.language_selected[0] # type: ignore
-
-        selected_camera = self.media_manager.get_selected_camera()
-        selected_microphone = self.media_manager.get_selected_microphone()
-        camera_name = selected_camera.description() if selected_camera is not None else "unknown"
-        microphone_name = selected_microphone.description() if selected_microphone is not None else "unknown"
-
-        video_metadata = extract_video_metadata(self.media_manager.video_filepath)
-
-        self.annotation_manager.save_annotation(
-            annotation_file_path, 
-            file_name,
-            video_path,
-            language_code,
-            language_name,
-            sentence,
-            template_type,
-            camera_name,
-            microphone_name,
-            video_metadata["file_size_bytes"],
-            video_metadata["video_format"],
-            video_metadata["duration_seconds"],
-            video_metadata["video_codec"],
-            video_metadata["video_width"],
-            video_metadata["video_height"],
-            video_metadata["video_fps"],
-            video_metadata["video_bitrate"],
-            video_metadata["audio_codec"],
-            video_metadata["audio_sample_rate"],
-            video_metadata["audio_channels"],
-            video_metadata["audio_bitrate"]
-            )
+        # Prépare et sauvegarde l'annotation de l'enregistrement qui vient de se terminer.
+        self.annotation_manager.save_recording_annotation(
+            self.media_manager,
+            self.corpus_manager,
+        )
 
         # Supprime du corpus la phrase qui vient d'être lue.
         self.corpus_manager.consume_current_sentence()
