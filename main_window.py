@@ -1,5 +1,5 @@
 # QMainWindow est la classe de base de la fenêtre principale.
-from PySide6.QtWidgets import QMainWindow, QSizePolicy
+from PySide6.QtWidgets import QMainWindow, QSizePolicy, QMessageBox
 
 # Slot permet de déclarer explicitement certaines méthodes connectées aux signaux Qt.
 from PySide6.QtCore import Slot, QTimer, Qt
@@ -696,11 +696,15 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             self.corpus_manager,
         )
 
-        # Supprime du corpus la phrase qui vient d'être lue.
-        self.corpus_manager.consume_current_sentence()
+        if self.ask_manual_validation():
+            # Supprime du corpus la phrase qui vient d'être lue.
+            self.corpus_manager.consume_current_sentence()
 
-        # Affiche la phrase suivante.
-        self.display_current_sentence()
+            # Affiche la phrase suivante.
+            self.display_current_sentence()
+        
+
+        
 
     # -----------------------------------------------------------------
 
@@ -772,3 +776,15 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # Réapplique le style au widget en tenant compte de ses propriétés actuelles.
         widget.style().polish(widget)
+
+
+    def ask_manual_validation(self):
+        reply = QMessageBox.question(
+            self, # Fenêtre parente
+            "Validation", # Titre de la pop-up
+            "Recording satisfactory ?", # Message affiché
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No, # Boutons proposés
+            QMessageBox.StandardButton.No # Bouton sélectionné par défaut
+        )
+        # Retourne True si l'utilisateur clique sur Oui, sinon False
+        return reply == QMessageBox.StandardButton.Yes

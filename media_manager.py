@@ -1,6 +1,3 @@
-# Permet de manipuler proprement les chemins de fichiers et de dossiers.
-from pathlib import Path
-
 # math sert au calcul RMS du niveau sonore.
 # struct sert à convertir les données audio brutes en échantillons numériques.
 import math
