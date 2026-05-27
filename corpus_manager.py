@@ -45,7 +45,7 @@ class CorpusManager:
         self.current_sentence = ""
 
         # Template de la phrase actuellement affichée.
-        self.current_template_type = ""
+        self.current_template_type = None
         
 
     def load_languages(self):
