@@ -785,6 +785,10 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
 
     def ask_manual_validation(self):
+        """
+        Affiche une pop-up demandant à l'utilisateur s'il veut valider
+        l'enregistrement
+        """
         reply = QMessageBox.question(
             self, # Fenêtre parente
             "Validation", # Titre de la pop-up
