@@ -689,12 +689,6 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         Cette méthode est appelée après un court délai pour laisser le temps
         au fichier MP4 d'être complètement écrit.
         """
-        
-        # Prépare et sauvegarde l'annotation de l'enregistrement qui vient de se terminer.
-        self.annotation_manager.save_recording_annotation(
-            self.media_manager,
-            self.corpus_manager,
-        )
 
         if self.ask_manual_validation():
             # Supprime du corpus la phrase qui vient d'être lue.
@@ -703,6 +697,18 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             # Affiche la phrase suivante.
             self.display_current_sentence()
         
+            # Prépare et sauvegarde l'annotation de l'enregistrement qui vient de se terminer.
+            self.annotation_manager.save_recording_annotation(
+                self.media_manager,
+                self.corpus_manager,
+            )
+
+            print("Enregistrement confirmé")
+        else :
+            # Supprime le fichier vidéo non conforme
+            failed_filepath = self.media_manager.video_filepath
+            failed_filepath.unlink(missing_ok=True) # type: ignore
+            print("Enregistrement non conforme supprimé")
 
         
 
