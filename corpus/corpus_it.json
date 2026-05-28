@@ -35,16 +35,16 @@
             "fotografa"
         ],
         "number": [
-            "due",
-            "tre",
-            "quattro",
-            "cinque",
-            "sei",
-            "sette",
-            "otto",
-            "nove",
-            "dieci",
-            "dodici"
+            { "text": "due", "value": 2 },
+            { "text": "tre", "value": 3 },
+            { "text": "quattro", "value": 4 },
+            { "text": "cinque", "value": 5 },
+            { "text": "sei", "value": 6 },
+            { "text": "sette", "value": 7 },
+            { "text": "otto", "value": 8 },
+            { "text": "nove", "value": 9 },
+            { "text": "dieci", "value": 10 },
+            { "text": "dodici", "value": 12 }
         ],
         "nominal_group": [
             "libri rossi",

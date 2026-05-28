@@ -294,23 +294,55 @@ class CorpusManager:
         """
         Construit une phrase à partir du template 1.
 
-        La clé 'structure' définit l'ordre des blocs.
+        Deux versions sont produites :
+            - self.sentence : phrase affichée à l'utilisateur, avec le nombre en lettres ;
+            - self.annotation_sentence : phrase destinée aux annotations, avec la valeur numérique du nombre.
+
         Exemple :
-            ["subject", "verb", "number", "nominal_group"]
+            self.sentence = "Patrick demande dix montagnes sombres"
+            self.annotation_sentence = "Patrick demande 10 montagnes sombres"
         """
 
         # Récupère l'ordre syntaxique défini dans le JSON.
-        structure = self.corpus_data["template_1"]["structure"] # type: ignore
+        # Exemple : ["subject", "verb", "number", "nominal_group"]
+        structure = self.corpus_data["template_1"]["structure"]  # type: ignore
 
-        # Stocke les morceaux de phrase dans une liste.
-        sentence_parts = []
+        # Contient les morceaux de la phrase affichée à l'utilisateur.
+        display_sentence_parts = []
+
+        # Contient les morceaux de la phrase enregistrée dans les annotations.
+        annotation_sentence_parts = []
 
         # Parcourt chaque bloc dans l'ordre défini.
         for list_name in structure:
-            sentence_parts.append(self.corpus_data["template_1"][list_name][-1]) # type: ignore
 
-        # Assemble les morceaux avec des espaces.
-        return " ".join(sentence_parts)
+            # Cas particulier du nombre :
+            # il contient maintenant deux informations : "text" et "value".
+            if list_name == "number":
+                number_data = self.corpus_data["template_1"][list_name][-1]  # type: ignore
+
+                # Version affichée : nombre en lettres.
+                display_sentence_parts.append(number_data["text"])
+
+                # Version annotation : valeur numérique.
+                annotation_sentence_parts.append(str(number_data["value"]))
+
+            else:
+                # Pour les autres blocs, le contenu est une simple chaîne de caractères.
+                word = self.corpus_data["template_1"][list_name][-1]  # type: ignore
+
+                # Même contenu pour l'affichage et pour l'annotation.
+                display_sentence_parts.append(word)
+                annotation_sentence_parts.append(word)
+
+        # Assemble la phrase affichée.
+        sentence = " ".join(display_sentence_parts)
+
+        # Assemble la phrase d'annotation.
+        self.annotation_sentence = " ".join(annotation_sentence_parts)
+
+        # Retourne la phrase affichée à l'utilisateur.
+        return sentence
 
 
     def consume_current_sentence(self):

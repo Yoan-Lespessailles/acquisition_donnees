@@ -4,11 +4,60 @@
 	"syntax_order": "SVO",
 	"template_1": {
 		"type": "generated",
-		"structure": ["subject", "verb", "number", "nominal_group"],  
-		"subject": ["Mum", "Dad", "Alice", "Peter", "George", "Laura", "Hannah", "William", "Rose", "Jack"],  
-		"verb": ["sees", "finds", "takes", "brings", "chooses", "watches", "hears", "shares", "loves", "measures"],  
-		"number": ["two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "twelve"],  
-		"nominal_group": ["small bags", "red boxes", "green chairs", "thin feathers", "white shells", "yellow toys", "blue flowers", "quiet deer", "poor tourists", "large visions"]  
+		"structure": [
+			"subject", 
+			"verb", 
+			"number", 
+			"nominal_group"
+		],  
+		"subject": [
+			"Mum", 
+			"Dad", 
+			"Alice", 
+			"Peter", 
+			"George", 
+			"Laura", 
+			"Hannah", 
+			"William", 
+			"Rose", 
+			"Jack"
+		],  
+		"verb": [
+			"sees", 
+			"finds",
+			"takes", 
+			"brings", 
+			"chooses", 
+			"watches", 
+			"hears", 
+			"shares", 
+			"loves", 
+			"measures"
+		],  
+		"number": [
+    		{ "text": "two", "value": 2 },
+    		{ "text": "three", "value": 3 },
+    		{ "text": "four", "value": 4 },
+    		{ "text": "five", "value": 5 },
+    		{ "text": "six", "value": 6 },
+    		{ "text": "seven", "value": 7 },
+    		{ "text": "eight", "value": 8 },
+    		{ "text": "nine", "value": 9 },
+    		{ "text": "ten", "value": 10 },
+    		{ "text": "twelve", "value": 12 }
+		],  
+		"nominal_group": [
+			"small bags", 
+			"red boxes", 
+			"green chairs", 
+			"thin feathers", 
+			"white shells", 
+			"yellow toys", 
+			"blue flowers", 
+			"quiet deer", 
+			"poor tourists", 
+			"large visions"
+		]  
 	},  
 	"template_2": {
 		"type": "fixed", 

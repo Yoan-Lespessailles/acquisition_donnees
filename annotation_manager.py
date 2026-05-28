@@ -75,7 +75,7 @@ class AnnotationManager:
         annotation_file_path = media_manager.annotation_filepath
 
         # Informations du corpus correspondant à la phrase qui vient d'être lue.
-        sentence = corpus_manager.current_sentence
+        sentence = corpus_manager.annotation_sentence
         template_type = corpus_manager.current_template_type
         language_code = corpus_manager.language_selected[1] # type: ignore
         language_name = corpus_manager.language_selected[0] # type: ignore

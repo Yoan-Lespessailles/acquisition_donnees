@@ -584,6 +584,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
             # Remet la propriété QSS du bouton de test dans son état inactif.
             self.button_test_micro.setProperty("testing", False)
+            self.button_test_micro.setText("Tester le micro")
 
             # Force Qt à recalculer le style du bouton.
             self.update_style(self.button_test_micro)
@@ -691,19 +692,19 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         """
 
         if self.ask_manual_validation():
-            # Supprime du corpus la phrase qui vient d'être lue.
-            self.corpus_manager.consume_current_sentence()
-
-            # Affiche la phrase suivante.
-            self.display_current_sentence()
-        
             # Prépare et sauvegarde l'annotation de l'enregistrement qui vient de se terminer.
             self.annotation_manager.save_recording_annotation(
                 self.media_manager,
                 self.corpus_manager,
             )
-
             print("Enregistrement confirmé")
+
+            # Supprime du corpus la phrase qui vient d'être lue.
+            self.corpus_manager.consume_current_sentence()
+
+            # Affiche la phrase suivante.
+            self.display_current_sentence()
+
         else :
             # Supprime le fichier vidéo non conforme
             failed_filepath = self.media_manager.video_filepath
