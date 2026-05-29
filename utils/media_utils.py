@@ -1,4 +1,4 @@
-import av
+import av, hashlib
 
 from av.audio.stream import AudioStream
 from av.video.stream import VideoStream
@@ -107,11 +107,12 @@ def extract_video_metadata(video_filepath):
     # Cela permet de ne pas avoir d'erreurs de Pylance
     video_filepath = Path(video_filepath)
 
+    # Calcule le checksum SHA-256 du fichier vidéo.
+    # Il permet de vérifier plus tard que le fichier n'a pas été modifié ou corrompu.
+    checksum_sha256 = calculate_file_checksum(video_filepath)
+
     # Ouvre le fichier vidéo.
     container = av.open(str(video_filepath))
-
-    # Récupère la taille réelle du fichier vidéo en octets.
-    file_size_bytes = video_filepath.stat().st_size
 
     # Récupère le format enregistré à partir de l'extension du fichier.
     video_format = video_filepath.suffix.replace(".", "").lower()
@@ -171,8 +172,8 @@ def extract_video_metadata(video_filepath):
     container.close()
 
     return {
-        "file_size_bytes": file_size_bytes,
         "video_format": video_format,
+        "checksum_sha256": checksum_sha256,
 
         "duration_seconds": duration_seconds,
 
@@ -187,3 +188,26 @@ def extract_video_metadata(video_filepath):
         "audio_channels": audio_channels,
         "audio_bitrate": audio_bitrate,
     }
+
+def calculate_file_checksum(file_path):
+    """
+    Calcule le checksum SHA-256 d'un fichier.
+
+    Le fichier est lu par blocs pour éviter de charger toute la vidéo
+    en mémoire, ce qui est important pour les fichiers volumineux.
+    """
+
+    # Convertit le chemin reçu en objet Path.
+    file_path = Path(file_path)
+
+    # Crée l'objet de calcul SHA-256.
+    sha256_hash = hashlib.sha256()
+
+    # Ouvre le fichier en mode binaire.
+    with file_path.open("rb") as file:
+        # Lit le fichier par blocs de 8192 octets jusqu'à la fin.
+        for block in iter(lambda: file.read(8192), b""):
+            sha256_hash.update(block)
+
+    # Retourne le checksum sous forme de chaîne hexadécimale.
+    return sha256_hash.hexdigest()

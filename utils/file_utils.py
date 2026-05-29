@@ -1,7 +1,7 @@
 from datetime import datetime
 from pathlib import Path
 
-def build_recording_filepaths(data_dir: Path, language_code: str):
+def build_recording_filepaths(data_dir: Path, data_dir_rel: Path, language_code: str):
     """
     Construit les chemins de sauvegarde d'un enregistrement.
 
@@ -21,12 +21,15 @@ def build_recording_filepaths(data_dir: Path, language_code: str):
 
     # Dossier de la langue.
     language_dir = data_dir / language_code
+    language_dir_rel = data_dir_rel / language_code
 
     # Sous-dossier des vidéos.
     video_dir = language_dir / "videos"
+    video_dir_rel = language_dir_rel / "videos"
 
     # Sous-dossier des annotations.
     annotation_dir = language_dir / "annotations"
+    annotation_dir_rel = language_dir_rel / "annotations"
 
     # Crée les dossiers nécessaires.
     video_dir.mkdir(parents=True, exist_ok=True)
@@ -40,4 +43,8 @@ def build_recording_filepaths(data_dir: Path, language_code: str):
     video_filepath = video_dir / f"{file_name}.mp4"
     annotation_filepath = annotation_dir / f"{file_name}.csv"
 
-    return file_name, video_filepath, annotation_filepath
+    video_filepath_rel = video_dir_rel / f"{file_name}.mp4"
+    annotation_filepath_rel = annotation_dir_rel / f"{file_name}.csv"
+
+
+    return file_name, video_filepath, annotation_filepath, video_filepath_rel, annotation_filepath_rel

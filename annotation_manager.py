@@ -26,9 +26,11 @@ class AnnotationManager:
             "file_name",
             "machine_name",
             "operating_system",
-            "video_path",
+            "video_path_abs",
+            "video_path_rel",
+            "annotation_file_path_abs",
+            "annotation_file_path_rel",
             "annotation_path",
-            "file_size_bytes",
             "video_format",
             "camera_name",
             "microphone_name",
@@ -47,7 +49,7 @@ class AnnotationManager:
             "sentence",
             "template_type",
             "recorded_at",
-            "status"
+            "checksum_sha256"
         ]
 
 
@@ -71,8 +73,11 @@ class AnnotationManager:
 
         # Informations produites par MediaManager pendant l'enregistrement.
         file_name = media_manager.file_name
-        video_path = media_manager.recording_output_location.toLocalFile()
-        annotation_file_path = media_manager.annotation_filepath
+        video_path_abs = media_manager.video_filepath
+        video_path_rel = media_manager.video_filepath_rel
+        annotation_file_path_abs = media_manager.annotation_filepath
+        annotation_file_path_rel = media_manager.annotation_filepath_rel
+
 
         # Informations du corpus correspondant à la phrase qui vient d'être lue.
         sentence = corpus_manager.annotation_sentence
@@ -91,16 +96,17 @@ class AnnotationManager:
 
         # Écriture de la ligne CSV avec les données préparées.
         self.save_annotation(
-            annotation_file_path,
+            annotation_file_path_abs,
+            annotation_file_path_rel,
             file_name,
-            video_path,
+            video_path_abs,
+            video_path_rel,
             language_code,
             language_name,
             sentence,
             template_type,
             camera_name,
             microphone_name,
-            video_metadata["file_size_bytes"],
             video_metadata["video_format"],
             video_metadata["duration_seconds"],
             video_metadata["video_codec"],
@@ -112,21 +118,23 @@ class AnnotationManager:
             video_metadata["audio_sample_rate"],
             video_metadata["audio_channels"],
             video_metadata["audio_bitrate"],
+            video_metadata["checksum_sha256"]
         )
     
 
     def save_annotation(
         self,
-        annotation_file_path,
+        annotation_file_path_abs,
+        annotation_file_path_rel,
         file_name,
-        video_path,
+        video_path_abs,
+        video_path_rel,
         language_code,
         language_name,
         sentence,
         template_type,
         camera_name,
         microphone_name,
-        file_size_bytes,
         video_format,
         duration_seconds,
         video_codec,
@@ -138,15 +146,19 @@ class AnnotationManager:
         audio_sample_rate,
         audio_channels,
         audio_bitrate,
-        status="recorded",
+        checksum_sha256
     ):
         """
         Ajoute une annotation dans le fichier CSV.
 
         Paramètres :
-            annotation_file_path : chemin du fichier CSV d'annotation à créer ou compléter.
+            annotation_file_path_abs : chemin absolu du fichier CSV d'annotation.
+            annotation_file_path_rel : chemin relatif du fichier CSV d'annotation.
             file_name : nom du fichier vidéo sans extension.
-            video_path : chemin de la vidéo enregistrée.
+            video_path_abs : chemin absolu de la vidéo enregistrée.
+            video_path_rel : chemin relatif de la vidéo enregistrée
+            checksum_sha256 : empreinte SHA-256 calculée à partir du contenu du fichier vidéo.
+
             language_code : code de la langue, par exemple "fr" ou "en".
             language_name : nom lisible de la langue, par exemple "Français" ou "Anglais".
             sentence : phrase affichée et lue par l'utilisateur.
@@ -155,7 +167,6 @@ class AnnotationManager:
             camera_name : nom de la caméra utilisée pour l'enregistrement.
             microphone_name : nom du micro utilisé pour l'enregistrement.
 
-            file_size_bytes : taille réelle du fichier vidéo en octets.
             video_format : format/conteneur détecté dans le fichier vidéo.
             duration_seconds : durée réelle de la vidéo en secondes.
 
@@ -167,20 +178,19 @@ class AnnotationManager:
 
             audio_codec : codec audio réellement utilisé dans le fichier.
             audio_sample_rate : fréquence d'échantillonnage audio, par exemple 48000 Hz.
-            audio_channels : nombre de canaux audio, par exemple 1 ou 2.
+            audio_channels : nombre de canaux audio, par exemple 1 (mono) ou 2 (stéréo).
             audio_bitrate : débit audio réel du fichier.
 
-            status : état de l'enregistrement, par défaut "recorded".
             machine_name : nom de la machine utilisée pour l'enregistrement.
             operating_system : système d'exploitation utilisé pour l'enregistrement.
         """
         
         # Vérifie si le fichier CSV existe déjà.
-        file_exists = annotation_file_path.exists()
+        file_exists = annotation_file_path_abs.exists()
 
         # Ouvre le fichier en mode ajout.
         # newline="" évite les lignes vides en trop dans les fichiers CSV.
-        with open(annotation_file_path, "a", encoding="utf-8", newline="") as csv_file:
+        with open(annotation_file_path_abs, "a", encoding="utf-8", newline="") as csv_file:
             
             # Crée un writer CSV basé sur les noms de colonnes.
             writer = csv.DictWriter(csv_file, fieldnames=self.fieldnames)
@@ -194,9 +204,10 @@ class AnnotationManager:
                 "file_name": file_name,
                 "machine_name": self.machine_name,
                 "operating_system": self.operating_system,
-                "video_path": str(video_path),
-                "annotation_path": str(annotation_file_path),
-                "file_size_bytes": file_size_bytes,
+                "video_path_abs": str(video_path_abs),
+                "video_path_rel": str(video_path_rel),
+                "annotation_file_path_abs": str(annotation_file_path_abs),
+                "annotation_file_path_rel": str(annotation_file_path_rel),
                 "video_format": video_format,
                 "camera_name": camera_name,
                 "microphone_name": microphone_name,
@@ -215,5 +226,5 @@ class AnnotationManager:
                 "sentence": sentence,
                 "template_type": template_type,
                 "recorded_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                "status": status,
+                "checksum_sha256": checksum_sha256
             })
