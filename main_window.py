@@ -1,5 +1,5 @@
 # QMainWindow est la classe de base de la fenêtre principale.
-from PySide6.QtWidgets import QMainWindow, QSizePolicy, QMessageBox
+from PySide6.QtWidgets import QMainWindow, QSizePolicy, QMessageBox, QDialogButtonBox
 
 # Slot permet de déclarer explicitement certaines méthodes connectées aux signaux Qt.
 from PySide6.QtCore import Slot, QTimer, Qt
@@ -145,6 +145,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # Indique si un enregistrement est actuellement en cours.
         self.is_recording = False
+        
+        # Compteur indiquant le nombre d'essais d'enregistrement (fait apparaitre le bouton skip au pour de 2)
+        self.cpt_retry_register = 0
 
         # Initialise les gestionnaires spécialisés.
         self.setup_managers()
@@ -691,7 +694,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         au fichier MP4 d'être complètement écrit.
         """
 
-        if self.ask_manual_validation():
+        user_validation = self.ask_manual_validation()
+
+        if user_validation == "yes":
             # Prépare et sauvegarde l'annotation de l'enregistrement qui vient de se terminer.
             self.annotation_manager.save_recording_annotation(
                 self.media_manager,
@@ -699,19 +704,53 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             )
             print("Enregistrement confirmé")
 
-            # Supprime du corpus la phrase qui vient d'être lue.
-            self.corpus_manager.consume_current_sentence()
+            # Supprime la phrase et affiche la suivante
+            self.update_sentence()
 
-            # Affiche la phrase suivante.
-            self.display_current_sentence()
-
-        else :
+        elif user_validation == "no":
             # Supprime le fichier vidéo non conforme
             failed_filepath = self.media_manager.video_filepath
             failed_filepath.unlink(missing_ok=True) # type: ignore
             print("Enregistrement non conforme supprimé")
 
-        
+        else:
+            # Supprime le fichier vidéo non conforme
+            self.delete_failed_file()
+
+            # Supprime la phrase et affiche la suivante
+            self.update_sentence()
+
+            print("Phrase skipée")
+            
+
+    def delete_failed_file(self):
+        """
+        Supprime le fichier vidéo associé à un enregistrement non validé.
+
+        Cette méthode est utilisée lorsque l'enregistrement est refusé
+        ou considéré comme non conforme. Le fichier vidéo est alors supprimé
+        afin de ne pas conserver de données inutilisables dans le dossier de sortie.
+        """
+
+        # Supprime le fichier vidéo non conforme
+        failed_filepath = self.media_manager.video_filepath
+        failed_filepath.unlink(missing_ok=True) # type: ignore
+
+
+    def update_sentence(self):
+        """
+        Passe à la phrase suivante du corpus.
+
+        Cette méthode est appelée lorsqu'un enregistrement est validé
+        ou lorsqu'une phrase est volontairement ignorée. Elle retire d'abord
+        la phrase actuelle du corpus, puis affiche la phrase suivante dans l'interface.
+        """
+
+        # Supprime du corpus la phrase qui vient d'être lue.
+        self.corpus_manager.consume_current_sentence()
+
+        # Affiche la phrase suivante.
+        self.display_current_sentence()
 
     # -----------------------------------------------------------------
 
@@ -787,15 +826,95 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
     def ask_manual_validation(self):
         """
-        Affiche une pop-up demandant à l'utilisateur s'il veut valider
-        l'enregistrement
+        Affiche une pop-up demandant à l'utilisateur s'il veut valider,
+        recommencer ou ignorer l'enregistrement.
         """
-        reply = QMessageBox.question(
-            self, # Fenêtre parente
-            "Validation", # Titre de la pop-up
-            "Recording satisfactory ?", # Message affiché
-            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No, # Boutons proposés
-            QMessageBox.StandardButton.No # Bouton sélectionné par défaut
+
+        # Création de la boîte de dialogue
+        msg_box = QMessageBox(self)
+
+        # Titre de la pop-up
+        msg_box.setWindowTitle("Validation")
+
+        # Message affiché
+        msg_box.setText("Recording satisfactory ?")
+
+        if self.cpt_retry_register > 0 :
+            msg_box.setInformativeText(
+                "If the sentence is too difficult to read, you can skip it.\n"
+                "After skipping, you won't be able to return to this sentence."
+            )
+
+        msg_box.setStyleSheet("""
+            QLabel {
+                min-width: 450px;
+                color: #222222;
+                font-size: 14px;
+                qproperty-alignment: AlignCenter;
+            }
+
+            QPushButton {
+                min-width: 110px;
+                padding: 6px 12px;
+                border: 1px solid #9e9e9e;
+                border-radius: 6px;
+                background-color: #ffffff;
+                color: #222222;
+            }
+
+            QPushButton:hover {
+                background-color: #e8e8e8;
+            }
+
+            QPushButton:pressed {
+                background-color: #d0d0d0;
+            }
+        """)
+
+        # Bouton pour valider l'enregistrement
+        button_yes = msg_box.addButton(
+            "Yes",
+            QMessageBox.ButtonRole.AcceptRole
         )
-        # Retourne True si l'utilisateur clique sur Oui, sinon False
-        return reply == QMessageBox.StandardButton.Yes
+
+        # Bouton pour recommencer l'enregistrement
+        button_no = msg_box.addButton(
+            "No",
+            QMessageBox.ButtonRole.RejectRole
+        )
+
+        if self.cpt_retry_register > 0:
+            # Bouton pour ignorer la phrase
+            button_skip = msg_box.addButton(
+                "Skip",
+                QMessageBox.ButtonRole.DestructiveRole
+            )
+
+        # Bouton sélectionné par défaut
+        msg_box.setDefaultButton(button_yes)
+
+        # Récupère la zone interne qui contient les boutons de la QMessageBox
+        button_box = msg_box.findChild(QDialogButtonBox)
+
+        # Si elle existe, on force le centrage des boutons
+        if button_box is not None:
+            button_box.setCenterButtons(True)
+
+        # Affiche la pop-up et attend le choix de l'utilisateur
+        msg_box.exec()
+
+        # Récupère le bouton cliqué
+        clicked_button = msg_box.clickedButton()
+
+        # Retourne une valeur selon le choix utilisateur
+        if clicked_button == button_yes:
+            self.cpt_retry_register = 0
+            return "yes"
+
+        elif clicked_button == button_no:
+            self.cpt_retry_register += 1
+            return "no"
+
+        elif clicked_button == button_skip:
+            self.cpt_retry_register = 0
+            return "skip"

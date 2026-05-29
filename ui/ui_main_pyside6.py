@@ -286,7 +286,7 @@ class Ui_MainWindow(object):
         self.label_record_dot.setText("")
         self.label_micro.setText(QCoreApplication.translate("MainWindow", u"Micro :", None))
         self.button_test_micro.setText(QCoreApplication.translate("MainWindow", u"Test micro", None))
-        self.label_micro_state.setText(QCoreApplication.translate("MainWindow", u"Niveau du micro :", None))
+        self.label_micro_state.setText(QCoreApplication.translate("MainWindow", u"Microphone level :", None))
         self.label_select_camera.setText(QCoreApplication.translate("MainWindow", u"Camera :", None))
         self.label_select_language.setText(QCoreApplication.translate("MainWindow", u"Language :", None))
         self.label_cpt_sentence.setText("")

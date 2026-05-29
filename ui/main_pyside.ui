@@ -210,7 +210,7 @@ border-radius: 10px;</string>
                 </font>
                </property>
                <property name="text">
-                <string>Niveau du micro :</string>
+                <string>Microphone level :</string>
                </property>
               </widget>
              </item>
