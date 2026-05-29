@@ -714,6 +714,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             self.annotation_manager.save_recording_annotation(
                 self.media_manager,
                 self.corpus_manager,
+                self.user_firstname
             )
             print("Enregistrement confirmé")
 

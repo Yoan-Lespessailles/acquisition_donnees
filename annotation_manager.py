@@ -26,6 +26,7 @@ class AnnotationManager:
             "file_name",
             "machine_name",
             "operating_system",
+            "user_firstname",
             "video_path_abs",
             "video_path_rel",
             "annotation_file_path_abs",
@@ -57,18 +58,15 @@ class AnnotationManager:
         self,
         media_manager: MediaManager,
         corpus_manager: CorpusManager,
+        user_firstname
     ):
         """
         Prépare les données de l'enregistrement courant et sauvegarde l'annotation.
 
-        Cette méthode centralise la logique d'annotation :
-            - informations du fichier vidéo ;
-            - langue et phrase courante ;
-            - caméra et micro utilisés ;
-            - métadonnées réelles extraites du fichier vidéo.
-
-        MyWindow peut ainsi rester responsable du déroulement de l'interface,
-        sans connaître le détail des colonnes du CSV.
+        Paramètres :
+            media_manager : gestionnaire multimédia de l'application.
+            corpus_manager : gestionnaire du corpus de phrases.
+            user_firstname : prénom de l'utilisateur qui réalise l'enregistrement.
         """
 
         # Informations produites par MediaManager pendant l'enregistrement.
@@ -77,7 +75,6 @@ class AnnotationManager:
         video_path_rel = media_manager.video_filepath_rel
         annotation_file_path_abs = media_manager.annotation_filepath
         annotation_file_path_rel = media_manager.annotation_filepath_rel
-
 
         # Informations du corpus correspondant à la phrase qui vient d'être lue.
         sentence = corpus_manager.annotation_sentence
@@ -118,7 +115,8 @@ class AnnotationManager:
             video_metadata["audio_sample_rate"],
             video_metadata["audio_channels"],
             video_metadata["audio_bitrate"],
-            video_metadata["checksum_sha256"]
+            video_metadata["checksum_sha256"],
+            user_firstname
         )
     
 
@@ -146,7 +144,8 @@ class AnnotationManager:
         audio_sample_rate,
         audio_channels,
         audio_bitrate,
-        checksum_sha256
+        checksum_sha256,
+        user_firstname
     ):
         """
         Ajoute une annotation dans le fichier CSV.
@@ -183,6 +182,7 @@ class AnnotationManager:
 
             machine_name : nom de la machine utilisée pour l'enregistrement.
             operating_system : système d'exploitation utilisé pour l'enregistrement.
+            user_firstname : nom de l'utilisateur ayant lancé l'application
         """
         
         # Vérifie si le fichier CSV existe déjà.
@@ -202,6 +202,7 @@ class AnnotationManager:
             # Écrit une nouvelle ligne d'annotation.
             writer.writerow({
                 "file_name": file_name,
+                "user_firstname": user_firstname,
                 "machine_name": self.machine_name,
                 "operating_system": self.operating_system,
                 "video_path_abs": str(video_path_abs),
