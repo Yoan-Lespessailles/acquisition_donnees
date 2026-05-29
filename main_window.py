@@ -1,5 +1,5 @@
 # QMainWindow est la classe de base de la fenêtre principale.
-from PySide6.QtWidgets import QMainWindow, QSizePolicy, QMessageBox, QDialogButtonBox
+from PySide6.QtWidgets import QMainWindow, QSizePolicy, QMessageBox, QDialogButtonBox, QInputDialog, QApplication, QLineEdit
 
 # Slot permet de déclarer explicitement certaines méthodes connectées aux signaux Qt.
 from PySide6.QtCore import Slot, QTimer, Qt
@@ -35,9 +35,13 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         - coordonner MediaManager, CorpusManager et RecordingIndicator.
     """
 
-    def __init__(self):
+    def __init__(self, user_firstname=None):
         """
         Initialise la fenêtre principale.
+
+        Paramètres :
+            user_firstname : prénom fourni en ligne de commande.
+                Si None, une fenêtre de saisie sera affichée.
         """
 
         # Initialise la fenêtre Qt.
@@ -48,6 +52,15 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # Charge l'interface créée avec Qt Designer
         self.setupUi(self)
+
+        # Si un prénom est fourni en ligne de commande, on l'utilise directement.
+        if user_firstname is not None and user_firstname.strip():
+            self.user_firstname = user_firstname.strip().capitalize()
+            print("Prénom de l'utilisateur : " + user_firstname)
+
+        # Sinon, on demandera le prénom avec une fenêtre Qt après le lancement.
+        else:
+            QTimer.singleShot(0, self.ask_user_firstname)
 
         # Le QSS garde les couleurs, bordures et espacements.
         # Les tailles de police restent gérées en Python par le système responsive.
@@ -765,7 +778,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Si le test micro est déjà en cours, on l'arrête.
         if self.media_manager.micro_test_is_running:
             self.media_manager.stop_micro_test()
-            self.button_test_micro.setText("Tester le micro")
+            self.button_test_micro.setText("Test micro")
 
             self.button_test_micro.setProperty("testing", False)
 
@@ -782,7 +795,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # On démarre le test micro.
         self.media_manager.start_micro_test(micro)
-        self.button_test_micro.setText("Arrêter le test micro")
+        self.button_test_micro.setText("Stop test")
 
         self.button_test_micro.setProperty("testing", True)
         
@@ -918,3 +931,80 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         elif clicked_button == button_skip:
             self.cpt_retry_register = 0
             return "skip"
+    
+
+    def ask_user_firstname(self):
+        """
+        Demande le prénom de l'utilisateur.
+
+        OK avec champ vide : relance la fenêtre.
+        OK avec prénom valide : stocke le prénom.
+        Annuler ou croix : ferme l'application.
+        """
+
+        while True:
+            dialog = QInputDialog(self)
+
+            dialog.setWindowTitle("Identification utilisateur")
+            dialog.setLabelText("Veuillez renseigner votre prénom :")
+            dialog.setTextEchoMode(QLineEdit.EchoMode.Normal)
+
+            dialog.setStyleSheet("""
+                QInputDialog {
+                background-color: #f5f5f5;
+                }
+
+                QLabel {
+                    min-width: 450px;
+                    color: #222222;
+                    font-size: 14px;
+                    qproperty-alignment: AlignCenter;
+                }
+
+                QLineEdit {
+                    min-width: 300px;
+                    padding: 6px 10px;
+                    border: 1px solid #9e9e9e;
+                    border-radius: 6px;
+                    background-color: #ffffff;
+                    color: #222222;
+                    font-size: 14px;
+                }
+
+                QPushButton {
+                    min-width: 110px;
+                    padding: 6px 12px;
+                    border: 1px solid #9e9e9e;
+                    border-radius: 6px;
+                    background-color: #ffffff;
+                    color: #222222;
+                }
+
+                QPushButton:hover {
+                    background-color: #e8e8e8;
+                }
+
+                QPushButton:pressed {
+                    background-color: #d0d0d0;
+                }
+            """)
+
+            result = dialog.exec()
+
+            # Si l'utilisateur clique sur Annuler ou ferme avec la croix.
+            if result != QInputDialog.DialogCode.Accepted:
+                QApplication.quit()
+                return False
+
+            firstname = dialog.textValue().strip().capitalize()
+
+            # Si le prénom est vide, on relance la fenêtre.
+            if not firstname:
+                continue
+
+            # Si le prénom est valide, on le stocke.
+            self.user_firstname = firstname
+
+            print("Prénom de l'utilisateur : " + firstname)
+
+            return True
