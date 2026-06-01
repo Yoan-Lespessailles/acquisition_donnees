@@ -33,7 +33,6 @@ class AnnotationManager:
             "video_path_rel",
             "annotation_file_path_abs",
             "annotation_file_path_rel",
-            "annotation_path",
             "video_format",
             "camera_name",
             "microphone_name",
