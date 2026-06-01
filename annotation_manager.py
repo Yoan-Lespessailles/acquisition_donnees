@@ -47,7 +47,8 @@ class AnnotationManager:
             "audio_bitrate",
             "language_code",
             "language_name",
-            "sentence",
+            "sentence_display",
+            "sentence_annotation",
             "template_type",
             "recorded_at",
             "checksum_sha256"
@@ -77,7 +78,8 @@ class AnnotationManager:
         annotation_file_path_rel = media_manager.annotation_filepath_rel
 
         # Informations du corpus correspondant à la phrase qui vient d'être lue.
-        sentence = corpus_manager.annotation_sentence
+        sentence_display = corpus_manager.current_sentence
+        sentence_annotation = corpus_manager.annotation_sentence
         template_type = corpus_manager.current_template_type
         language_code = corpus_manager.language_selected[1] # type: ignore
         language_name = corpus_manager.language_selected[0] # type: ignore
@@ -100,7 +102,8 @@ class AnnotationManager:
             video_path_rel,
             language_code,
             language_name,
-            sentence,
+            sentence_display,
+            sentence_annotation,
             template_type,
             camera_name,
             microphone_name,
@@ -129,7 +132,8 @@ class AnnotationManager:
         video_path_rel,
         language_code,
         language_name,
-        sentence,
+        sentence_display,
+        sentence_annotation,
         template_type,
         camera_name,
         microphone_name,
@@ -160,7 +164,8 @@ class AnnotationManager:
 
             language_code : code de la langue, par exemple "fr" ou "en".
             language_name : nom lisible de la langue, par exemple "Français" ou "Anglais".
-            sentence : phrase affichée et lue par l'utilisateur.
+            sentence_display : phrase affichée à l'utilisateur dans l'interface.
+            sentence_annotation : phrase normalisée sauvegardée pour l'annotation, avec les nombres sous leur forme textuelle.
             template_type : template utilisé, par exemple "template_1" ou "template_2".
 
             camera_name : nom de la caméra utilisée pour l'enregistrement.
@@ -224,7 +229,8 @@ class AnnotationManager:
                 "audio_bitrate": audio_bitrate,
                 "language_code": language_code,
                 "language_name" : language_name,
-                "sentence": sentence,
+                "sentence_display": sentence_display,
+                "sentence_annotation": sentence_annotation,
                 "template_type": template_type,
                 "recorded_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "checksum_sha256": checksum_sha256

@@ -23,7 +23,7 @@
             "Francesca"
         ],
         "verb": [
-            "osserva",
+            "controlla",
             "conta",
             "cerca",
             "trova",
@@ -32,31 +32,61 @@
             "prende",
             "sceglie",
             "prepara",
-            "fotografa"
+            "compra"
         ],
         "number": [
-            { "text": "due", "value": 2 },
-            { "text": "tre", "value": 3 },
-            { "text": "quattro", "value": 4 },
-            { "text": "cinque", "value": 5 },
-            { "text": "sei", "value": 6 },
-            { "text": "sette", "value": 7 },
-            { "text": "otto", "value": 8 },
-            { "text": "nove", "value": 9 },
-            { "text": "dieci", "value": 10 },
-            { "text": "dodici", "value": 12 }
+            {
+                "text": "due",
+                "value": 2
+            },
+            {
+                "text": "quattro",
+                "value": 4
+            },
+            {
+                "text": "cinque",
+                "value": 5
+            },
+            {
+                "text": "sei",
+                "value": 6
+            },
+            {
+                "text": "sette",
+                "value": 7
+            },
+            {
+                "text": "otto",
+                "value": 8
+            },
+            {
+                "text": "nove",
+                "value": 9
+            },
+            {
+                "text": "dodici",
+                "value": 12
+            },
+            {
+                "text": "quindici",
+                "value": 15
+            },
+            {
+                "text": "trentadue",
+                "value": 32
+            }
         ],
         "nominal_group": [
             "libri rossi",
             "case nuove",
             "fiori gialli",
-            "zaini piccoli",
-            "giochi belli",
-            "ceste verdi",
-            "chiavi leggere",
+            "chiavi nuove",
+            "foglie secche",
             "scarpe comode",
             "piatti grandi",
-            "bottiglie fresche"
+            "bottiglie fresche",
+            "calze azzurre",
+            "maglie bianche"
         ]
     },
     "template_2": {
@@ -66,11 +96,11 @@
             "Giulia sceglie una bottiglia fresca per la famiglia.",
             "Lo gnomo disegna cinque foglie gialle sul quaderno.",
             "Francesca prepara una zuppa calda con poco sale.",
-            "Il ragazzo legge una pagina chiara e semplice.",
+            "Il ragazzo sistema le calze azzurre sul divano.",
             "La signora porta dieci chiavi leggere nella borsa.",
-            "Paolo trova sette piatti nuovi vicino al tavolo.",
+            "Paolo mette quattro piatti nuovi vicino al tavolo.",
             "Anna conta quattro giochi piccoli davanti alla scuola.",
-            "Roberto fotografa due sciarpe rosse sulla sedia.",
+            "Roberto mette due sciarpe rosse sulla sedia.",
             "Sofia sistema una maglia bianca sotto la finestra."
         ]
     }
