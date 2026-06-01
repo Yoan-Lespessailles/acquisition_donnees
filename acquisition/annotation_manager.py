@@ -1,4 +1,6 @@
-import csv, socket, platform
+import csv
+import platform
+import socket
 from datetime import datetime
 from acquisition.media_manager import MediaManager
 from acquisition.corpus_manager import CorpusManager

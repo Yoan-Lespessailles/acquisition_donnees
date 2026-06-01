@@ -1,4 +1,6 @@
-import av, hashlib
+import hashlib
+
+import av
 
 from av.audio.stream import AudioStream
 from av.video.stream import VideoStream

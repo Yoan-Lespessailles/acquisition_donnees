@@ -11,7 +11,7 @@ def load_config():
     reste de l'application.
     """
     # Dossier racine du projet.
-    base_dir = Path(__file__).resolve().parent
+    base_dir = Path(__file__).resolve().parents[1]
 
     # Chemin du fichier YAML.
     config_path = base_dir / "config.yaml"

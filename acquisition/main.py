@@ -4,7 +4,18 @@
 # dans un ordre qui provoque une erreur libgobject / glib.
 import av
 
-import sys, argparse
+import argparse
+import sys
+from pathlib import Path
+
+# Quand ce fichier est lancé directement avec :
+#     python acquisition/main.py
+# Python ne connaît pas automatiquement le dossier racine du projet.
+# On l'ajoute donc au PYTHONPATH pour que les imports de package
+# comme "from acquisition.main_window import MyWindow" fonctionnent aussi
+# bien en lancement direct qu'avec "python -m acquisition.main".
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from PySide6.QtWidgets import QApplication
 
