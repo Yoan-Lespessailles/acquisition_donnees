@@ -1,0 +1,107 @@
+{
+    "language_code": "pt",
+    "language_name": "Portugais",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Ana",
+            "Maria",
+            "João",
+            "Pedro",
+            "Inês",
+            "Luís",
+            "Rita",
+            "Sofia",
+            "Teresa",
+            "Guilherme"
+        ],
+        "verb": [
+            "observa",
+            "compra",
+            "guarda",
+            "procura",
+            "encontra",
+            "mostra",
+            "limpa",
+            "traz",
+            "escolhe",
+            "arruma"
+        ],
+        "number": [
+            {
+                "text": "dois",
+                "value": 2
+            },
+            {
+                "text": "três",
+                "value": 3
+            },
+            {
+                "text": "quatro",
+                "value": 4
+            },
+            {
+                "text": "cinco",
+                "value": 5
+            },
+            {
+                "text": "sete",
+                "value": 7
+            },
+            {
+                "text": "oito",
+                "value": 8
+            },
+            {
+                "text": "nove",
+                "value": 9
+            },
+            {
+                "text": "dez",
+                "value": 10
+            },
+            {
+                "text": "doze",
+                "value": 12
+            },
+            {
+                "text": "trinta",
+                "value": 30
+            }
+        ],
+        "nominal_group": [
+            "livros novos",
+            "copos pequenos",
+            "pratos fundos",
+            "sacos brancos",
+            "sapatos pretos",
+            "carros vermelhos",
+            "bonecos pequenos",
+            "quadros antigos",
+            "jornais antigos",
+            "desenhos bonitos"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            "O vinho branco fica no frio durante a noite.",
+            "A mãe põe pão quente em cima da mesa.",
+            "Guilherme trabalha junto ao jardim velho.",
+            "Rita sorri quando vê três cães pequenos.",
+            "Teresa lê um jornal antigo junto da janela.",
+            "O rapaz guarda livros numa caixa grande.",
+            "Miguel lava copos limpos antes do almoço.",
+            "João fecha a porta do quarto com cuidado.",
+            "Sofia traz flores bonitas para Ana de manhã.",
+            "Pedro ouve música baixa enquanto caminha no fim da tarde."
+        ]
+    }
+}

@@ -1,0 +1,107 @@
+{
+    "language_code": "es",
+    "language_name": "Espagnol",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Marta",
+            "Pablo",
+            "Lucía",
+            "Diego",
+            "Jorge",
+            "Nuria",
+            "Raquel",
+            "Beatriz",
+            "Ángel",
+            "Chema"
+        ],
+        "verb": [
+            "compra",
+            "vende",
+            "pide",
+            "lleva",
+            "guarda",
+            "enseña",
+            "ordena",
+            "busca",
+            "recoge",
+            "prepara"
+        ],
+        "number": [
+            {
+                "text": "dos",
+                "value": 2
+            },
+            {
+                "text": "tres",
+                "value": 3
+            },
+            {
+                "text": "cuatro",
+                "value": 4
+            },
+            {
+                "text": "cinco",
+                "value": 5
+            },
+            {
+                "text": "seis",
+                "value": 6
+            },
+            {
+                "text": "siete",
+                "value": 7
+            },
+            {
+                "text": "ocho",
+                "value": 8
+            },
+            {
+                "text": "nueve",
+                "value": 9
+            },
+            {
+                "text": "quince",
+                "value": 15
+            },
+            {
+                "text": "treinta y dos",
+                "value": 32
+            }
+        ],
+        "nominal_group": [
+            "libros grandes",
+            "llaves nuevas",
+            "cajas pequeñas",
+            "mochilas rojas",
+            "vasos azules",
+            "juguetes viejos",
+            "platos blancos",
+            "flores amarillas",
+            "camisas limpias",
+            "cuadernos baratos"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            "La niña juega con una llave pequeña junto a la fuente.",
+            "Ramón prepara chocolate caliente para Beatriz y Jorge.",
+            "Guillermo guarda cuatro juguetes viejos en una caja azul.",
+            "El perro corre rápido por la calle seca.",
+            "Cecilia dice que cinco platos están limpios.",
+            "Diego oye un ruido fuerte bajo la ventana.",
+            "Ángel enseña treinta y dos dibujos nuevos.",
+            "Chema recoge flores rojas cerca del jardín.",
+            "Nuria busca agua fría en la cocina.",
+            "Pablo vende pan crujiente y queso fresco."
+        ]
+    }
+}

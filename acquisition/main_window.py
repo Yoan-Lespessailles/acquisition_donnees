@@ -9,19 +9,19 @@ from PySide6.QtCore import Slot, QTimer, Qt
 from PySide6.QtGui import QFontMetrics
 
 # Interface générée depuis Qt Designer.
-from ui.ui_main_pyside6 import Ui_MainWindow
+from acquisition.ui.ui_main_pyside6 import Ui_MainWindow
 
 # Gestion de toute la partie caméra / micro / preview / enregistrement.
-from media_manager import MediaManager
+from acquisition.media_manager import MediaManager
 
 # Gestion du corpus, des langues, des phrases et du compteur.
-from corpus_manager import CorpusManager
+from acquisition.corpus_manager import CorpusManager
 
 # Gestion de l'affichage REC : chrono + point rouge clignotant.
-from recording_indicator import RecordingIndicator
+from acquisition.recording_indicator import RecordingIndicator
 
 # Gestion du fichier d'annotations
-from annotation_manager import AnnotationManager
+from acquisition.annotation_manager import AnnotationManager
 
 
 class MyWindow(QMainWindow, Ui_MainWindow):

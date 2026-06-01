@@ -1,7 +1,7 @@
 import json
 import random
 
-from config_loader import load_config
+from acquisition.config_loader import load_config
 CONFIG = load_config()
 
 class CorpusManager:

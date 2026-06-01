@@ -1,0 +1,107 @@
+{
+    "language_code": "de",
+    "language_name": "Allemand",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Anna",
+            "Ben",
+            "Clara",
+            "David",
+            "Emma",
+            "Felix",
+            "Hanna",
+            "Jonas",
+            "Laura",
+            "Sophie"
+        ],
+        "verb": [
+            "kauft",
+            "sieht",Mädchen spielen heute Deutsch
+            "sucht",
+            "findet",
+            "zählt",
+            "nimmt",
+            "holt",
+            "zeigt",
+            "prüft",
+            "sortiert"
+        ],
+        "number": [
+            {
+                "text": "zwei",
+                "value": 2
+            },
+            {
+                "text": "drei",
+                "value": 3
+            },
+            {
+                "text": "fünf",
+                "value": 5
+            },
+            {
+                "text": "sechs",
+                "value": 6
+            },
+            {
+                "text": "sieben",
+                "value": 7
+            },
+            {
+                "text": "acht",
+                "value": 8
+            },
+            {
+                "text": "zehn",
+                "value": 10
+            },
+            {
+                "text": "zwölf",
+                "value": 12
+            },
+            {
+                "text": "neun",
+                "value": 9
+            },
+            {
+                "text": "dreißig",
+                "value": 30
+            }
+        ],
+        "nominal_group": [
+            "rote Tassen",
+            "neue Bücher",
+            "kleine Pakete",
+            "helle Jacken",
+            "schwere Taschen",
+            "frische Brötchen",
+            "schöne Bilder",
+            "gelbe Blumen",
+            "weiche Kissen",
+            "süße Äpfel"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            "Der junge Koch bäckt frische Brötchen, streut Pfeffer und zählt zehn Gäste.",
+            "Mädchen lernen heute spät Deutsch und trinken süßen Tee.",
+            "Clara kauft zwölf bunte deutsche Bücher für Felix.",
+            "Jonas prüft die dünnen Kissen neben dem offenen Fenster.",
+            "Hanna holt drei schwere Taschen zum grünen Haus.",
+            "Ben sucht oft acht schöne gelbe Blumen neben dem langen Weg.",
+            "Sophie zeigt Laura neun schöne Bilder am Rhein.",
+            "David findet kleine Pakete auf dem weiten Feld.",
+            "Emma nimmt fünf süße Äpfel aus dem Korb.",
+            "Felix spricht deutlich, dann sagt er Tschüss und lacht."
+        ]
+    }
+}

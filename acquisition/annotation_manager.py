@@ -1,7 +1,7 @@
 import csv, socket, platform
 from datetime import datetime
-from media_manager import MediaManager
-from corpus_manager import CorpusManager
+from acquisition.media_manager import MediaManager
+from acquisition.corpus_manager import CorpusManager
 
 from utils.media_utils import extract_video_metadata
 

@@ -1,0 +1,107 @@
+{
+    "language_code": "nl",
+    "language_name": "Néerlandais",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Bram",
+            "Daan",
+            "Eva",
+            "Lars",
+            "Noor",
+            "Fleur",
+            "Gijs",
+            "Femke",
+            "Willem",
+            "Koen"
+        ],
+        "verb": [
+            "ziet",
+            "vindt",
+            "zoekt",
+            "koopt",
+            "kiest",
+            "pakt",
+            "telt",
+            "haalt",
+            "bewaart",
+            "gebruikt"
+        ],
+        "number": [
+            {
+                "text": "twee",
+                "value": 2
+            },
+            {
+                "text": "drie",
+                "value": 3
+            },
+            {
+                "text": "vier",
+                "value": 4
+            },
+            {
+                "text": "vijf",
+                "value": 5
+            },
+            {
+                "text": "zeven",
+                "value": 7
+            },
+            {
+                "text": "acht",
+                "value": 8
+            },
+            {
+                "text": "elf",
+                "value": 11
+            },
+            {
+                "text": "twaalf",
+                "value": 12
+            },
+            {
+                "text": "zestien",
+                "value": 16
+            },
+            {
+                "text": "negen",
+                "value": 9
+            }
+        ],
+        "nominal_group": [
+            "boeken",
+            "gele bloemen",
+            "nieuwe stoelen",
+            "rode fietsen",
+            "zachte kussens",
+            "bruine jassen",
+            "kleine dozen",
+            "houten banken",
+            "mooie vogels",
+            "lange lepels"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            "De jongen fietst langzaam door de groene straat.",
+            "Een vrouw koopt verse kaas en leuke bloemen op de markt.",
+            "Het kleine meisje geeft haar broer een blauw boek.",
+            "Willem vraagt of Julia vandaag thuis blijft.",
+            "De kat springt rustig achter de zachte bank.",
+            "Noor schrijft negen korte zinnen in haar schrift.",
+            "Bram brengt warme soep naar zijn oude buurman.",
+            "Eva hoort muziek uit de open keuken.",
+            "Femke legt vijf rode sleutels naast het raam.",
+            "Gijs zegt rustig goedendag tegen de buurman."
+        ]
+    }
+}

@@ -37,7 +37,7 @@ from PySide6.QtMultimedia import (
 from PySide6.QtMultimediaWidgets import QVideoWidget
 
 # Charge la configuration globale du projet : chemins, bitrates, paramètres vidéo, etc.
-from config_loader import load_config
+from acquisition.config_loader import load_config
 
 CONFIG = load_config()
 

@@ -8,7 +8,7 @@ import sys, argparse
 
 from PySide6.QtWidgets import QApplication
 
-from main_window import MyWindow
+from acquisition.main_window import MyWindow
 
 
 def parse_arguments():
