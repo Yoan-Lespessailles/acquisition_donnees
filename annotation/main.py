@@ -75,9 +75,6 @@ if __name__ == "__main__":
     if args.dry_run:
         annotation_context.display_files()
     
-    match_video_and_metadata_files(
-        annotation_context.video_files, 
-        annotation_context.metadata_files, 
-        annotation_context.videos_dir, 
-        annotation_context.metadatas_dir
-    )
+    valid_pairs, videos_without_metadata, metadatas_without_video = match_video_and_metadata_files(annotation_context.video_files, annotation_context.metadata_files, annotation_context.videos_dir, annotation_context.metadatas_dir)
+
+    
