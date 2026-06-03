@@ -1,0 +1,107 @@
+{
+    "language_code": "no",
+    "language_name": "Norvégien",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Anna",
+            "Emil",
+            "Ola",
+            "Maja",
+            "Siri",
+            "Knut",
+            "Ylva",
+            "Guro",
+            "Pål",
+            "Nora"
+        ],
+        "verb": [
+            "ser",
+            "kjøper",
+            "lager",
+            "bærer",
+            "finner",
+            "henter",
+            "viser",
+            "bruker",
+            "kaster",
+            "måler"
+        ],
+        "number": [
+            {
+                "text": "to",
+                "value": 2
+            },
+            {
+                "text": "tre",
+                "value": 3
+            },
+            {
+                "text": "fire",
+                "value": 4
+            },
+            {
+                "text": "sju",
+                "value": 7
+            },
+            {
+                "text": "åtte",
+                "value": 8
+            },
+            {
+                "text": "ni",
+                "value": 9
+            },
+            {
+                "text": "tolv",
+                "value": 12
+            },
+            {
+                "text": "seksten",
+                "value": 16
+            },
+            {
+                "text": "tjue",
+                "value": 20
+            },
+            {
+                "text": "tretti",
+                "value": 30
+            }
+        ],
+        "nominal_group": [
+            "røde biler",
+            "grønne epler",
+            "blå kopper",
+            "nye bøker",
+            "store hus",
+            "tunge sekker",
+            "varme sko",
+            "myke skjerf",
+            "lyse kjoler",
+            "mørke rom"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            "Kaja synger rolig mens jenta leker ute.",
+            "Per kjøper nye bøker og legger dem på hylla.",
+            "Siri finner fire små kopper i skapet.",
+            "Guro bruker tunge sekker ved døra.",
+            "Pål viser mørke rom med varme lamper.",
+            "Nora henter skjerf og jakker ved skolen.",
+            "Ylva bærer blå kopper over gulvet.",
+            "Knut måler lyse kjoler i butikken.",
+            "Ola lager grønn suppe med røde bær.",
+            "Emil kaster sju myke puter i sofaen."
+        ]
+    }
+}

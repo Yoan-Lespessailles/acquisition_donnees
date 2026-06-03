@@ -1,0 +1,107 @@
+{
+    "language_code": "lv",
+    "language_name": "Letton",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Anna",
+            "Jānis",
+            "Līga",
+            "Māris",
+            "Ilze",
+            "Kārlis",
+            "Dace",
+            "Zane",
+            "Rūta",
+            "Roberts"
+        ],
+        "verb": [
+            "redz",
+            "nes",
+            "pērk",
+            "rāda",
+            "skaita",
+            "meklē",
+            "atrod",
+            "izvēlas",
+            "fotografē",
+            "zīmē"
+        ],
+        "number": [
+            {
+                "text": "divas",
+                "value": 2
+            },
+            {
+                "text": "trīs",
+                "value": 3
+            },
+            {
+                "text": "četras",
+                "value": 4
+            },
+            {
+                "text": "piecas",
+                "value": 5
+            },
+            {
+                "text": "sešas",
+                "value": 6
+            },
+            {
+                "text": "septiņas",
+                "value": 7
+            },
+            {
+                "text": "astoņas",
+                "value": 8
+            },
+            {
+                "text": "deviņas",
+                "value": 9
+            },
+            {
+                "text": "desmit",
+                "value": 10
+            },
+            {
+                "text": "divpadsmit",
+                "value": 12
+            }
+        ],
+        "nominal_group": [
+            "jaunas grāmatas",
+            "baltas krūzes",
+            "skaistas puķes",
+            "siltas zeķes",
+            "zaļas lapas",
+            "šauras lentas",
+            "gaišas kleitas",
+            "svaigas maizes",
+            "dzeltenas rozes",
+            "jaunas ģitāras"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            "Sofija fotografē gaišu māju pie hokeja laukuma.",
+            "Hokeja treneris rāda bērniem klusu vingrinājumu.",
+            "Ģirts džemperī sēž pie loga un vēro lietu.",
+            "Maija nopērk plakātu ar zaļu puisi.",
+            "Laura ātri salabo vecu krēslu un noliek to istabā.",
+            "Čakla meitene cep pankūkas un pasniedz tās ar džemu.",
+            "Žanete dzird skaļu zvanu pie hokeja halles.",
+            "Puika lēni ķemmē matus un šķiro krāsainus zīmuļus.",
+            "Vēsā rītā Ilona atver logu, klausās radio un rāda foto.",
+            "Ernests čukst ģimenei, izvēlas filmu un noliek grozu pie durvīm."
+        ]
+    }
+}

@@ -1,0 +1,107 @@
+{
+    "language_code": "da",
+    "language_name": "Danois",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Anne",
+            "Ida",
+            "Sofie",
+            "Lars",
+            "Emil",
+            "Freja",
+            "Peter",
+            "Karen",
+            "Jonas",
+            "Maja"
+        ],
+        "verb": [
+            "køber",
+            "finder",
+            "sælger",
+            "gemmer",
+            "laver",
+            "ser",
+            "sorterer",
+            "flytter",
+            "henter",
+            "vælger"
+        ],
+        "number": [
+            {
+                "text": "to",
+                "value": 2
+            },
+            {
+                "text": "tre",
+                "value": 3
+            },
+            {
+                "text": "fire",
+                "value": 4
+            },
+            {
+                "text": "fem",
+                "value": 5
+            },
+            {
+                "text": "seks",
+                "value": 6
+            },
+            {
+                "text": "syv",
+                "value": 7
+            },
+            {
+                "text": "otte",
+                "value": 8
+            },
+            {
+                "text": "elleve",
+                "value": 11
+            },
+            {
+                "text": "fjorten",
+                "value": 14
+            },
+            {
+                "text": "tredive",
+                "value": 30
+            }
+        ],
+        "nominal_group": [
+            "røde kopper",
+            "grønne tasker",
+            "store bøger",
+            "små skåle",
+            "bløde puder",
+            "gamle nøgler",
+            "friske æbler",
+            "hvide blomster",
+            "gule jakker",
+            "tykke sokker"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            "Børnene leger roligt i haven efter regnen.",
+            "Maja hælder koldt vand i den blå skål.",
+            "Søren skriver en kort besked på sin telefon.",
+            "Kvinden finder nøglen under den gamle bænk.",
+            "Jonas tager jakken med, fordi vinden er kold.",
+            "Læreren læser langsomt, så alle kan følge med.",
+            "Freja køber frisk fisk og grønne æbler.",
+            "Peter bruger syv små kopper til den varme suppe.",
+            "Karen synger en enkel sang ved det åbne vindue.",
+            "Maja vælger røde blomster og lægger dem på bordet."
+        ]
+    }
+}

@@ -1,0 +1,107 @@
+{
+    "language_code": "sv",
+    "language_name": "Suédois",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Anna",
+            "Erik",
+            "Karin",
+            "Johan",
+            "Maja",
+            "Oskar",
+            "Linnea",
+            "Sofia",
+            "Kjell",
+            "Ylva"
+        ],
+        "verb": [
+            "ser",
+            "hittar",
+            "köper",
+            "målar",
+            "bär",
+            "räknar",
+            "visar",
+            "hämtar",
+            "samlar",
+            "flyttar"
+        ],
+        "number": [
+            {
+                "text": "två",
+                "value": 2
+            },
+            {
+                "text": "fyra",
+                "value": 4
+            },
+            {
+                "text": "fem",
+                "value": 5
+            },
+            {
+                "text": "sju",
+                "value": 7
+            },
+            {
+                "text": "åtta",
+                "value": 8
+            },
+            {
+                "text": "nio",
+                "value": 9
+            },
+            {
+                "text": "tolv",
+                "value": 12
+            },
+            {
+                "text": "sexton",
+                "value": 16
+            },
+            {
+                "text": "sjutton",
+                "value": 17
+            },
+            {
+                "text": "tjugo",
+                "value": 20
+            }
+        ],
+        "nominal_group": [
+            "röda bilar",
+            "mörka dörrar",
+            "mjuka kuddar",
+            "sjuka hundar",
+            "nya väskor",
+            "gula lampor",
+            "tunga lådor",
+            "tjocka jackor",
+            "långa ringar",
+            "små blå blommor"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            "Kjell köper färskt bröd och mjuk ost.",
+            "Ylva öppnar en mörk dörr och ropar på Johan.",
+            "Sofia sjunger en lugn sång medan regnet faller.",
+            "Håkan lägger åtta nya böcker på hyllan.",
+            "Maja cyklar över bron när solen skiner.",
+            "Anna tvättar små sjalar i kallt vatten.",
+            "Erik bygger ett gult hus nära sjön.",
+            "Linnea hittar femton gamla nycklar under bordet.",
+            "Oskar målar tjocka streck på papper.",
+            "Karin lagar soppa och skalar fyra äpplen."
+        ]
+    }
+}

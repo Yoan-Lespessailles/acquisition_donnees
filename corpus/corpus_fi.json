@@ -1,0 +1,107 @@
+{
+    "language_code": "fi",
+    "language_name": "Finnois",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Aino",
+            "Eero",
+            "Laura",
+            "Mikko",
+            "Sari",
+            "Jukka",
+            "Kaisa",
+            "Sofia",
+            "Fanni",
+            "Gabriel"
+        ],
+        "verb": [
+            "näkee",
+            "löytää",
+            "ottaa",
+            "ostaa",
+            "tuo",
+            "hakee",
+            "valitsee",
+            "laskee",
+            "näyttää",
+            "kantaa"
+        ],
+        "number": [
+            {
+                "text": "kaksi",
+                "value": 2
+            },
+            {
+                "text": "kolme",
+                "value": 3
+            },
+            {
+                "text": "neljä",
+                "value": 4
+            },
+            {
+                "text": "viisi",
+                "value": 5
+            },
+            {
+                "text": "kuusi",
+                "value": 6
+            },
+            {
+                "text": "seitsemän",
+                "value": 7
+            },
+            {
+                "text": "kahdeksan",
+                "value": 8
+            },
+            {
+                "text": "yhdeksän",
+                "value": 9
+            },
+            {
+                "text": "kaksitoista",
+                "value": 12
+            },
+            {
+                "text": "kymmenen",
+                "value": 10
+            }
+        ],
+        "nominal_group": [
+            "punaista kuppia",
+            "pientä kirjaa",
+            "uutta avainta",
+            "vihreää omenaa",
+            "sinistä palloa",
+            "keltaista laatikkoa",
+            "kevyttä laukkua",
+            "vanhaa lehteä",
+            "mustaa kenkää",
+            "pyöreää lautasta"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            "Bussi pysähtyy hiljaa vanhan koulun edessä.",
+            "Fanni kirjoittaa lyhyen viestin uudelle ystävälle.",
+            "Gabriel löytää pienen kengän märältä pihalta.",
+            "Sofia käy pienessä galleriassa ja katsoo valokuvaa.",
+            "Äiti keittää teetä ja leikkaa tuoretta leipää.",
+            "Nainen ostaa kolme vihreää omenaa torilta.",
+            "Kylmä yö saa järven pinnan hiljaiseksi.",
+            "Lääkäri neuvoo lasta hengittämään rauhallisesti.",
+            "Sade alkaa, mutta Veera kantaa kevyttä laukkua.",
+            "Pieni koira juoksee nopeasti suuren talon ympäri."
+        ]
+    }
+}
