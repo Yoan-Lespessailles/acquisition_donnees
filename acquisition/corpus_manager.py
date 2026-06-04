@@ -279,6 +279,7 @@ class CorpusManager:
         # et s'il reste encore des phrases disponibles.
         if self.sentence_mode in (0, 2) and self.corpus_data["template_2"]["sentences"]:
             self.current_sentence = self.corpus_data["template_2"]["sentences"][-1]
+            self.annotation_sentence = self.current_sentence
             self.current_template_type = "template_2"
             return self.current_sentence
 
