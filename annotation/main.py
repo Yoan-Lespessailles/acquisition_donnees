@@ -6,7 +6,9 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from annotation.annotation_context import AnnotationContext
+from annotation.whisper_manager import WhisperManager
 from annotation.file_pairing import match_video_and_metadata_files
+from annotation.unmatched_manager import move_unmatched_files
 
 def parse_arguments():
     """
@@ -66,7 +68,7 @@ if __name__ == "__main__":
     # Lit les arguments de la ligne de commande.
     args = parse_arguments()
     
-    annotation_context = AnnotationContext (args.language, args.data_dir, args.model)
+    annotation_context = AnnotationContext (args.language, args.data_dir)
 
     annotation_context.validate_paths()
 
@@ -77,4 +79,11 @@ if __name__ == "__main__":
     
     valid_pairs, videos_without_metadata, metadatas_without_video = match_video_and_metadata_files(annotation_context.video_files, annotation_context.metadata_files, annotation_context.videos_dir, annotation_context.metadatas_dir)
 
-    
+    if move_unmatched_files (annotation_context.language_dir, videos_without_metadata, metadatas_without_video):
+        print("Fichiers déplacés")
+    else:
+        print("Aucun fichiers à déplacer")
+
+    whisper_manager = WhisperManager(args.model, valid_pairs)
+
+    whisper_manager.oral_transcription()

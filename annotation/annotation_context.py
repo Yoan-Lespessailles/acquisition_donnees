@@ -2,11 +2,10 @@ from pathlib import Path
 
 
 class AnnotationContext:
-    def __init__(self, language_code, data_dir, model):
+    def __init__(self, language_code, data_dir):
         
         self.language_code = language_code.lower()
         self.data_dir = data_dir
-        self.model = model
 
         self.language_dir = Path()
         self.videos_dir = Path()
