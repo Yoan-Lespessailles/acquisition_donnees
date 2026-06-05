@@ -1,0 +1,138 @@
+{
+    "language_code": "pl",
+    "language_name": "Polonais",
+    "whisper_code": "pl",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Anna",
+            "Tomasz",
+            "Katarzyna",
+            "Paweł",
+            "Michał",
+            "Łukasz",
+            "Zofia",
+            "Beata",
+            "Piotr",
+            "Julia"
+        ],
+        "verb": [
+            "ogląda",
+            "widzi",
+            "rysuje",
+            "fotografuje",
+            "opisuje",
+            "liczy",
+            "zbiera",
+            "kupuje",
+            "pokazuje",
+            "znajduje"
+        ],
+        "number": [
+            {
+                "text": "pięć",
+                "value": 5
+            },
+            {
+                "text": "sześć",
+                "value": 6
+            },
+            {
+                "text": "siedem",
+                "value": 7
+            },
+            {
+                "text": "osiem",
+                "value": 8
+            },
+            {
+                "text": "dziewięć",
+                "value": 9
+            },
+            {
+                "text": "dziesięć",
+                "value": 10
+            },
+            {
+                "text": "dwanaście",
+                "value": 12
+            },
+            {
+                "text": "piętnaście",
+                "value": 15
+            },
+            {
+                "text": "dwadzieścia",
+                "value": 20
+            },
+            {
+                "text": "trzydzieści",
+                "value": 30
+            }
+        ],
+        "nominal_group": [
+            "małych kotów",
+            "zielonych jabłek",
+            "starych domów",
+            "kolorowych dzwonów",
+            "dużych talerzy",
+            "szybkich rowerów",
+            "nowych książek",
+            "ciepłych bułek",
+            "żółtych kwiatów",
+            "czystych łyżek"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            {
+                "text": "Dziecko cicho siedzi przy zielonym stole.",
+                "numeric": "Dziecko cicho siedzi przy zielonym stole."
+            },
+            {
+                "text": "Babcia smaży świeże pączki w dużej kuchni.",
+                "numeric": "Babcia smaży świeże pączki w dużej kuchni."
+            },
+            {
+                "text": "Gruby kot szybko skacze przez wąski płot.",
+                "numeric": "Gruby kot szybko skacze przez wąski płot."
+            },
+            {
+                "text": "Słoik dżemu stoi obok zielonego garnka.",
+                "numeric": "Słoik dżemu stoi obok zielonego garnka."
+            },
+            {
+                "text": "Janek dzwoni do Beaty po ważnej lekcji.",
+                "numeric": "Janek dzwoni do Beaty po ważnej lekcji."
+            },
+            {
+                "text": "Mała dziewczynka znajduje żółty klucz.",
+                "numeric": "Mała dziewczynka znajduje żółty klucz."
+            },
+            {
+                "text": "Piotr rysuje czarny krzyż na kartce.",
+                "numeric": "Piotr rysuje czarny krzyż na kartce."
+            },
+            {
+                "text": "Zosia niesie świeży chleb i ciepłą zupę.",
+                "numeric": "Zosia niesie świeży chleb i ciepłą zupę."
+            },
+            {
+                "text": "Łukasz mówi spokojnie, gdy pada deszcz.",
+                "numeric": "Łukasz mówi spokojnie, gdy pada deszcz."
+            },
+            {
+                "text": "Teresa liczy trzydzieści sześć jasnych obrazków.",
+                "numeric": "Teresa liczy 36 jasnych obrazków."
+            }
+        ]
+    }
+}

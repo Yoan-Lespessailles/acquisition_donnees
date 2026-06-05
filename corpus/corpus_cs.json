@@ -1,0 +1,138 @@
+{
+    "language_code": "cs",
+    "language_name": "Tchèque",
+    "whisper_code": "cs",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Anna",
+            "Petr",
+            "Jana",
+            "Tomáš",
+            "Lucie",
+            "Martin",
+            "Eva",
+            "Pavel",
+            "Radek",
+            "Klára"
+        ],
+        "verb": [
+            "počítá",
+            "hledá",
+            "kreslí",
+            "vidí",
+            "vybírá",
+            "ukazuje",
+            "popisuje",
+            "fotí",
+            "sleduje",
+            "měří"
+        ],
+        "number": [
+            {
+                "text": "pět",
+                "value": 5
+            },
+            {
+                "text": "šest",
+                "value": 6
+            },
+            {
+                "text": "devět",
+                "value": 9
+            },
+            {
+                "text": "deset",
+                "value": 10
+            },
+            {
+                "text": "jedenáct",
+                "value": 11
+            },
+            {
+                "text": "dvanáct",
+                "value": 12
+            },
+            {
+                "text": "třináct",
+                "value": 13
+            },
+            {
+                "text": "patnáct",
+                "value": 15
+            },
+            {
+                "text": "dvacet",
+                "value": 20
+            },
+            {
+                "text": "třicet",
+                "value": 30
+            }
+        ],
+        "nominal_group": [
+            "červených balónů",
+            "mladých koní",
+            "starých židlí",
+            "bílých květin",
+            "malých psů",
+            "kulatých stolů",
+            "dlouhých řek",
+            "nových domů",
+            "žlutých klíčů",
+            "rychlých vlaků"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            {
+                "text": "Žofie vaří horkou polévku v malé kuchyni.",
+                "numeric": "Žofie vaří horkou polévku v malé kuchyni."
+            },
+            {
+                "text": "Řidič čeká před školou a pije vodu.",
+                "numeric": "Řidič čeká před školou a pije vodu."
+            },
+            {
+                "text": "Chlapec běží přes dlouhý most k zelenému domu.",
+                "numeric": "Chlapec běží přes dlouhý most k zelenému domu."
+            },
+            {
+                "text": "Lékař měří teplotu malému dítěti.",
+                "numeric": "Lékař měří teplotu malému dítěti."
+            },
+            {
+                "text": "Tichý déšť padá na střechu staré garáže.",
+                "numeric": "Tichý déšť padá na střechu staré garáže."
+            },
+            {
+                "text": "Jirka píše krátký vzkaz na čistý papír.",
+                "numeric": "Jirka píše krátký vzkaz na čistý papír."
+            },
+            {
+                "text": "Dívka poslouchá hudbu a směje se u okna.",
+                "numeric": "Dívka poslouchá hudbu a směje se u okna."
+            },
+            {
+                "text": "Učitel vysvětluje žákům těžkou úlohu.",
+                "numeric": "Učitel vysvětluje žákům těžkou úlohu."
+            },
+            {
+                "text": "Kočka leží chvíli na měkkém koberci.",
+                "numeric": "Kočka leží chvíli na měkkém koberci."
+            },
+            {
+                "text": "Filip fotografuje módní přehlídku na náměstí.",
+                "numeric": "Filip fotografuje módní přehlídku na náměstí."
+            }
+        ]
+    }
+}

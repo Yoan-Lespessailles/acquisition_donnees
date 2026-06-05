@@ -1,6 +1,7 @@
 {
     "language_code": "pt",
     "language_name": "Portugais",
+    "whisper_code": "pt",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",
@@ -92,16 +93,46 @@
     "template_2": {
         "type": "fixed",
         "sentences": [
-            "O vinho branco fica no frio durante a noite.",
-            "A mãe põe pão quente em cima da mesa.",
-            "Guilherme trabalha junto ao jardim velho.",
-            "Rita sorri quando vê três cães pequenos.",
-            "Teresa lê um jornal antigo junto da janela.",
-            "O rapaz guarda livros numa caixa grande.",
-            "Miguel lava copos limpos antes do almoço.",
-            "João fecha a porta do quarto com cuidado.",
-            "Sofia traz flores bonitas para Ana de manhã.",
-            "Pedro ouve música baixa enquanto caminha no fim da tarde."
+            {
+                "text": "O vinho branco fica no frio durante a noite.",
+                "numeric": "O vinho branco fica no frio durante a noite."
+            },
+            {
+                "text": "A mãe põe pão quente em cima da mesa.",
+                "numeric": "A mãe põe pão quente em cima da mesa."
+            },
+            {
+                "text": "Guilherme trabalha junto ao jardim velho.",
+                "numeric": "Guilherme trabalha junto ao jardim velho."
+            },
+            {
+                "text": "Rita sorri quando vê três cães pequenos.",
+                "numeric": "Rita sorri quando vê 3 cães pequenos."
+            },
+            {
+                "text": "Teresa lê um jornal antigo junto da janela.",
+                "numeric": "Teresa lê um jornal antigo junto da janela."
+            },
+            {
+                "text": "O rapaz guarda livros numa caixa grande.",
+                "numeric": "O rapaz guarda livros numa caixa grande."
+            },
+            {
+                "text": "Miguel lava copos limpos antes do almoço.",
+                "numeric": "Miguel lava copos limpos antes do almoço."
+            },
+            {
+                "text": "João fecha a porta do quarto com cuidado.",
+                "numeric": "João fecha a porta do quarto com cuidado."
+            },
+            {
+                "text": "Sofia traz flores bonitas para Ana de manhã.",
+                "numeric": "Sofia traz flores bonitas para Ana de manhã."
+            },
+            {
+                "text": "Pedro ouve música baixa enquanto caminha no fim da tarde.",
+                "numeric": "Pedro ouve música baixa enquanto caminha no fim da tarde."
+            }
         ]
     }
 }

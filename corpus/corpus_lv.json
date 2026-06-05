@@ -1,0 +1,138 @@
+{
+    "language_code": "lv",
+    "language_name": "Letton",
+    "whisper_code": "lv",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Anna",
+            "Jānis",
+            "Līga",
+            "Māris",
+            "Ilze",
+            "Kārlis",
+            "Dace",
+            "Zane",
+            "Rūta",
+            "Roberts"
+        ],
+        "verb": [
+            "redz",
+            "nes",
+            "pērk",
+            "rāda",
+            "skaita",
+            "meklē",
+            "atrod",
+            "izvēlas",
+            "fotografē",
+            "zīmē"
+        ],
+        "number": [
+            {
+                "text": "divas",
+                "value": 2
+            },
+            {
+                "text": "trīs",
+                "value": 3
+            },
+            {
+                "text": "četras",
+                "value": 4
+            },
+            {
+                "text": "piecas",
+                "value": 5
+            },
+            {
+                "text": "sešas",
+                "value": 6
+            },
+            {
+                "text": "septiņas",
+                "value": 7
+            },
+            {
+                "text": "astoņas",
+                "value": 8
+            },
+            {
+                "text": "deviņas",
+                "value": 9
+            },
+            {
+                "text": "desmit",
+                "value": 10
+            },
+            {
+                "text": "divpadsmit",
+                "value": 12
+            }
+        ],
+        "nominal_group": [
+            "jaunas grāmatas",
+            "baltas krūzes",
+            "skaistas puķes",
+            "siltas zeķes",
+            "zaļas lapas",
+            "šauras lentas",
+            "gaišas kleitas",
+            "svaigas maizes",
+            "dzeltenas rozes",
+            "jaunas ģitāras"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            {
+                "text": "Sofija fotografē gaišu māju pie hokeja laukuma.",
+                "numeric": "Sofija fotografē gaišu māju pie hokeja laukuma."
+            },
+            {
+                "text": "Hokeja treneris rāda bērniem klusu vingrinājumu.",
+                "numeric": "Hokeja treneris rāda bērniem klusu vingrinājumu."
+            },
+            {
+                "text": "Ģirts džemperī sēž pie loga un vēro lietu.",
+                "numeric": "Ģirts džemperī sēž pie loga un vēro lietu."
+            },
+            {
+                "text": "Maija nopērk plakātu ar zaļu puisi.",
+                "numeric": "Maija nopērk plakātu ar zaļu puisi."
+            },
+            {
+                "text": "Laura ātri salabo vecu krēslu un noliek to istabā.",
+                "numeric": "Laura ātri salabo vecu krēslu un noliek to istabā."
+            },
+            {
+                "text": "Čakla meitene cep pankūkas un pasniedz tās ar džemu.",
+                "numeric": "Čakla meitene cep pankūkas un pasniedz tās ar džemu."
+            },
+            {
+                "text": "Žanete dzird skaļu zvanu pie hokeja halles.",
+                "numeric": "Žanete dzird skaļu zvanu pie hokeja halles."
+            },
+            {
+                "text": "Puika lēni ķemmē matus un šķiro krāsainus zīmuļus.",
+                "numeric": "Puika lēni ķemmē matus un šķiro krāsainus zīmuļus."
+            },
+            {
+                "text": "Vēsā rītā Ilona atver logu, klausās radio un rāda foto.",
+                "numeric": "Vēsā rītā Ilona atver logu, klausās radio un rāda foto."
+            },
+            {
+                "text": "Ernests čukst ģimenei, izvēlas filmu un noliek grozu pie durvīm.",
+                "numeric": "Ernests čukst ģimenei, izvēlas filmu un noliek grozu pie durvīm."
+            }
+        ]
+    }
+}

@@ -1,0 +1,138 @@
+{
+    "language_code": "sk",
+    "language_name": "Slovaque",
+    "whisper_code": "sk",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Jana",
+            "Peter",
+            "Lucia",
+            "Marek",
+            "Zuzana",
+            "Šimon",
+            "Tomáš",
+            "Nikola",
+            "Ľuboš",
+            "Katarína"
+        ],
+        "verb": [
+            "vidí",
+            "číta",
+            "hľadá",
+            "kupuje",
+            "nosí",
+            "kreslí",
+            "počíta",
+            "ukazuje",
+            "opisuje",
+            "nájde"
+        ],
+        "number": [
+            {
+                "text": "päť",
+                "value": 5
+            },
+            {
+                "text": "šesť",
+                "value": 6
+            },
+            {
+                "text": "sedem",
+                "value": 7
+            },
+            {
+                "text": "osem",
+                "value": 8
+            },
+            {
+                "text": "desať",
+                "value": 10
+            },
+            {
+                "text": "dvanásť",
+                "value": 12
+            },
+            {
+                "text": "pätnásť",
+                "value": 15
+            },
+            {
+                "text": "dvadsať",
+                "value": 20
+            },
+            {
+                "text": "tridsať",
+                "value": 30
+            },
+            {
+                "text": "štyridsať",
+                "value": 40
+            }
+        ],
+        "nominal_group": [
+            "červených jabĺk",
+            "malých kníh",
+            "nových stolov",
+            "žltých lístkov",
+            "bielych kvetov",
+            "dobrých obrázkov",
+            "dlhých vlakov",
+            "krásnych tanierov",
+            "teplých domov",
+            "čistých pohárov"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            {
+                "text": "Dieťa dnes ďakuje za dobrý džem a ďalšiu cudziu knihu.",
+                "numeric": "Dieťa dnes ďakuje za dobrý džem a ďalšiu cudziu knihu."
+            },
+            {
+                "text": "V bazéne plávajú deti, potom sedia pri veľkom okne a farbia žltý dom.",
+                "numeric": "V bazéne plávajú deti, potom sedia pri veľkom okne a farbia žltý dom."
+            },
+            {
+                "text": "Môj kôň pôjde k bráne, kde rastie voňavý ker a zelená tráva.",
+                "numeric": "Môj kôň pôjde k bráne, kde rastie voňavý ker a zelená tráva."
+            },
+            {
+                "text": "Mladá rodina kúpi ovocie, mlieko a na trhu kúpi figúrku.",
+                "numeric": "Mladá rodina kúpi ovocie, mlieko a na trhu kúpi figúrku."
+            },
+            {
+                "text": "Na dvore rastie vŕba, môj kôň stojí pod ňou a vonia tráva.",
+                "numeric": "Na dvore rastie vŕba, môj kôň stojí pod ňou a vonia tráva."
+            },
+            {
+                "text": "Chlapec si poraní prst a krk, potom číta príbeh o vlkovi.",
+                "numeric": "Chlapec si poraní prst a krk, potom číta príbeh o vlkovi."
+            },
+            {
+                "text": "Zuzka nájde cudziu knihu medzi gombíkmi a cudzími ceruzkami.",
+                "numeric": "Zuzka nájde cudziu knihu medzi gombíkmi a cudzími ceruzkami."
+            },
+            {
+                "text": "Mária nosí ďalšiu farebnú sukňu, spieva medzi deťmi a drží žltú figúrku.",
+                "numeric": "Mária nosí ďalšiu farebnú sukňu, spieva medzi deťmi a drží žltú figúrku."
+            },
+            {
+                "text": "Malý žiak ide cez trh, kreslí kruh, šípku a dlhú čiaru.",
+                "numeric": "Malý žiak ide cez trh, kreslí kruh, šípku a dlhú čiaru."
+            },
+            {
+                "text": "V kancelárii visí môj nový plagát, fialový balón, veľká mapa a gumená figúrka.",
+                "numeric": "V kancelárii visí môj nový plagát, fialový balón, veľká mapa a gumená figúrka."
+            }
+        ]
+    }
+}

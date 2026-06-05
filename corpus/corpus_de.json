@@ -1,6 +1,7 @@
 {
     "language_code": "de",
     "language_name": "Allemand",
+    "whisper_code": "de",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",
@@ -92,16 +93,46 @@
     "template_2": {
         "type": "fixed",
         "sentences": [
-            "Der junge Koch bäckt frische Brötchen, streut Pfeffer und zählt zehn Gäste.",
-            "Mädchen lernen heute spät Deutsch und trinken süßen Tee.",
-            "Clara kauft zwölf bunte deutsche Bücher für Felix.",
-            "Jonas prüft die dünnen Kissen neben dem offenen Fenster.",
-            "Hanna holt drei schwere Taschen zum grünen Haus.",
-            "Ben sucht oft acht schöne gelbe Blumen neben dem langen Weg.",
-            "Sophie zeigt Laura neun schöne Bilder am Rhein.",
-            "David findet kleine Pakete auf dem weiten Feld.",
-            "Emma nimmt fünf süße Äpfel aus dem Korb.",
-            "Felix spricht deutlich, dann sagt er Tschüss und lacht."
+            {
+                "text": "Der junge Koch bäckt frische Brötchen, streut Pfeffer und zählt zehn Gäste.",
+                "numeric": "Der junge Koch bäckt frische Brötchen, streut Pfeffer und zählt 10 Gäste."
+            },
+            {
+                "text": "Mädchen lernen heute spät Deutsch und trinken süßen Tee.",
+                "numeric": "Mädchen lernen heute spät Deutsch und trinken süßen Tee."
+            },
+            {
+                "text": "Clara kauft zwölf bunte deutsche Bücher für Felix.",
+                "numeric": "Clara kauft 12 bunte deutsche Bücher für Felix."
+            },
+            {
+                "text": "Jonas prüft die dünnen Kissen neben dem offenen Fenster.",
+                "numeric": "Jonas prüft die dünnen Kissen neben dem offenen Fenster."
+            },
+            {
+                "text": "Hanna holt drei schwere Taschen zum grünen Haus.",
+                "numeric": "Hanna holt 3 schwere Taschen zum grünen Haus."
+            },
+            {
+                "text": "Ben sucht oft acht schöne gelbe Blumen neben dem langen Weg.",
+                "numeric": "Ben sucht oft 8 schöne gelbe Blumen neben dem langen Weg."
+            },
+            {
+                "text": "Sophie zeigt Laura neun schöne Bilder am Rhein.",
+                "numeric": "Sophie zeigt Laura 9 schöne Bilder am Rhein."
+            },
+            {
+                "text": "David findet kleine Pakete auf dem weiten Feld.",
+                "numeric": "David findet kleine Pakete auf dem weiten Feld."
+            },
+            {
+                "text": "Emma nimmt fünf süße Äpfel aus dem Korb.",
+                "numeric": "Emma nimmt 5 süße Äpfel aus dem Korb."
+            },
+            {
+                "text": "Felix spricht deutlich, dann sagt er Tschüss und lacht.",
+                "numeric": "Felix spricht deutlich, dann sagt er Tschüss und lacht."
+            }
         ]
     }
 }

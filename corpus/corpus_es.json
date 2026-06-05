@@ -1,6 +1,7 @@
 {
     "language_code": "es",
     "language_name": "Espagnol",
+    "whisper_code": "es",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",
@@ -92,16 +93,46 @@
     "template_2": {
         "type": "fixed",
         "sentences": [
-            "La niña juega con una llave pequeña junto a la fuente.",
-            "Ramón prepara chocolate caliente para Beatriz y Jorge.",
-            "Guillermo guarda cuatro juguetes viejos en una caja azul.",
-            "El perro corre rápido por la calle seca.",
-            "Cecilia dice que cinco platos están limpios.",
-            "Diego oye un ruido fuerte bajo la ventana.",
-            "Ángel enseña treinta y dos dibujos nuevos.",
-            "Chema recoge flores rojas cerca del jardín.",
-            "Nuria busca agua fría en la cocina.",
-            "Pablo vende pan crujiente y queso fresco."
+            {
+                "text": "La niña juega con una llave pequeña junto a la fuente.",
+                "numeric": "La niña juega con una llave pequeña junto a la fuente."
+            },
+            {
+                "text": "Ramón prepara chocolate caliente para Beatriz y Jorge.",
+                "numeric": "Ramón prepara chocolate caliente para Beatriz y Jorge."
+            },
+            {
+                "text": "Guillermo guarda cuatro juguetes viejos en una caja azul.",
+                "numeric": "Guillermo guarda 4 juguetes viejos en una caja azul."
+            },
+            {
+                "text": "El perro corre rápido por la calle seca.",
+                "numeric": "El perro corre rápido por la calle seca."
+            },
+            {
+                "text": "Cecilia dice que cinco platos están limpios.",
+                "numeric": "Cecilia dice que 5 platos están limpios."
+            },
+            {
+                "text": "Diego oye un ruido fuerte bajo la ventana.",
+                "numeric": "Diego oye un ruido fuerte bajo la ventana."
+            },
+            {
+                "text": "Ángel enseña treinta y dos dibujos nuevos.",
+                "numeric": "Ángel enseña 32 dibujos nuevos."
+            },
+            {
+                "text": "Chema recoge flores rojas cerca del jardín.",
+                "numeric": "Chema recoge flores rojas cerca del jardín."
+            },
+            {
+                "text": "Nuria busca agua fría en la cocina.",
+                "numeric": "Nuria busca agua fría en la cocina."
+            },
+            {
+                "text": "Pablo vende pan crujiente y queso fresco.",
+                "numeric": "Pablo vende pan crujiente y queso fresco."
+            }
         ]
     }
 }

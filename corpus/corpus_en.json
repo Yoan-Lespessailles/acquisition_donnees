@@ -1,6 +1,7 @@
 {
     "language_code": "en",
     "language_name": "Anglais",
+    "whisper_code": "en",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",
@@ -92,16 +93,46 @@
     "template_2": {
         "type": "fixed",
         "sentences": [
-            "The young nurse measures a quiet blue flower near the wall.",
-            "George shares yellow toys with three tourists.",
-            "Alice watches white shells beside the small box.",
-            "William brings green chairs through the garden.",
-            "Rose hears a clear voice during the evening.",
-            "Ben chooses large bags for the new shop.",
-            "Emma finds red feathers under the table.",
-            "Peter takes thin books from the kitchen.",
-            "Laura loves the warm air after a bright shower.",
-            "Jack sees pure jewels in the old drawer."
+            {
+                "text": "The young nurse measures a quiet blue flower near the wall.",
+                "numeric": "The young nurse measures a quiet blue flower near the wall."
+            },
+            {
+                "text": "George shares yellow toys with three tourists.",
+                "numeric": "George shares yellow toys with 3 tourists."
+            },
+            {
+                "text": "Alice watches white shells beside the small box.",
+                "numeric": "Alice watches white shells beside the small box."
+            },
+            {
+                "text": "William brings green chairs through the garden.",
+                "numeric": "William brings green chairs through the garden."
+            },
+            {
+                "text": "Rose hears a clear voice during the evening.",
+                "numeric": "Rose hears a clear voice during the evening."
+            },
+            {
+                "text": "Ben chooses large bags for the new shop.",
+                "numeric": "Ben chooses large bags for the new shop."
+            },
+            {
+                "text": "Emma finds red feathers under the table.",
+                "numeric": "Emma finds red feathers under the table."
+            },
+            {
+                "text": "Peter takes thin books from the kitchen.",
+                "numeric": "Peter takes thin books from the kitchen."
+            },
+            {
+                "text": "Laura loves the warm air after a bright shower.",
+                "numeric": "Laura loves the warm air after a bright shower."
+            },
+            {
+                "text": "Jack sees pure jewels in the old drawer.",
+                "numeric": "Jack sees pure jewels in the old drawer."
+            }
         ]
     }
 }

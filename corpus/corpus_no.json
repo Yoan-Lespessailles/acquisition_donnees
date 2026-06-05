@@ -1,0 +1,138 @@
+{
+    "language_code": "no",
+    "language_name": "Norvégien",
+    "whisper_code": "no",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Anna",
+            "Emil",
+            "Ola",
+            "Maja",
+            "Siri",
+            "Knut",
+            "Ylva",
+            "Guro",
+            "Pål",
+            "Nora"
+        ],
+        "verb": [
+            "ser",
+            "kjøper",
+            "lager",
+            "bærer",
+            "finner",
+            "henter",
+            "viser",
+            "bruker",
+            "kaster",
+            "måler"
+        ],
+        "number": [
+            {
+                "text": "to",
+                "value": 2
+            },
+            {
+                "text": "tre",
+                "value": 3
+            },
+            {
+                "text": "fire",
+                "value": 4
+            },
+            {
+                "text": "sju",
+                "value": 7
+            },
+            {
+                "text": "åtte",
+                "value": 8
+            },
+            {
+                "text": "ni",
+                "value": 9
+            },
+            {
+                "text": "tolv",
+                "value": 12
+            },
+            {
+                "text": "seksten",
+                "value": 16
+            },
+            {
+                "text": "tjue",
+                "value": 20
+            },
+            {
+                "text": "tretti",
+                "value": 30
+            }
+        ],
+        "nominal_group": [
+            "røde biler",
+            "grønne epler",
+            "blå kopper",
+            "nye bøker",
+            "store hus",
+            "tunge sekker",
+            "varme sko",
+            "myke skjerf",
+            "lyse kjoler",
+            "mørke rom"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            {
+                "text": "Kaja synger rolig mens jenta leker ute.",
+                "numeric": "Kaja synger rolig mens jenta leker ute."
+            },
+            {
+                "text": "Per kjøper nye bøker og legger dem på hylla.",
+                "numeric": "Per kjøper nye bøker og legger dem på hylla."
+            },
+            {
+                "text": "Siri finner fire små kopper i skapet.",
+                "numeric": "Siri finner 4 små kopper i skapet."
+            },
+            {
+                "text": "Guro bruker tunge sekker ved døra.",
+                "numeric": "Guro bruker tunge sekker ved døra."
+            },
+            {
+                "text": "Pål viser mørke rom med varme lamper.",
+                "numeric": "Pål viser mørke rom med varme lamper."
+            },
+            {
+                "text": "Nora henter skjerf og jakker ved skolen.",
+                "numeric": "Nora henter skjerf og jakker ved skolen."
+            },
+            {
+                "text": "Ylva bærer blå kopper over gulvet.",
+                "numeric": "Ylva bærer blå kopper over gulvet."
+            },
+            {
+                "text": "Knut måler lyse kjoler i butikken.",
+                "numeric": "Knut måler lyse kjoler i butikken."
+            },
+            {
+                "text": "Ola lager grønn suppe med røde bær.",
+                "numeric": "Ola lager grønn suppe med røde bær."
+            },
+            {
+                "text": "Emil kaster sju myke puter i sofaen.",
+                "numeric": "Emil kaster 7 myke puter i sofaen."
+            }
+        ]
+    }
+}

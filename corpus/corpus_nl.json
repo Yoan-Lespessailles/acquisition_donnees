@@ -1,6 +1,7 @@
 {
     "language_code": "nl",
     "language_name": "Néerlandais",
+    "whisper_code": "nl",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",
@@ -92,16 +93,46 @@
     "template_2": {
         "type": "fixed",
         "sentences": [
-            "De jongen fietst langzaam door de groene straat.",
-            "Een vrouw koopt verse kaas en leuke bloemen op de markt.",
-            "Het kleine meisje geeft haar broer een blauw boek.",
-            "Willem vraagt of Julia vandaag thuis blijft.",
-            "De kat springt rustig achter de zachte bank.",
-            "Noor schrijft negen korte zinnen in haar schrift.",
-            "Bram brengt warme soep naar zijn oude buurman.",
-            "Eva hoort muziek uit de open keuken.",
-            "Femke legt vijf rode sleutels naast het raam.",
-            "Gijs zegt rustig goedendag tegen de buurman."
+            {
+                "text": "De jongen fietst langzaam door de groene straat.",
+                "numeric": "De jongen fietst langzaam door de groene straat."
+            },
+            {
+                "text": "Een vrouw koopt verse kaas en leuke bloemen op de markt.",
+                "numeric": "Een vrouw koopt verse kaas en leuke bloemen op de markt."
+            },
+            {
+                "text": "Het kleine meisje geeft haar broer een blauw boek.",
+                "numeric": "Het kleine meisje geeft haar broer een blauw boek."
+            },
+            {
+                "text": "Willem vraagt of Julia vandaag thuis blijft.",
+                "numeric": "Willem vraagt of Julia vandaag thuis blijft."
+            },
+            {
+                "text": "De kat springt rustig achter de zachte bank.",
+                "numeric": "De kat springt rustig achter de zachte bank."
+            },
+            {
+                "text": "Noor schrijft negen korte zinnen in haar schrift.",
+                "numeric": "Noor schrijft 9 korte zinnen in haar schrift."
+            },
+            {
+                "text": "Bram brengt warme soep naar zijn oude buurman.",
+                "numeric": "Bram brengt warme soep naar zijn oude buurman."
+            },
+            {
+                "text": "Eva hoort muziek uit de open keuken.",
+                "numeric": "Eva hoort muziek uit de open keuken."
+            },
+            {
+                "text": "Femke legt vijf rode sleutels naast het raam.",
+                "numeric": "Femke legt 5 rode sleutels naast het raam."
+            },
+            {
+                "text": "Gijs zegt rustig goedendag tegen de buurman.",
+                "numeric": "Gijs zegt rustig goedendag tegen de buurman."
+            }
         ]
     }
 }

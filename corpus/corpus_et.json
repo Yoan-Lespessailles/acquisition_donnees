@@ -1,0 +1,138 @@
+{
+    "language_code": "et",
+    "language_name": "Estonien",
+    "whisper_code": "et",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Mari",
+            "Jaan",
+            "Liisa",
+            "Peeter",
+            "Kärt",
+            "Tõnu",
+            "Jüri",
+            "Külli",
+            "Oskar",
+            "Reet"
+        ],
+        "verb": [
+            "näeb",
+            "leiab",
+            "võtab",
+            "ostab",
+            "kannab",
+            "paneb",
+            "hoiab",
+            "otsib",
+            "toob",
+            "valib"
+        ],
+        "number": [
+            {
+                "text": "kaks",
+                "value": 2
+            },
+            {
+                "text": "kolm",
+                "value": 3
+            },
+            {
+                "text": "neli",
+                "value": 4
+            },
+            {
+                "text": "viis",
+                "value": 5
+            },
+            {
+                "text": "kuus",
+                "value": 6
+            },
+            {
+                "text": "seitse",
+                "value": 7
+            },
+            {
+                "text": "kaheksa",
+                "value": 8
+            },
+            {
+                "text": "üheksa",
+                "value": 9
+            },
+            {
+                "text": "kaksteist",
+                "value": 12
+            },
+            {
+                "text": "kakskümmend",
+                "value": 20
+            }
+        ],
+        "nominal_group": [
+            "vana raamatut",
+            "väikest kotti",
+            "suurt pilti",
+            "sinist tooli",
+            "pikka lehte",
+            "märga särki",
+            "ümmargust palli",
+            "kõrget klaasi",
+            "uut kaussi",
+            "värvilist linti"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            {
+                "text": "Mari kõnnib õhtul mööda väikest teed.",
+                "numeric": "Mari kõnnib õhtul mööda väikest teed."
+            },
+            {
+                "text": "Jüri sööb köögis sooja suppi.",
+                "numeric": "Jüri sööb köögis sooja suppi."
+            },
+            {
+                "text": "Tõnu kirjutab õhtul väikese kirja.",
+                "numeric": "Tõnu kirjutab õhtul väikese kirja."
+            },
+            {
+                "text": "Külli peseb märga särki ja paneb selle kuivama.",
+                "numeric": "Külli peseb märga särki ja paneb selle kuivama."
+            },
+            {
+                "text": "Oskar teeb töö juures telefoniga foto.",
+                "numeric": "Oskar teeb töö juures telefoniga foto."
+            },
+            {
+                "text": "Peeter toob poest kaksteist uut klaasi.",
+                "numeric": "Peeter toob poest 12 uut klaasi."
+            },
+            {
+                "text": "Liisa loeb öösel rahulikult huvitavat raamatut.",
+                "numeric": "Liisa loeb öösel rahulikult huvitavat raamatut."
+            },
+            {
+                "text": "Reet ostab šokolaadi ja väikese šalli.",
+                "numeric": "Reet ostab šokolaadi ja väikese šalli."
+            },
+            {
+                "text": "Kärt hoiab ümmargust palli kahe käega.",
+                "numeric": "Kärt hoiab ümmargust palli 2 käega."
+            },
+            {
+                "text": "Anu näeb õues väikest lindu kõrgel oksal.",
+                "numeric": "Anu näeb õues väikest lindu kõrgel oksal."
+            }
+        ]
+    }
+}

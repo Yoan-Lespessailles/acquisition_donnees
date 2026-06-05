@@ -1,0 +1,138 @@
+{
+    "language_code": "is",
+    "language_name": "Islandais",
+    "whisper_code": "is",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Anna",
+            "Jón",
+            "Katrín",
+            "Ólafur",
+            "Sigríður",
+            "Einar",
+            "Helga",
+            "Þór",
+            "Rakel",
+            "Guðrún"
+        ],
+        "verb": [
+            "sér",
+            "kaupir",
+            "finnur",
+            "tekur",
+            "notar",
+            "velur",
+            "flytur",
+            "skoðar",
+            "sækir",
+            "færir"
+        ],
+        "number": [
+            {
+                "text": "tvö",
+                "value": 2
+            },
+            {
+                "text": "þrjú",
+                "value": 3
+            },
+            {
+                "text": "fjögur",
+                "value": 4
+            },
+            {
+                "text": "fimm",
+                "value": 5
+            },
+            {
+                "text": "sex",
+                "value": 6
+            },
+            {
+                "text": "átta",
+                "value": 8
+            },
+            {
+                "text": "níu",
+                "value": 9
+            },
+            {
+                "text": "tólf",
+                "value": 12
+            },
+            {
+                "text": "sextán",
+                "value": 16
+            },
+            {
+                "text": "tuttugu",
+                "value": 20
+            }
+        ],
+        "nominal_group": [
+            "fersk epli",
+            "rauð hús",
+            "ný borð",
+            "stór ljós",
+            "góð brauð",
+            "mjúk teppi",
+            "gömul hjól",
+            "gömul bréf",
+            "falleg blóm",
+            "litrík kort"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            {
+                "text": "Barnið horfir á litla fugla við gamla tjörnina.",
+                "numeric": "Barnið horfir á litla fugla við gamla tjörnina."
+            },
+            {
+                "text": "Kötturinn sefur rólega undir mjúku teppi.",
+                "numeric": "Kötturinn sefur rólega undir mjúku teppi."
+            },
+            {
+                "text": "Þóra skrifar skýra sögu um nýja skólann.",
+                "numeric": "Þóra skrifar skýra sögu um nýja skólann."
+            },
+            {
+                "text": "Gunnar finnur þunga bók á borðinu.",
+                "numeric": "Gunnar finnur þunga bók á borðinu."
+            },
+            {
+                "text": "Hrefna gengur hægt yfir breiða brú.",
+                "numeric": "Hrefna gengur hægt yfir breiða brú."
+            },
+            {
+                "text": "Jökull kveikir ljós í köldu húsi.",
+                "numeric": "Jökull kveikir ljós í köldu húsi."
+            },
+            {
+                "text": "Sóley velur fallega mynd fyrir litla systur.",
+                "numeric": "Sóley velur fallega mynd fyrir litla systur."
+            },
+            {
+                "text": "Páll heyrir vind við opinn glugga.",
+                "numeric": "Páll heyrir vind við opinn glugga."
+            },
+            {
+                "text": "Krakkarnir telja átta litríka bolta á vellinum.",
+                "numeric": "Krakkarnir telja 8 litríka bolta á vellinum."
+            },
+            {
+                "text": "Svanur syngur lengi fallegt lag fyrir unga vini.",
+                "numeric": "Svanur syngur lengi fallegt lag fyrir unga vini."
+            }
+        ]
+    }
+}

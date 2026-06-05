@@ -1,0 +1,138 @@
+{
+    "language_code": "lt",
+    "language_name": "Lituanien",
+    "whisper_code": "lt",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Jonas",
+            "Benas",
+            "Lina",
+            "Tomas",
+            "Zita",
+            "Mantas",
+            "Greta",
+            "Darius",
+            "Herkus",
+            "Viktoras"
+        ],
+        "verb": [
+            "mato",
+            "neša",
+            "perka",
+            "randa",
+            "veža",
+            "ima",
+            "deda",
+            "laiko",
+            "tvarko",
+            "skaičiuoja"
+        ],
+        "number": [
+            {
+                "text": "dešimt",
+                "value": 10
+            },
+            {
+                "text": "vienuolika",
+                "value": 11
+            },
+            {
+                "text": "dvylika",
+                "value": 12
+            },
+            {
+                "text": "trylika",
+                "value": 13
+            },
+            {
+                "text": "keturiolika",
+                "value": 14
+            },
+            {
+                "text": "penkiolika",
+                "value": 15
+            },
+            {
+                "text": "šešiolika",
+                "value": 16
+            },
+            {
+                "text": "dvidešimt",
+                "value": 20
+            },
+            {
+                "text": "trisdešimt",
+                "value": 30
+            },
+            {
+                "text": "keturiasdešimt",
+                "value": 40
+            }
+        ],
+        "nominal_group": [
+            "mažų puodelių",
+            "naujų filmų",
+            "švarių langų",
+            "sunkių krepšių",
+            "ilgų laidų",
+            "gražių žiedų",
+            "šaltų gėrimų",
+            "senų raktų",
+            "trumpų tekstų",
+            "geltonų citrinų"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            {
+                "text": "Mama čia kepa šiltą pyragą ir padeda jį ant stalo.",
+                "numeric": "Mama čia kepa šiltą pyragą ir padeda jį ant stalo."
+            },
+            {
+                "text": "Vaikas piešia ryškų žalią namą prie lango.",
+                "numeric": "Vaikas piešia ryškų žalią namą prie lango."
+            },
+            {
+                "text": "Mokytoja tęsia chemijos ir zoologijos pamoką, kai klasėje skamba telefonas.",
+                "numeric": "Mokytoja tęsia chemijos ir zoologijos pamoką, kai klasėje skamba telefonas."
+            },
+            {
+                "text": "Darius randa mažą ąsotį šalia senos tvoros.",
+                "numeric": "Darius randa mažą ąsotį šalia senos tvoros."
+            },
+            {
+                "text": "Greta neša šviežią duoną, džemą ir citrinų arbatą.",
+                "numeric": "Greta neša šviežią duoną, džemą ir citrinų arbatą."
+            },
+            {
+                "text": "Tėvas tikrina dėžę, džinsų kišenę ir technikos sąrašą.",
+                "numeric": "Tėvas tikrina dėžę, džinsų kišenę ir technikos sąrašą."
+            },
+            {
+                "text": "Zita skaito apie Dzūkijos centrą, vietinį herojų ir seną bažnyčią.",
+                "numeric": "Zita skaito apie Dzūkijos centrą, vietinį herojų ir seną bažnyčią."
+            },
+            {
+                "text": "Jonas džiaugiasi, kai draugas rodo Dzūkijos žemėlapį.",
+                "numeric": "Jonas džiaugiasi, kai draugas rodo Dzūkijos žemėlapį."
+            },
+            {
+                "text": "Herkus fotografuoja chorą prie aukšto tilto.",
+                "numeric": "Herkus fotografuoja chorą prie aukšto tilto."
+            },
+            {
+                "text": "Lina užrašo džemo kainą ir padeda puodelį ant stalo.",
+                "numeric": "Lina užrašo džemo kainą ir padeda puodelį ant stalo."
+            }
+        ]
+    }
+}

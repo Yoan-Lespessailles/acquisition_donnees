@@ -1,6 +1,7 @@
 {
     "language_code": "it",
     "language_name": "Italien",
+    "whisper_code": "it",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",
@@ -92,16 +93,46 @@
     "template_2": {
         "type": "fixed",
         "sentences": [
-            "La ragazza guarda lo zaino vicino alla cucina.",
-            "Giulia sceglie una bottiglia fresca per la famiglia.",
-            "Lo gnomo disegna cinque foglie gialle sul quaderno.",
-            "Francesca prepara una zuppa calda con poco sale.",
-            "Il ragazzo sistema le calze azzurre sul divano.",
-            "La signora porta dieci chiavi leggere nella borsa.",
-            "Paolo mette quattro piatti nuovi vicino al tavolo.",
-            "Anna conta quattro giochi piccoli davanti alla scuola.",
-            "Roberto mette due sciarpe rosse sulla sedia.",
-            "Sofia sistema una maglia bianca sotto la finestra."
+            {
+                "text": "La ragazza guarda lo zaino vicino alla cucina.",
+                "numeric": "La ragazza guarda lo zaino vicino alla cucina."
+            },
+            {
+                "text": "Giulia sceglie una bottiglia fresca per la famiglia.",
+                "numeric": "Giulia sceglie una bottiglia fresca per la famiglia."
+            },
+            {
+                "text": "Lo gnomo disegna cinque foglie gialle sul quaderno.",
+                "numeric": "Lo gnomo disegna 5 foglie gialle sul quaderno."
+            },
+            {
+                "text": "Francesca prepara una zuppa calda con poco sale.",
+                "numeric": "Francesca prepara una zuppa calda con poco sale."
+            },
+            {
+                "text": "Il ragazzo sistema le calze azzurre sul divano.",
+                "numeric": "Il ragazzo sistema le calze azzurre sul divano."
+            },
+            {
+                "text": "La signora porta dieci chiavi leggere nella borsa.",
+                "numeric": "La signora porta 10 chiavi leggere nella borsa."
+            },
+            {
+                "text": "Paolo mette quattro piatti nuovi vicino al tavolo.",
+                "numeric": "Paolo mette 4 piatti nuovi vicino al tavolo."
+            },
+            {
+                "text": "Anna conta quattro giochi piccoli davanti alla scuola.",
+                "numeric": "Anna conta 4 giochi piccoli davanti alla scuola."
+            },
+            {
+                "text": "Roberto mette due sciarpe rosse sulla sedia.",
+                "numeric": "Roberto mette 2 sciarpe rosse sulla sedia."
+            },
+            {
+                "text": "Sofia sistema una maglia bianca sotto la finestra.",
+                "numeric": "Sofia sistema una maglia bianca sotto la finestra."
+            }
         ]
     }
 }
