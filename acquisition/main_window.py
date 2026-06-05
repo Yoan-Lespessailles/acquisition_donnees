@@ -479,7 +479,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         languages = self.corpus_manager.load_languages()
 
         # Ajoute chaque langue dans la ComboBox.
-        for language_name, language_code in languages:
+        for language_name, language_code, _ in languages:
             self.select_language.addItem(language_name, language_code)
 
         # Si aucune langue n'est disponible, on désactive le bouton d'enregistrement.
@@ -507,6 +507,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
     def language_changed(self, index):
         """
         Réagit au changement de langue dans la ComboBox.
+
+        Paramètres :
+            index : position de la langue sélectionnée dans la ComboBox.
         """
 
         # Informe le CorpusManager de la langue sélectionnée.
