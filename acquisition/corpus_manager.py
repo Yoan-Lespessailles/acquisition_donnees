@@ -53,7 +53,7 @@ class CorpusManager:
         Charge la liste des langues disponibles à partir des fichiers JSON du dossier corpus.
 
         Retourne :
-            Une liste de tuples : [(language_name, language_code), ...]
+            Une liste de listes : [[language_name, language_code, whisper_code], ...]
         """
 
         # On vide la liste pour éviter les doublons si la méthode est rappelée.
@@ -69,10 +69,11 @@ class CorpusManager:
                 # Récupère le nom et le code de la langue.
                 language_name = data.get("language_name")
                 language_code = data.get("language_code")
+                whisper_code = data.get("whisper_code")
 
                 # Si les deux informations existent, on ajoute la langue.
                 if language_name and language_code:
-                    self.languages.append((language_name, language_code))
+                    self.languages.append([language_name, language_code, whisper_code])
 
             except json.JSONDecodeError:
                 print(f"Erreur JSON dans le fichier : {json_file}")
