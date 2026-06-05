@@ -1,6 +1,7 @@
 {
     "language_code": "lv",
     "language_name": "Letton",
+    "whisper_code": "lv",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",
@@ -92,16 +93,46 @@
     "template_2": {
         "type": "fixed",
         "sentences": [
-            "Sofija fotografē gaišu māju pie hokeja laukuma.",
-            "Hokeja treneris rāda bērniem klusu vingrinājumu.",
-            "Ģirts džemperī sēž pie loga un vēro lietu.",
-            "Maija nopērk plakātu ar zaļu puisi.",
-            "Laura ātri salabo vecu krēslu un noliek to istabā.",
-            "Čakla meitene cep pankūkas un pasniedz tās ar džemu.",
-            "Žanete dzird skaļu zvanu pie hokeja halles.",
-            "Puika lēni ķemmē matus un šķiro krāsainus zīmuļus.",
-            "Vēsā rītā Ilona atver logu, klausās radio un rāda foto.",
-            "Ernests čukst ģimenei, izvēlas filmu un noliek grozu pie durvīm."
+            {
+                "text": "Sofija fotografē gaišu māju pie hokeja laukuma.",
+                "numeric": "Sofija fotografē gaišu māju pie hokeja laukuma."
+            },
+            {
+                "text": "Hokeja treneris rāda bērniem klusu vingrinājumu.",
+                "numeric": "Hokeja treneris rāda bērniem klusu vingrinājumu."
+            },
+            {
+                "text": "Ģirts džemperī sēž pie loga un vēro lietu.",
+                "numeric": "Ģirts džemperī sēž pie loga un vēro lietu."
+            },
+            {
+                "text": "Maija nopērk plakātu ar zaļu puisi.",
+                "numeric": "Maija nopērk plakātu ar zaļu puisi."
+            },
+            {
+                "text": "Laura ātri salabo vecu krēslu un noliek to istabā.",
+                "numeric": "Laura ātri salabo vecu krēslu un noliek to istabā."
+            },
+            {
+                "text": "Čakla meitene cep pankūkas un pasniedz tās ar džemu.",
+                "numeric": "Čakla meitene cep pankūkas un pasniedz tās ar džemu."
+            },
+            {
+                "text": "Žanete dzird skaļu zvanu pie hokeja halles.",
+                "numeric": "Žanete dzird skaļu zvanu pie hokeja halles."
+            },
+            {
+                "text": "Puika lēni ķemmē matus un šķiro krāsainus zīmuļus.",
+                "numeric": "Puika lēni ķemmē matus un šķiro krāsainus zīmuļus."
+            },
+            {
+                "text": "Vēsā rītā Ilona atver logu, klausās radio un rāda foto.",
+                "numeric": "Vēsā rītā Ilona atver logu, klausās radio un rāda foto."
+            },
+            {
+                "text": "Ernests čukst ģimenei, izvēlas filmu un noliek grozu pie durvīm.",
+                "numeric": "Ernests čukst ģimenei, izvēlas filmu un noliek grozu pie durvīm."
+            }
         ]
     }
 }

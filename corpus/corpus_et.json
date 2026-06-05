@@ -1,6 +1,7 @@
 {
     "language_code": "et",
     "language_name": "Estonien",
+    "whisper_code": "et",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",
@@ -92,16 +93,46 @@
     "template_2": {
         "type": "fixed",
         "sentences": [
-            "Mari kõnnib õhtul mööda väikest teed.",
-            "Jüri sööb köögis sooja suppi.",
-            "Tõnu kirjutab õhtul väikese kirja.",
-            "Külli peseb märga särki ja paneb selle kuivama.",
-            "Oskar teeb töö juures telefoniga foto.",
-            "Peeter toob poest kaksteist uut klaasi.",
-            "Liisa loeb öösel rahulikult huvitavat raamatut.",
-            "Reet ostab šokolaadi ja väikese šalli.",
-            "Kärt hoiab ümmargust palli kahe käega.",
-            "Anu näeb õues väikest lindu kõrgel oksal."
+            {
+                "text": "Mari kõnnib õhtul mööda väikest teed.",
+                "numeric": "Mari kõnnib õhtul mööda väikest teed."
+            },
+            {
+                "text": "Jüri sööb köögis sooja suppi.",
+                "numeric": "Jüri sööb köögis sooja suppi."
+            },
+            {
+                "text": "Tõnu kirjutab õhtul väikese kirja.",
+                "numeric": "Tõnu kirjutab õhtul väikese kirja."
+            },
+            {
+                "text": "Külli peseb märga särki ja paneb selle kuivama.",
+                "numeric": "Külli peseb märga särki ja paneb selle kuivama."
+            },
+            {
+                "text": "Oskar teeb töö juures telefoniga foto.",
+                "numeric": "Oskar teeb töö juures telefoniga foto."
+            },
+            {
+                "text": "Peeter toob poest kaksteist uut klaasi.",
+                "numeric": "Peeter toob poest 12 uut klaasi."
+            },
+            {
+                "text": "Liisa loeb öösel rahulikult huvitavat raamatut.",
+                "numeric": "Liisa loeb öösel rahulikult huvitavat raamatut."
+            },
+            {
+                "text": "Reet ostab šokolaadi ja väikese šalli.",
+                "numeric": "Reet ostab šokolaadi ja väikese šalli."
+            },
+            {
+                "text": "Kärt hoiab ümmargust palli kahe käega.",
+                "numeric": "Kärt hoiab ümmargust palli 2 käega."
+            },
+            {
+                "text": "Anu näeb õues väikest lindu kõrgel oksal.",
+                "numeric": "Anu näeb õues väikest lindu kõrgel oksal."
+            }
         ]
     }
 }

@@ -1,6 +1,7 @@
 {
     "language_code": "da",
     "language_name": "Danois",
+    "whisper_code": "da",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",
@@ -92,16 +93,46 @@
     "template_2": {
         "type": "fixed",
         "sentences": [
-            "Børnene leger roligt i haven efter regnen.",
-            "Maja hælder koldt vand i den blå skål.",
-            "Søren skriver en kort besked på sin telefon.",
-            "Kvinden finder nøglen under den gamle bænk.",
-            "Jonas tager jakken med, fordi vinden er kold.",
-            "Læreren læser langsomt, så alle kan følge med.",
-            "Freja køber frisk fisk og grønne æbler.",
-            "Peter bruger syv små kopper til den varme suppe.",
-            "Karen synger en enkel sang ved det åbne vindue.",
-            "Maja vælger røde blomster og lægger dem på bordet."
+            {
+                "text": "Børnene leger roligt i haven efter regnen.",
+                "numeric": "Børnene leger roligt i haven efter regnen."
+            },
+            {
+                "text": "Maja hælder koldt vand i den blå skål.",
+                "numeric": "Maja hælder koldt vand i den blå skål."
+            },
+            {
+                "text": "Søren skriver en kort besked på sin telefon.",
+                "numeric": "Søren skriver en kort besked på sin telefon."
+            },
+            {
+                "text": "Kvinden finder nøglen under den gamle bænk.",
+                "numeric": "Kvinden finder nøglen under den gamle bænk."
+            },
+            {
+                "text": "Jonas tager jakken med, fordi vinden er kold.",
+                "numeric": "Jonas tager jakken med, fordi vinden er kold."
+            },
+            {
+                "text": "Læreren læser langsomt, så alle kan følge med.",
+                "numeric": "Læreren læser langsomt, så alle kan følge med."
+            },
+            {
+                "text": "Freja køber frisk fisk og grønne æbler.",
+                "numeric": "Freja køber frisk fisk og grønne æbler."
+            },
+            {
+                "text": "Peter bruger syv små kopper til den varme suppe.",
+                "numeric": "Peter bruger 7 små kopper til den varme suppe."
+            },
+            {
+                "text": "Karen synger en enkel sang ved det åbne vindue.",
+                "numeric": "Karen synger en enkel sang ved det åbne vindue."
+            },
+            {
+                "text": "Maja vælger røde blomster og lægger dem på bordet.",
+                "numeric": "Maja vælger røde blomster og lægger dem på bordet."
+            }
         ]
     }
 }

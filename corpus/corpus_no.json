@@ -1,6 +1,7 @@
 {
     "language_code": "no",
     "language_name": "Norvégien",
+    "whisper_code": "no",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",
@@ -92,16 +93,46 @@
     "template_2": {
         "type": "fixed",
         "sentences": [
-            "Kaja synger rolig mens jenta leker ute.",
-            "Per kjøper nye bøker og legger dem på hylla.",
-            "Siri finner fire små kopper i skapet.",
-            "Guro bruker tunge sekker ved døra.",
-            "Pål viser mørke rom med varme lamper.",
-            "Nora henter skjerf og jakker ved skolen.",
-            "Ylva bærer blå kopper over gulvet.",
-            "Knut måler lyse kjoler i butikken.",
-            "Ola lager grønn suppe med røde bær.",
-            "Emil kaster sju myke puter i sofaen."
+            {
+                "text": "Kaja synger rolig mens jenta leker ute.",
+                "numeric": "Kaja synger rolig mens jenta leker ute."
+            },
+            {
+                "text": "Per kjøper nye bøker og legger dem på hylla.",
+                "numeric": "Per kjøper nye bøker og legger dem på hylla."
+            },
+            {
+                "text": "Siri finner fire små kopper i skapet.",
+                "numeric": "Siri finner 4 små kopper i skapet."
+            },
+            {
+                "text": "Guro bruker tunge sekker ved døra.",
+                "numeric": "Guro bruker tunge sekker ved døra."
+            },
+            {
+                "text": "Pål viser mørke rom med varme lamper.",
+                "numeric": "Pål viser mørke rom med varme lamper."
+            },
+            {
+                "text": "Nora henter skjerf og jakker ved skolen.",
+                "numeric": "Nora henter skjerf og jakker ved skolen."
+            },
+            {
+                "text": "Ylva bærer blå kopper over gulvet.",
+                "numeric": "Ylva bærer blå kopper over gulvet."
+            },
+            {
+                "text": "Knut måler lyse kjoler i butikken.",
+                "numeric": "Knut måler lyse kjoler i butikken."
+            },
+            {
+                "text": "Ola lager grønn suppe med røde bær.",
+                "numeric": "Ola lager grønn suppe med røde bær."
+            },
+            {
+                "text": "Emil kaster sju myke puter i sofaen.",
+                "numeric": "Emil kaster 7 myke puter i sofaen."
+            }
         ]
     }
 }

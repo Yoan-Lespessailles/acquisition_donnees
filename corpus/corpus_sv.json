@@ -1,6 +1,7 @@
 {
     "language_code": "sv",
     "language_name": "Suédois",
+    "whisper_code": "sv",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",
@@ -92,16 +93,46 @@
     "template_2": {
         "type": "fixed",
         "sentences": [
-            "Kjell köper färskt bröd och mjuk ost.",
-            "Ylva öppnar en mörk dörr och ropar på Johan.",
-            "Sofia sjunger en lugn sång medan regnet faller.",
-            "Håkan lägger åtta nya böcker på hyllan.",
-            "Maja cyklar över bron när solen skiner.",
-            "Anna tvättar små sjalar i kallt vatten.",
-            "Erik bygger ett gult hus nära sjön.",
-            "Linnea hittar femton gamla nycklar under bordet.",
-            "Oskar målar tjocka streck på papper.",
-            "Karin lagar soppa och skalar fyra äpplen."
+            {
+                "text": "Kjell köper färskt bröd och mjuk ost.",
+                "numeric": "Kjell köper färskt bröd och mjuk ost."
+            },
+            {
+                "text": "Ylva öppnar en mörk dörr och ropar på Johan.",
+                "numeric": "Ylva öppnar en mörk dörr och ropar på Johan."
+            },
+            {
+                "text": "Sofia sjunger en lugn sång medan regnet faller.",
+                "numeric": "Sofia sjunger en lugn sång medan regnet faller."
+            },
+            {
+                "text": "Håkan lägger åtta nya böcker på hyllan.",
+                "numeric": "Håkan lägger 8 nya böcker på hyllan."
+            },
+            {
+                "text": "Maja cyklar över bron när solen skiner.",
+                "numeric": "Maja cyklar över bron när solen skiner."
+            },
+            {
+                "text": "Anna tvättar små sjalar i kallt vatten.",
+                "numeric": "Anna tvättar små sjalar i kallt vatten."
+            },
+            {
+                "text": "Erik bygger ett gult hus nära sjön.",
+                "numeric": "Erik bygger ett gult hus nära sjön."
+            },
+            {
+                "text": "Linnea hittar femton gamla nycklar under bordet.",
+                "numeric": "Linnea hittar 15 gamla nycklar under bordet."
+            },
+            {
+                "text": "Oskar målar tjocka streck på papper.",
+                "numeric": "Oskar målar tjocka streck på papper."
+            },
+            {
+                "text": "Karin lagar soppa och skalar fyra äpplen.",
+                "numeric": "Karin lagar soppa och skalar 4 äpplen."
+            }
         ]
     }
 }

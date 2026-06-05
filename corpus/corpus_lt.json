@@ -1,6 +1,7 @@
 {
     "language_code": "lt",
     "language_name": "Lituanien",
+    "whisper_code": "lt",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",
@@ -92,16 +93,46 @@
     "template_2": {
         "type": "fixed",
         "sentences": [
-            "Mama čia kepa šiltą pyragą ir padeda jį ant stalo.",
-            "Vaikas piešia ryškų žalią namą prie lango.",
-            "Mokytoja tęsia chemijos ir zoologijos pamoką, kai klasėje skamba telefonas.",
-            "Darius randa mažą ąsotį šalia senos tvoros.",
-            "Greta neša šviežią duoną, džemą ir citrinų arbatą.",
-            "Tėvas tikrina dėžę, džinsų kišenę ir technikos sąrašą.",
-            "Zita skaito apie Dzūkijos centrą, vietinį herojų ir seną bažnyčią.",
-            "Jonas džiaugiasi, kai draugas rodo Dzūkijos žemėlapį.",
-            "Herkus fotografuoja chorą prie aukšto tilto.",
-            "Lina užrašo džemo kainą ir padeda puodelį ant stalo."
+            {
+                "text": "Mama čia kepa šiltą pyragą ir padeda jį ant stalo.",
+                "numeric": "Mama čia kepa šiltą pyragą ir padeda jį ant stalo."
+            },
+            {
+                "text": "Vaikas piešia ryškų žalią namą prie lango.",
+                "numeric": "Vaikas piešia ryškų žalią namą prie lango."
+            },
+            {
+                "text": "Mokytoja tęsia chemijos ir zoologijos pamoką, kai klasėje skamba telefonas.",
+                "numeric": "Mokytoja tęsia chemijos ir zoologijos pamoką, kai klasėje skamba telefonas."
+            },
+            {
+                "text": "Darius randa mažą ąsotį šalia senos tvoros.",
+                "numeric": "Darius randa mažą ąsotį šalia senos tvoros."
+            },
+            {
+                "text": "Greta neša šviežią duoną, džemą ir citrinų arbatą.",
+                "numeric": "Greta neša šviežią duoną, džemą ir citrinų arbatą."
+            },
+            {
+                "text": "Tėvas tikrina dėžę, džinsų kišenę ir technikos sąrašą.",
+                "numeric": "Tėvas tikrina dėžę, džinsų kišenę ir technikos sąrašą."
+            },
+            {
+                "text": "Zita skaito apie Dzūkijos centrą, vietinį herojų ir seną bažnyčią.",
+                "numeric": "Zita skaito apie Dzūkijos centrą, vietinį herojų ir seną bažnyčią."
+            },
+            {
+                "text": "Jonas džiaugiasi, kai draugas rodo Dzūkijos žemėlapį.",
+                "numeric": "Jonas džiaugiasi, kai draugas rodo Dzūkijos žemėlapį."
+            },
+            {
+                "text": "Herkus fotografuoja chorą prie aukšto tilto.",
+                "numeric": "Herkus fotografuoja chorą prie aukšto tilto."
+            },
+            {
+                "text": "Lina užrašo džemo kainą ir padeda puodelį ant stalo.",
+                "numeric": "Lina užrašo džemo kainą ir padeda puodelį ant stalo."
+            }
         ]
     }
 }

@@ -1,6 +1,7 @@
 {
     "language_code": "is",
     "language_name": "Islandais",
+    "whisper_code": "is",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",
@@ -92,16 +93,46 @@
     "template_2": {
         "type": "fixed",
         "sentences": [
-            "Barnið horfir á litla fugla við gamla tjörnina.",
-            "Kötturinn sefur rólega undir mjúku teppi.",
-            "Þóra skrifar skýra sögu um nýja skólann.",
-            "Gunnar finnur þunga bók á borðinu.",
-            "Hrefna gengur hægt yfir breiða brú.",
-            "Jökull kveikir ljós í köldu húsi.",
-            "Sóley velur fallega mynd fyrir litla systur.",
-            "Páll heyrir vind við opinn glugga.",
-            "Krakkarnir telja átta litríka bolta á vellinum.",
-            "Svanur syngur lengi fallegt lag fyrir unga vini."
+            {
+                "text": "Barnið horfir á litla fugla við gamla tjörnina.",
+                "numeric": "Barnið horfir á litla fugla við gamla tjörnina."
+            },
+            {
+                "text": "Kötturinn sefur rólega undir mjúku teppi.",
+                "numeric": "Kötturinn sefur rólega undir mjúku teppi."
+            },
+            {
+                "text": "Þóra skrifar skýra sögu um nýja skólann.",
+                "numeric": "Þóra skrifar skýra sögu um nýja skólann."
+            },
+            {
+                "text": "Gunnar finnur þunga bók á borðinu.",
+                "numeric": "Gunnar finnur þunga bók á borðinu."
+            },
+            {
+                "text": "Hrefna gengur hægt yfir breiða brú.",
+                "numeric": "Hrefna gengur hægt yfir breiða brú."
+            },
+            {
+                "text": "Jökull kveikir ljós í köldu húsi.",
+                "numeric": "Jökull kveikir ljós í köldu húsi."
+            },
+            {
+                "text": "Sóley velur fallega mynd fyrir litla systur.",
+                "numeric": "Sóley velur fallega mynd fyrir litla systur."
+            },
+            {
+                "text": "Páll heyrir vind við opinn glugga.",
+                "numeric": "Páll heyrir vind við opinn glugga."
+            },
+            {
+                "text": "Krakkarnir telja átta litríka bolta á vellinum.",
+                "numeric": "Krakkarnir telja 8 litríka bolta á vellinum."
+            },
+            {
+                "text": "Svanur syngur lengi fallegt lag fyrir unga vini.",
+                "numeric": "Svanur syngur lengi fallegt lag fyrir unga vini."
+            }
         ]
     }
 }

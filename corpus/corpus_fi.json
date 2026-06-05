@@ -1,6 +1,7 @@
 {
     "language_code": "fi",
     "language_name": "Finnois",
+    "whisper_code": "fi",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",
@@ -92,16 +93,46 @@
     "template_2": {
         "type": "fixed",
         "sentences": [
-            "Bussi pysähtyy hiljaa vanhan koulun edessä.",
-            "Fanni kirjoittaa lyhyen viestin uudelle ystävälle.",
-            "Gabriel löytää pienen kengän märältä pihalta.",
-            "Sofia käy pienessä galleriassa ja katsoo valokuvaa.",
-            "Äiti keittää teetä ja leikkaa tuoretta leipää.",
-            "Nainen ostaa kolme vihreää omenaa torilta.",
-            "Kylmä yö saa järven pinnan hiljaiseksi.",
-            "Lääkäri neuvoo lasta hengittämään rauhallisesti.",
-            "Sade alkaa, mutta Veera kantaa kevyttä laukkua.",
-            "Pieni koira juoksee nopeasti suuren talon ympäri."
+            {
+                "text": "Bussi pysähtyy hiljaa vanhan koulun edessä.",
+                "numeric": "Bussi pysähtyy hiljaa vanhan koulun edessä."
+            },
+            {
+                "text": "Fanni kirjoittaa lyhyen viestin uudelle ystävälle.",
+                "numeric": "Fanni kirjoittaa lyhyen viestin uudelle ystävälle."
+            },
+            {
+                "text": "Gabriel löytää pienen kengän märältä pihalta.",
+                "numeric": "Gabriel löytää pienen kengän märältä pihalta."
+            },
+            {
+                "text": "Sofia käy pienessä galleriassa ja katsoo valokuvaa.",
+                "numeric": "Sofia käy pienessä galleriassa ja katsoo valokuvaa."
+            },
+            {
+                "text": "Äiti keittää teetä ja leikkaa tuoretta leipää.",
+                "numeric": "Äiti keittää teetä ja leikkaa tuoretta leipää."
+            },
+            {
+                "text": "Nainen ostaa kolme vihreää omenaa torilta.",
+                "numeric": "Nainen ostaa 3 vihreää omenaa torilta."
+            },
+            {
+                "text": "Kylmä yö saa järven pinnan hiljaiseksi.",
+                "numeric": "Kylmä yö saa järven pinnan hiljaiseksi."
+            },
+            {
+                "text": "Lääkäri neuvoo lasta hengittämään rauhallisesti.",
+                "numeric": "Lääkäri neuvoo lasta hengittämään rauhallisesti."
+            },
+            {
+                "text": "Sade alkaa, mutta Veera kantaa kevyttä laukkua.",
+                "numeric": "Sade alkaa, mutta Veera kantaa kevyttä laukkua."
+            },
+            {
+                "text": "Pieni koira juoksee nopeasti suuren talon ympäri.",
+                "numeric": "Pieni koira juoksee nopeasti suuren talon ympäri."
+            }
         ]
     }
 }

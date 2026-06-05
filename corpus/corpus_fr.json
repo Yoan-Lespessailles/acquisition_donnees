@@ -1,6 +1,7 @@
 {
     "language_code": "fr",
     "language_name": "Français",
+    "whisper_code": "fr",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",
@@ -92,16 +93,46 @@
     "template_2": {
         "type": "fixed",
         "sentences": [
-            "Un oignon brun cuit doucement dans la poêle chaude",
-            "Le musicien joyeux joue un air ancien",
-            "Une grenouille regarde le feu dans la grotte sombre",
-            "Un chien mignon marche lentement dans la montagne",
-            "Le vent froid souffle sur les feuilles jaunes",
-            "Un peintre soigneux nettoie un vieux mur humide",
-            "La nuit tombe sur une grande vallée silencieuse",
-            "Un nageur plonge dans une eau profonde et calme",
-            "Le boulanger gagne une médaille pour son pain croustillant",
-            "Un joueur lance une balle contre un grand mur gris"
+            {
+                "text": "Un oignon brun cuit doucement dans la poêle chaude",
+                "numeric": "Un oignon brun cuit doucement dans la poêle chaude"
+            },
+            {
+                "text": "Le musicien joyeux joue un air ancien",
+                "numeric": "Le musicien joyeux joue un air ancien"
+            },
+            {
+                "text": "Une grenouille regarde le feu dans la grotte sombre",
+                "numeric": "Une grenouille regarde le feu dans la grotte sombre"
+            },
+            {
+                "text": "Un chien mignon marche lentement dans la montagne",
+                "numeric": "Un chien mignon marche lentement dans la montagne"
+            },
+            {
+                "text": "Le vent froid souffle sur les feuilles jaunes",
+                "numeric": "Le vent froid souffle sur les feuilles jaunes"
+            },
+            {
+                "text": "Un peintre soigneux nettoie un vieux mur humide",
+                "numeric": "Un peintre soigneux nettoie un vieux mur humide"
+            },
+            {
+                "text": "La nuit tombe sur une grande vallée silencieuse",
+                "numeric": "La nuit tombe sur une grande vallée silencieuse"
+            },
+            {
+                "text": "Un nageur plonge dans une eau profonde et calme",
+                "numeric": "Un nageur plonge dans une eau profonde et calme"
+            },
+            {
+                "text": "Le boulanger gagne une médaille pour son pain croustillant",
+                "numeric": "Le boulanger gagne une médaille pour son pain croustillant"
+            },
+            {
+                "text": "Un joueur lance une balle contre un grand mur gris",
+                "numeric": "Un joueur lance une balle contre un grand mur gris"
+            }
         ]
     }
 }

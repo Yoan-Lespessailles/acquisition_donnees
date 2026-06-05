@@ -1,6 +1,7 @@
 {
     "language_code": "pl",
     "language_name": "Polonais",
+    "whisper_code": "pl",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",
@@ -92,16 +93,46 @@
     "template_2": {
         "type": "fixed",
         "sentences": [
-            "Dziecko cicho siedzi przy zielonym stole.",
-            "Babcia smaży świeże pączki w dużej kuchni.",
-            "Gruby kot szybko skacze przez wąski płot.",
-            "Słoik dżemu stoi obok zielonego garnka.",
-            "Janek dzwoni do Beaty po ważnej lekcji.",
-            "Mała dziewczynka znajduje żółty klucz.",
-            "Piotr rysuje czarny krzyż na kartce.",
-            "Zosia niesie świeży chleb i ciepłą zupę.",
-            "Łukasz mówi spokojnie, gdy pada deszcz.",
-            "Teresa liczy trzydzieści sześć jasnych obrazków."
+            {
+                "text": "Dziecko cicho siedzi przy zielonym stole.",
+                "numeric": "Dziecko cicho siedzi przy zielonym stole."
+            },
+            {
+                "text": "Babcia smaży świeże pączki w dużej kuchni.",
+                "numeric": "Babcia smaży świeże pączki w dużej kuchni."
+            },
+            {
+                "text": "Gruby kot szybko skacze przez wąski płot.",
+                "numeric": "Gruby kot szybko skacze przez wąski płot."
+            },
+            {
+                "text": "Słoik dżemu stoi obok zielonego garnka.",
+                "numeric": "Słoik dżemu stoi obok zielonego garnka."
+            },
+            {
+                "text": "Janek dzwoni do Beaty po ważnej lekcji.",
+                "numeric": "Janek dzwoni do Beaty po ważnej lekcji."
+            },
+            {
+                "text": "Mała dziewczynka znajduje żółty klucz.",
+                "numeric": "Mała dziewczynka znajduje żółty klucz."
+            },
+            {
+                "text": "Piotr rysuje czarny krzyż na kartce.",
+                "numeric": "Piotr rysuje czarny krzyż na kartce."
+            },
+            {
+                "text": "Zosia niesie świeży chleb i ciepłą zupę.",
+                "numeric": "Zosia niesie świeży chleb i ciepłą zupę."
+            },
+            {
+                "text": "Łukasz mówi spokojnie, gdy pada deszcz.",
+                "numeric": "Łukasz mówi spokojnie, gdy pada deszcz."
+            },
+            {
+                "text": "Teresa liczy trzydzieści sześć jasnych obrazków.",
+                "numeric": "Teresa liczy 36 jasnych obrazków."
+            }
         ]
     }
 }
