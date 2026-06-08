@@ -10,7 +10,7 @@ def csv_reader(metadata_path):
             
     return metadata
 
-def normalize_for_comparison(text):
+def normalize_for_reading_check(text):
     # Supprime les espaces au début et à la fin.
     normalized_text = text.strip()
 
@@ -36,3 +36,6 @@ def normalize_for_comparison(text):
     normalized_text = " ".join(normalized_text.split())
 
     return normalized_text
+
+def normalize_letters_only(text):
+    return text.replace(" ","")

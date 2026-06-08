@@ -21,7 +21,7 @@ def create_unmatched_directories(language_dir, videos_without_metadata, metadata
     
 
     if metadatas_without_video :
-        unmatched_metadatas_dir = create_destination_path(unmatched_dir, "annotations")
+        unmatched_metadatas_dir = create_destination_path(unmatched_dir, "metadatas")
         unmatched_metadatas_dir.mkdir(parents=True, exist_ok=True)
     
 
