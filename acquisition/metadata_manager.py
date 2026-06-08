@@ -7,14 +7,14 @@ from acquisition.corpus_manager import CorpusManager
 
 from utils.media_utils import extract_video_metadata
 
-class AnnotationManager:
+class MetadataManager:
     """
-    Gère l'écriture des annotations associées aux vidéos enregistrées.
+    Gère l'écriture des metadatas associées aux vidéos enregistrées.
     """
 
     def __init__(self):
         """
-        Initialise le gestionnaire d'annotations.
+        Initialise le gestionnaire d'metadatas.
         """
 
         # Nom de la machine utilisée pour les enregistrements.
@@ -31,8 +31,8 @@ class AnnotationManager:
             "user_firstname",
             "video_path_abs",
             "video_path_rel",
-            "annotation_file_path_abs",
-            "annotation_file_path_rel",
+            "metadata_file_path_abs",
+            "metadata_file_path_rel",
             "video_format",
             "camera_name",
             "microphone_name",
@@ -50,21 +50,21 @@ class AnnotationManager:
             "language_name",
             "whisper_code",
             "sentence_display",
-            "sentence_annotation",
+            "sentence_metadata",
             "template_type",
             "recorded_at",
             "checksum_sha256"
         ]
 
 
-    def save_recording_annotation(
+    def save_recording_metadata(
         self,
         media_manager: MediaManager,
         corpus_manager: CorpusManager,
         user_firstname
     ):
         """
-        Prépare les données de l'enregistrement courant et sauvegarde l'annotation.
+        Prépare les données de l'enregistrement courant et sauvegarde l'metadata.
 
         Paramètres :
             media_manager : gestionnaire multimédia de l'application.
@@ -76,12 +76,12 @@ class AnnotationManager:
         file_name = media_manager.file_name
         video_path_abs = media_manager.video_filepath
         video_path_rel = media_manager.video_filepath_rel
-        annotation_file_path_abs = media_manager.annotation_filepath
-        annotation_file_path_rel = media_manager.annotation_filepath_rel
+        metadata_file_path_abs = media_manager.metadata_filepath
+        metadata_file_path_rel = media_manager.metadata_filepath_rel
 
         # Informations du corpus correspondant à la phrase qui vient d'être lue.
         sentence_display = corpus_manager.current_sentence
-        sentence_annotation = corpus_manager.annotation_sentence
+        sentence_metadata = corpus_manager.metadata_sentence
         template_type = corpus_manager.current_template_type
         language_code = corpus_manager.language_selected[1] # type: ignore
         language_name = corpus_manager.language_selected[0] # type: ignore
@@ -97,9 +97,9 @@ class AnnotationManager:
         video_metadata = extract_video_metadata(media_manager.video_filepath)
 
         # Écriture de la ligne CSV avec les données préparées.
-        self.save_annotation(
-            annotation_file_path_abs,
-            annotation_file_path_rel,
+        self.save_metadata(
+            metadata_file_path_abs,
+            metadata_file_path_rel,
             file_name,
             video_path_abs,
             video_path_rel,
@@ -107,7 +107,7 @@ class AnnotationManager:
             language_name,
             whisper_code,
             sentence_display,
-            sentence_annotation,
+            sentence_metadata,
             template_type,
             camera_name,
             microphone_name,
@@ -127,10 +127,10 @@ class AnnotationManager:
         )
     
 
-    def save_annotation(
+    def save_metadata(
         self,
-        annotation_file_path_abs,
-        annotation_file_path_rel,
+        metadata_file_path_abs,
+        metadata_file_path_rel,
         file_name,
         video_path_abs,
         video_path_rel,
@@ -138,7 +138,7 @@ class AnnotationManager:
         language_name,
         whisper_code,
         sentence_display,
-        sentence_annotation,
+        sentence_metadata,
         template_type,
         camera_name,
         microphone_name,
@@ -156,52 +156,57 @@ class AnnotationManager:
         checksum_sha256,
         user_firstname
     ):
+    
         """
-        Ajoute une annotation dans le fichier CSV.
+        Ajoute les métadonnées d’un enregistrement dans un fichier CSV.
 
         Paramètres :
-            annotation_file_path_abs : chemin absolu du fichier CSV d'annotation.
-            annotation_file_path_rel : chemin relatif du fichier CSV d'annotation.
+            metadata_file_path_abs : chemin absolu du fichier CSV de métadonnées.
+            metadata_file_path_rel : chemin relatif du fichier CSV de métadonnées.
+
             file_name : nom du fichier vidéo sans extension.
             video_path_abs : chemin absolu de la vidéo enregistrée.
-            video_path_rel : chemin relatif de la vidéo enregistrée
+            video_path_rel : chemin relatif de la vidéo enregistrée.
             checksum_sha256 : empreinte SHA-256 calculée à partir du contenu du fichier vidéo.
 
             whisper_code : code de langue utilisé par Whisper pour la transcription.
-            language_code : code de la langue, par exemple "fr" ou "en".
+            language_code : code interne de la langue, par exemple "fr" ou "en".
             language_name : nom lisible de la langue, par exemple "Français" ou "Anglais".
-            sentence_display : phrase affichée à l'utilisateur dans l'interface.
-            sentence_annotation : phrase normalisée sauvegardée pour l'annotation, avec les nombres sous leur forme textuelle.
-            template_type : template utilisé, par exemple "template_1" ou "template_2".
 
-            camera_name : nom de la caméra utilisée pour l'enregistrement.
-            microphone_name : nom du micro utilisé pour l'enregistrement.
+            sentence_display : phrase affichée à l’utilisateur dans l’interface.
+            sentence_metadata : phrase normalisée sauvegardée dans les métadonnées,
+                avec les nombres sous leur forme textuelle ou normalisée selon le corpus.
+            template_type : template utilisé pour générer ou sélectionner la phrase,
+                par exemple "template_1" ou "template_2".
 
-            video_format : format/conteneur détecté dans le fichier vidéo.
+            camera_name : nom de la caméra utilisée pour l’enregistrement.
+            microphone_name : nom du microphone utilisé pour l’enregistrement.
+
+            video_format : format ou conteneur détecté dans le fichier vidéo.
             duration_seconds : durée réelle de la vidéo en secondes.
 
             video_codec : codec vidéo réellement utilisé dans le fichier.
             video_width : largeur réelle de la vidéo en pixels.
             video_height : hauteur réelle de la vidéo en pixels.
-            video_fps : nombre d'images par seconde réel ou moyen de la vidéo.
+            video_fps : nombre d’images par seconde réel ou moyen de la vidéo.
             video_bitrate : débit vidéo réel du fichier.
 
             audio_codec : codec audio réellement utilisé dans le fichier.
-            audio_sample_rate : fréquence d'échantillonnage audio, par exemple 48000 Hz.
-            audio_channels : nombre de canaux audio, par exemple 1 (mono) ou 2 (stéréo).
+            audio_sample_rate : fréquence d’échantillonnage audio, par exemple 48000 Hz.
+            audio_channels : nombre de canaux audio, par exemple 1 pour mono ou 2 pour stéréo.
             audio_bitrate : débit audio réel du fichier.
 
-            machine_name : nom de la machine utilisée pour l'enregistrement.
-            operating_system : système d'exploitation utilisé pour l'enregistrement.
-            user_firstname : nom de l'utilisateur ayant lancé l'application
+            machine_name : nom de la machine utilisée pour l’enregistrement.
+            operating_system : système d’exploitation utilisé pour l’enregistrement.
+            user_firstname : prénom de l’utilisateur ayant lancé l’application.
         """
         
         # Vérifie si le fichier CSV existe déjà.
-        file_exists = annotation_file_path_abs.exists()
+        file_exists = metadata_file_path_abs.exists()
 
         # Ouvre le fichier en mode ajout.
         # newline="" évite les lignes vides en trop dans les fichiers CSV.
-        with open(annotation_file_path_abs, "a", encoding="utf-8", newline="") as csv_file:
+        with open(metadata_file_path_abs, "a", encoding="utf-8", newline="") as csv_file:
             
             # Crée un writer CSV basé sur les noms de colonnes.
             writer = csv.DictWriter(csv_file, fieldnames=self.fieldnames)
@@ -210,7 +215,7 @@ class AnnotationManager:
             if not file_exists:
                 writer.writeheader()
             
-            # Écrit une nouvelle ligne d'annotation.
+            # Écrit une nouvelle ligne d'metadata.
             writer.writerow({
                 "file_name": file_name,
                 "user_firstname": user_firstname,
@@ -218,8 +223,8 @@ class AnnotationManager:
                 "operating_system": self.operating_system,
                 "video_path_abs": str(video_path_abs),
                 "video_path_rel": str(video_path_rel),
-                "annotation_file_path_abs": str(annotation_file_path_abs),
-                "annotation_file_path_rel": str(annotation_file_path_rel),
+                "metadata_file_path_abs": str(metadata_file_path_abs),
+                "metadata_file_path_rel": str(metadata_file_path_rel),
                 "video_format": video_format,
                 "camera_name": camera_name,
                 "microphone_name": microphone_name,
@@ -237,7 +242,7 @@ class AnnotationManager:
                 "language_name" : language_name,
                 "whisper_code" : whisper_code,
                 "sentence_display": sentence_display,
-                "sentence_annotation": sentence_annotation,
+                "sentence_metadata": sentence_metadata,
                 "template_type": template_type,
                 "recorded_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "checksum_sha256": checksum_sha256

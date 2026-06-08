@@ -129,11 +129,11 @@ class MediaManager(QObject):
         # Chemin relatif d'enregistrement du fichier vidéo
         self.video_filepath_rel = None
 
-        # Chemin absolu d'enregistrement du fichier d'annotation
-        self.annotation_filepath = None
+        # Chemin absolu d'enregistrement du fichier de métadonnées
+        self.metadata_filepath = None
 
-        # Chemin relatif d'enregistrement du fichier d'annotation
-        self.annotation_filepath_rel = None
+        # Chemin relatif d'enregistrement du fichier de métadonnées
+        self.metadata_filepath_rel = None
 
         # Largeur de la vidéo choisie.
         self.video_width = None
@@ -625,7 +625,7 @@ class MediaManager(QObject):
         """
 
         # Construit le nom de fichier et le chemin complet.
-        self.file_name, self.video_filepath, self.annotation_filepath, self.video_filepath_rel, self.annotation_filepath_rel = build_recording_filepaths(CONFIG["paths"]["data_dir"], CONFIG["paths"]["data_dir_rel"], language_code)
+        self.file_name, self.video_filepath, self.metadata_filepath, self.video_filepath_rel, self.metadata_filepath_rel = build_recording_filepaths(CONFIG["paths"]["data_dir"], CONFIG["paths"]["data_dir_rel"], language_code)
 
         # Affiche le chemin pour vérifier où la vidéo sera enregistrée
         print("Enregistrement dans :", self.video_filepath)

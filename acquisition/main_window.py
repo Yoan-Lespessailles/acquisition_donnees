@@ -20,8 +20,8 @@ from acquisition.corpus_manager import CorpusManager
 # Gestion de l'affichage REC : chrono + point rouge clignotant.
 from acquisition.recording_indicator import RecordingIndicator
 
-# Gestion du fichier d'annotations
-from acquisition.annotation_manager import AnnotationManager
+# Gestion du fichier de métadonnées
+from acquisition.metadata_manager import MetadataManager
 
 
 class MyWindow(QMainWindow, Ui_MainWindow):
@@ -426,7 +426,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Gère l'affichage du timer REC et du point rouge.
         self.recording_indicator = RecordingIndicator(self.label_record_timer, self.label_record_dot)
 
-        self.annotation_manager = AnnotationManager()
+        self.metadata_manager = MetadataManager()
 
     # -----------------------------------------------------------------
 
@@ -713,8 +713,8 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         user_validation = self.ask_manual_validation()
 
         if user_validation == "yes":
-            # Prépare et sauvegarde l'annotation de l'enregistrement qui vient de se terminer.
-            self.annotation_manager.save_recording_annotation(
+            # Prépare et sauvegarde la métadonnée de l'enregistrement qui vient de se terminer.
+            self.metadata_manager.save_recording_metadata(
                 self.media_manager,
                 self.corpus_manager,
                 self.user_firstname

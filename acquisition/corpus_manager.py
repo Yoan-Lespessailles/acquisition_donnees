@@ -280,7 +280,7 @@ class CorpusManager:
         # et s'il reste encore des phrases disponibles.
         if self.sentence_mode in (0, 2) and self.corpus_data["template_2"]["sentences"]:
             self.current_sentence = self.corpus_data["template_2"]["sentences"][-1]["text"]
-            self.annotation_sentence = self.corpus_data["template_2"]["sentences"][-1]["numeric"]
+            self.metadata_sentence = self.corpus_data["template_2"]["sentences"][-1]["numeric"]
             self.current_template_type = "template_2"
             return self.current_sentence
 
@@ -298,11 +298,11 @@ class CorpusManager:
 
         Deux versions sont produites :
             - self.sentence : phrase affichée à l'utilisateur, avec le nombre en lettres ;
-            - self.annotation_sentence : phrase destinée aux annotations, avec la valeur numérique du nombre.
+            - self.metadata_sentence : phrase destinée aux métadonnés, avec la valeur numérique du nombre.
 
         Exemple :
             self.sentence = "Patrick demande dix montagnes sombres"
-            self.annotation_sentence = "Patrick demande 10 montagnes sombres"
+            self.metadata_sentence = "Patrick demande 10 montagnes sombres"
         """
 
         # Récupère l'ordre syntaxique défini dans le JSON.
@@ -312,8 +312,8 @@ class CorpusManager:
         # Contient les morceaux de la phrase affichée à l'utilisateur.
         display_sentence_parts = []
 
-        # Contient les morceaux de la phrase enregistrée dans les annotations.
-        annotation_sentence_parts = []
+        # Contient les morceaux de la phrase enregistrée dans les métadonnées.
+        metadata_sentence_parts = []
 
         # Parcourt chaque bloc dans l'ordre défini.
         for list_name in structure:
@@ -326,22 +326,22 @@ class CorpusManager:
                 # Version affichée : nombre en lettres.
                 display_sentence_parts.append(number_data["text"])
 
-                # Version annotation : valeur numérique.
-                annotation_sentence_parts.append(str(number_data["value"]))
+                # Version métadonées : valeur numérique.
+                metadata_sentence_parts.append(str(number_data["value"]))
 
             else:
                 # Pour les autres blocs, le contenu est une simple chaîne de caractères.
                 word = self.corpus_data["template_1"][list_name][-1]  # type: ignore
 
-                # Même contenu pour l'affichage et pour l'annotation.
+                # Même contenu pour l'affichage et pour les métadonnées.
                 display_sentence_parts.append(word)
-                annotation_sentence_parts.append(word)
+                metadata_sentence_parts.append(word)
 
         # Assemble la phrase affichée.
         sentence = " ".join(display_sentence_parts)
 
-        # Assemble la phrase d'annotation.
-        self.annotation_sentence = " ".join(annotation_sentence_parts)
+        # Assemble la phrase de métadonnées.
+        self.metadata_sentence = " ".join(metadata_sentence_parts)
 
         # Retourne la phrase affichée à l'utilisateur.
         return sentence

@@ -1,0 +1,138 @@
+{
+    "language_code": "sl",
+    "language_name": "Slovène",
+    "whisper_code": "sl",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Ana",
+            "Luka",
+            "Maja",
+            "Neža",
+            "Sara",
+            "Marko",
+            "Nina",
+            "Bojan",
+            "Živa",
+            "Klemen"
+        ],
+        "verb": [
+            "gleda",
+            "opazuje",
+            "išče",
+            "fotografira",
+            "riše",
+            "šteje",
+            "izbere",
+            "najde",
+            "pokaže",
+            "pregleda"
+        ],
+        "number": [
+            {
+                "text": "pet",
+                "value": 5
+            },
+            {
+                "text": "šest",
+                "value": 6
+            },
+            {
+                "text": "sedem",
+                "value": 7
+            },
+            {
+                "text": "osem",
+                "value": 8
+            },
+            {
+                "text": "devet",
+                "value": 9
+            },
+            {
+                "text": "deset",
+                "value": 10
+            },
+            {
+                "text": "enajst",
+                "value": 11
+            },
+            {
+                "text": "dvanajst",
+                "value": 12
+            },
+            {
+                "text": "trinajst",
+                "value": 13
+            },
+            {
+                "text": "dvajset",
+                "value": 20
+            }
+        ],
+        "nominal_group": [
+            "rdečih jabolk",
+            "starih knjig",
+            "belih krožnikov",
+            "majhnih čevljev",
+            "svežih hrušk",
+            "lepih slik",
+            "rumenih cvetov",
+            "novih filmov",
+            "mehkih blazin",
+            "barvnih fotografij"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            {
+                "text": "Živa zjutraj fotografira novo modro sobo.",
+                "numeric": "Živa zjutraj fotografira novo modro sobo."
+            },
+            {
+                "text": "Marko na vrtu išče široko črno škatlo.",
+                "numeric": "Marko na vrtu išče široko črno škatlo."
+            },
+            {
+                "text": "Ana gleda miren obraz in bere novo knjigo.",
+                "numeric": "Ana gleda miren obraz in bere novo knjigo."
+            },
+            {
+                "text": "Bojan pokaže devet zelenih ključev pri oknu.",
+                "numeric": "Bojan pokaže 9 zelenih ključev pri oknu."
+            },
+            {
+                "text": "Sara riše majhno hišo ob reki.",
+                "numeric": "Sara riše majhno hišo ob reki."
+            },
+            {
+                "text": "Klemen pregleda težko torbo in moder šal.",
+                "numeric": "Klemen pregleda težko torbo in moder šal."
+            },
+            {
+                "text": "Luka najde hladno sobo, ker zunaj močno piha.",
+                "numeric": "Luka najde hladno sobo, ker zunaj močno piha."
+            },
+            {
+                "text": "Nina šteje šest belih krožnikov na mizi.",
+                "numeric": "Nina šteje 6 belih krožnikov na mizi."
+            },
+            {
+                "text": "Neža ob večerih fotografira most in cvetove.",
+                "numeric": "Neža ob večerih fotografira most in cvetove."
+            },
+            {
+                "text": "Maja nese svež kruh čez ozko ulico.",
+                "numeric": "Maja nese svež kruh čez ozko ulico."
+            }
+        ]
+    }
+}
