@@ -1,10 +1,10 @@
 ## Présentation générale de l'application d'acquisition
 
-L'application d'acquisition constitue la première étape du pipeline de création du corpus audio-vidéo. Elle permet d'enregistrer un utilisateur pendant la lecture de phrases issues d'un corpus linguistique prédéfini. Chaque enregistrement produit une vidéo, accompagnée d'un fichier d'annotation contenant les métadonnées utiles : langue, phrase lue, type de template, périphériques utilisés, informations techniques du fichier vidéo et statut de validation.
+L'application d'acquisition constitue la première étape du pipeline de création du corpus audio-vidéo. Elle permet d'enregistrer un utilisateur pendant la lecture de phrases issues d'un corpus linguistique prédéfini. Chaque enregistrement produit une vidéo, accompagnée d'un fichier de métadonnées contenant les métadonnées utiles : langue, phrase lue, type de template, périphériques utilisés, informations techniques du fichier vidéo et statut de validation.
 
 Le fonctionnement général suit une logique de session. L'utilisateur renseigne d'abord son prénom, configure la caméra et le microphone, puis effectue un test micro. Une fois les périphériques validés, il choisit la langue de lecture. Le corpus correspondant est alors chargé, puis les phrases sont affichées une par une. Pour chaque phrase, l'utilisateur peut enregistrer une vidéo, la valider, la recommencer ou, après un premier échec, passer à la phrase suivante.
 
-L'objectif principal de cette application est de garantir une acquisition structurée et exploitable des données. Les vidéos sont sauvegardées dans une arborescence organisée par langue, tandis que les annotations associées permettent ensuite à l'application d'annotation de retrouver automatiquement les informations nécessaires au traitement avec Whisper.
+L'objectif principal de cette application est de garantir une acquisition structurée et exploitable des données. Les vidéos sont sauvegardées dans une arborescence organisée par langue, tandis que les métadonnées associées permettent ensuite à l'application d'annotation de retrouver automatiquement les informations nécessaires au traitement avec Whisper.
 
 Le diagramme de flux ci-dessous présente le déroulement fonctionnel d'une session d'acquisition.
 
@@ -41,13 +41,13 @@ flowchart TD
 
 ## Architecture de l'application d'acquisition
 
-L'application d'acquisition est structurée autour de plusieurs composants ayant chacun une responsabilité précise. La fenêtre principale coordonne le déroulement de la session, tandis que des gestionnaires spécialisés prennent en charge les périphériques audio-vidéo, le corpus, l'indicateur d'enregistrement et la sauvegarde des annotations.
+L'application d'acquisition est structurée autour de plusieurs composants ayant chacun une responsabilité précise. La fenêtre principale coordonne le déroulement de la session, tandis que des gestionnaires spécialisés prennent en charge les périphériques audio-vidéo, le corpus, l'indicateur d'enregistrement et la sauvegarde des métadonnées.
 
 Cette organisation permet de séparer la logique d'interface, la logique métier et les traitements techniques. Elle facilite également l'évolution du projet, notamment l'ajout de l'application d'annotation, qui pourra réutiliser certains modules ou certaines données produites par l'acquisition.
 
 ### Diagramme de classes
 
-Le diagramme de classes présente les principales classes de l'application d'acquisition et leurs relations. Il met en évidence le rôle central de `MyWindow`, qui possède et coordonne les différents gestionnaires : `MediaManager`, `CorpusManager`, `RecordingIndicator` et `AnnotationManager`.
+Le diagramme de classes présente les principales classes de l'application d'acquisition et leurs relations. Il met en évidence le rôle central de `MyWindow`, qui possède et coordonne les différents gestionnaires : `MediaManager`, `CorpusManager`, `RecordingIndicator` et `MetadataManager`.
 
 Chaque classe est représentée avec ses principaux attributs et méthodes afin de donner une vue synthétique de l'organisation interne du code. Ce diagramme ne représente que les véritables classes Python du projet ; les fichiers contenant uniquement des fonctions utilitaires sont volontairement exclus de ce diagramme.
 
@@ -58,7 +58,7 @@ classDiagram
         - media_manager : MediaManager
         - corpus_manager : CorpusManager
         - recording_indicator : RecordingIndicator
-        - annotation_manager : AnnotationManager
+        - metadata_manager : MetadataManager
         - is_recording : bool
 
         + setup_managers()
@@ -84,7 +84,7 @@ classDiagram
 
         - file_name : str
         - video_filepath : Path
-        - annotation_filepath : Path
+        - metadata_filepath : Path
         - micro_test_is_running : bool
 
         + setup()
@@ -136,22 +136,22 @@ classDiagram
         + update_record_timer()
     }
 
-    class AnnotationManager {
+    class MetadataManager {
         - machine_name : str
         - operating_system : str
         - fieldnames : list
 
-        + save_recording_annotation(media_manager : MediaManager, corpus_manager : CorpusManager)
-        + save_annotation(...)
+        + save_recording_metadata(media_manager : MediaManager, corpus_manager : CorpusManager)
+        + save_metadata(...)
     }
 
     MyWindow *-- MediaManager : possède
     MyWindow *-- CorpusManager : possède
     MyWindow *-- RecordingIndicator : possède
-    MyWindow *-- AnnotationManager : possède
+    MyWindow *-- MetadataManager : possède
 
-    AnnotationManager ..> MediaManager : lit les données vidéo
-    AnnotationManager ..> CorpusManager : lit la phrase et la langue
+    MetadataManager ..> MediaManager : lit les données vidéo
+    MetadataManager ..> CorpusManager : lit la phrase et la langue
 ```
 
 ### Diagramme de dépendances entre modules
@@ -166,7 +166,7 @@ Ce diagramme permet de visualiser quels modules dépendent les uns des autres. I
 
     MM[media_manager.py<br/>MediaManager]
     CM[corpus_manager.py<br/>CorpusManager]
-    AM[annotation_manager.py<br/>AnnotationManager]
+    AM[metadata_manager.py<br/>MetadataManager]
     RI[recording_indicator.py<br/>RecordingIndicator]
 
     CL[config_loader.py<br/>load_config()]

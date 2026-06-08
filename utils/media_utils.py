@@ -101,10 +101,9 @@ def extract_video_metadata(video_filepath):
         video_filepath : chemin du fichier vidéo à analyser.
 
     Retourne :
-        un dictionnaire contenant les informations utiles pour l'annotation.
+        un dictionnaire contenant les informations utiles pour les métadonnées.
     """
     
-
     # Convertit le chemin reçu en objet Path.
     # Cela permet de ne pas avoir d'erreurs de Pylance
     video_filepath = Path(video_filepath)
