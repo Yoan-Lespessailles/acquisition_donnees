@@ -14,20 +14,19 @@ class WhisperManager:
 
             metadata = csv_reader(metadata_path)
 
-            result = self.model.transcribe(str(media_path),language = metadata["language_code"],fp16=False)
+            result = self.model.transcribe(str(media_path),language = metadata["whisper_code"],fp16=False)
 
             text_result = normalize_for_comparison(result["text"])
             sentence_annotation = normalize_for_comparison(metadata["sentence_annotation"])
             sentence_display = normalize_for_comparison(metadata["sentence_display"])
 
             print(f"Transcription de Whisper : {text_result}")
-            print(f"Phrase affiché lors de l'enregistrement : {sentence_annotation} ou {sentence_display}\n")
+            print(f"Phrase affiché lors de l'enregistrement : {sentence_annotation} | {sentence_display}")
 
             if text_result == sentence_annotation or text_result == sentence_display :
                 self.compliant_pairs.append(files)
 
-            print(f"Nombres de paires conformes : {len(self.compliant_pairs)}")
-            print(self.compliant_pairs)
+            print(f"Nombres de paires conformes : {len(self.compliant_pairs)} \n")
 
             
 
