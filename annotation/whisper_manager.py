@@ -28,7 +28,7 @@ class WhisperManager:
 
             text_result_letters = normalize_letters_only(text_result)
             sentence_annotation_letters = normalize_letters_only(sentence_annotation)
-            sentence_display_letters = normalize_letters_only(text_result)
+            sentence_display_letters = normalize_letters_only(sentence_display)
 
             if text_result_letters != sentence_annotation_letters and text_result_letters != sentence_display_letters:
                 compliant = False
@@ -71,33 +71,6 @@ class WhisperManager:
                 writer.writeheader()
                 writer.writerows(rows)
 
-
-    def move_pair_to_human_review(self, language_dir):
-        if not self.non_compliant_pairs:
-            return False
-        
-        non_compliant_video_dir, non_compliant_metadata_dir = self.create_non_compliant_directories(language_dir)
-
-        for non_compliant_pair in self.non_compliant_pairs :
-            media_file = non_compliant_pair[0][0]
-            metadata_file = non_compliant_pair[0][1]
-
-            shutil.move(media_file, non_compliant_video_dir / Path(media_file).name)
-            shutil.move(metadata_file, non_compliant_metadata_dir / Path(metadata_file).name)
-        return True
-
-
-    def create_non_compliant_directories(self, language_dir):
-        non_compliant_dir = Path(language_dir) / "non_compliant"
-        non_compliant_dir.mkdir(parents=True, exist_ok=True)
-
-        non_compliant_video_dir = non_compliant_dir / "videos"
-        non_compliant_metadata_dir = non_compliant_dir / "metadatas"
-
-        non_compliant_video_dir.mkdir(parents=True, exist_ok=True)
-        non_compliant_metadata_dir.mkdir(parents=True, exist_ok=True)
-
-        return non_compliant_video_dir, non_compliant_metadata_dir
 
         
 

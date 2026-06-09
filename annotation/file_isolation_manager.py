@@ -5,6 +5,7 @@ def create_destination_path(unmatched_dir, file_type) :
     return (Path(unmatched_dir) / file_type)
 
 
+
 def create_unmatched_directories(language_dir, videos_without_metadata, metadatas_without_video) :
     
     unmatched_dir = Path(language_dir) / "unmatched"
@@ -28,21 +29,61 @@ def create_unmatched_directories(language_dir, videos_without_metadata, metadata
     return unmatched_videos_dir, unmatched_metadatas_dir
 
 
+
 def move_unmatched_files (language_dir, videos_without_metadata, metadatas_without_video):
     #Si aucun fichier n’est non appairé, aucun dossier unmatched n’est créé.
     if not videos_without_metadata and not metadatas_without_video :
-        return False
+        return 0, 0
     
     unmatched_videos_dir, unmatched_metadatas_dir = create_unmatched_directories(language_dir, videos_without_metadata, metadatas_without_video)
+    move_videos_cpt = 0
+    move_metadatas_cpt = 0
+
 
     if unmatched_videos_dir is not None :
         # Pour chaque vidéo dans la liste, on déplace les fichiers dans un autre dossier
         for video in videos_without_metadata :
             # shutil.move(source, destination)
             shutil.move(video, unmatched_videos_dir / Path(video).name)
+            move_videos_cpt += 1
     
     if unmatched_metadatas_dir is not None :
          for metadata in metadatas_without_video :
-            shutil.move(metadata, unmatched_metadatas_dir / Path(video).name)
-
+            shutil.move(metadata, unmatched_metadatas_dir / Path(metadata).name)
+            move_metadatas_cpt +=1
     
+    return move_videos_cpt, move_metadatas_cpt
+
+
+
+def move_pair_to_human_review(language_dir, non_compliant_pairs):
+    if not non_compliant_pairs:
+        return 0
+        
+    non_compliant_video_dir, non_compliant_metadata_dir = create_non_compliant_directories(language_dir)
+    move_files_cpt = 0
+
+    for non_compliant_pair in non_compliant_pairs :
+        media_file = non_compliant_pair[0][0]
+        metadata_file = non_compliant_pair[0][1]
+
+        shutil.move(media_file, non_compliant_video_dir / Path(media_file).name)
+        shutil.move(metadata_file, non_compliant_metadata_dir / Path(metadata_file).name)
+
+        move_files_cpt += 2
+
+    return move_files_cpt
+
+
+
+def create_non_compliant_directories(language_dir):
+    non_compliant_dir = Path(language_dir) / "non_compliant"
+    non_compliant_dir.mkdir(parents=True, exist_ok=True)
+
+    non_compliant_video_dir = non_compliant_dir / "videos"
+    non_compliant_metadata_dir = non_compliant_dir / "metadatas"
+
+    non_compliant_video_dir.mkdir(parents=True, exist_ok=True)
+    non_compliant_metadata_dir.mkdir(parents=True, exist_ok=True)
+
+    return non_compliant_video_dir, non_compliant_metadata_dir
