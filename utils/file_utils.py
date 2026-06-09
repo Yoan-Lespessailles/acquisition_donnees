@@ -11,7 +11,7 @@ def build_recording_filepaths(data_dir: Path, data_dir_rel: Path, language_code:
 
     Exemple :
         data/fr/videos/fr_20260522_143012.mp4
-        data/fr/metadatas/fr_20260522_143012.csv
+        data/fr/metadata/fr_20260522_143012.csv
 
     Retourne :
         - le nom de base sans extension ;
@@ -28,8 +28,8 @@ def build_recording_filepaths(data_dir: Path, data_dir_rel: Path, language_code:
     video_dir_rel = language_dir_rel / "videos"
 
     # Sous-dossier des métadonnées.
-    metadata_dir = language_dir / "metadatas"
-    metadata_dir_rel = language_dir_rel / "metadatas"
+    metadata_dir = language_dir / "metadata"
+    metadata_dir_rel = language_dir_rel / "metadata"
 
     # Crée les dossiers nécessaires.
     video_dir.mkdir(parents=True, exist_ok=True)
