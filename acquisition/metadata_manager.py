@@ -9,12 +9,12 @@ from utils.media_utils import extract_video_metadata
 
 class MetadataManager:
     """
-    Gère l'écriture des metadatas associées aux vidéos enregistrées.
+    Gère l'écriture des metadonnées associées aux vidéos enregistrées.
     """
 
     def __init__(self):
         """
-        Initialise le gestionnaire d'metadatas.
+        Initialise le gestionnaire de métadonnées.
         """
 
         # Nom de la machine utilisée pour les enregistrements.
