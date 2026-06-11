@@ -8,20 +8,20 @@ def match_video_and_metadata_files(video_files, metadata_files, videos_dir, meta
     metadata_set = extract_file_stems(metadata_files)
 
     pairs = videos_set & metadata_set
-    videos_without_annotation = videos_set - metadata_set
+    videos_without_metadata = videos_set - metadata_set
     metadata_without_video = metadata_set - videos_set
 
-    print_match(videos_set, metadata_set, pairs, videos_without_annotation, metadata_without_video)
+    print_match(videos_set, metadata_set, pairs, videos_without_metadata, metadata_without_video)
 
-    return build_pairs(pairs, videos_dir, metadata_dir, video_extension, metadata_extension), rebuild_file_paths_from_stems(videos_without_annotation, videos_dir, video_extension), rebuild_file_paths_from_stems(metadata_without_video, metadata_dir, metadata_extension)
+    return build_pairs(pairs, videos_dir, metadata_dir, video_extension, metadata_extension), rebuild_file_paths_from_stems(videos_without_metadata, videos_dir, video_extension), rebuild_file_paths_from_stems(metadata_without_video, metadata_dir, metadata_extension)
     
 
-def print_match(videos_set, annotations_set, pairs, videos_without_annotation, annotations_without_video):
+def print_match(videos_set, metadata_set, pairs, videos_without_metadata, metadata_without_video):
     print(f"Vidéos trouvées : {len(videos_set)}")
-    print(f"Annotations trouvées : {len(annotations_set)}")
+    print(f"metadata trouvées : {len(metadata_set)}")
     print(f"Paires valides : {len(pairs)}")
-    print(f"Vidéos sans annotation : {len(videos_without_annotation)}")
-    print(f"Annotations sans vidéo : {len(annotations_without_video)}")
+    print(f"Vidéos sans metadata : {len(videos_without_metadata)}")
+    print(f"metadata sans vidéo : {len(metadata_without_video)}")
 
 
 def extract_file_stems(files):
