@@ -50,7 +50,7 @@ class MetadataManager:
             "language_name",
             "whisper_code",
             "sentence_display",
-            "sentence_metadata",
+            "sentence_with_digit",
             "template_type",
             "recorded_at",
             "checksum_sha256"
@@ -81,7 +81,7 @@ class MetadataManager:
 
         # Informations du corpus correspondant à la phrase qui vient d'être lue.
         sentence_display = corpus_manager.current_sentence
-        sentence_metadata = corpus_manager.metadata_sentence
+        sentence_with_digit = corpus_manager.sentence_with_digit
         template_type = corpus_manager.current_template_type
         language_code = corpus_manager.language_selected[1] # type: ignore
         language_name = corpus_manager.language_selected[0] # type: ignore
@@ -107,7 +107,7 @@ class MetadataManager:
             language_name,
             whisper_code,
             sentence_display,
-            sentence_metadata,
+            sentence_with_digit,
             template_type,
             camera_name,
             microphone_name,
@@ -138,7 +138,7 @@ class MetadataManager:
         language_name,
         whisper_code,
         sentence_display,
-        sentence_metadata,
+        sentence_with_digit,
         template_type,
         camera_name,
         microphone_name,
@@ -174,8 +174,7 @@ class MetadataManager:
             language_name : nom lisible de la langue, par exemple "Français" ou "Anglais".
 
             sentence_display : phrase affichée à l’utilisateur dans l’interface.
-            sentence_metadata : phrase normalisée sauvegardée dans les métadonnées,
-                avec les nombres sous leur forme textuelle ou normalisée selon le corpus.
+            sentence_with_digit : phrase normalisée avec les nombres en chiffre,
             template_type : template utilisé pour générer ou sélectionner la phrase,
                 par exemple "template_1" ou "template_2".
 
@@ -242,7 +241,7 @@ class MetadataManager:
                 "language_name" : language_name,
                 "whisper_code" : whisper_code,
                 "sentence_display": sentence_display,
-                "sentence_metadata": sentence_metadata,
+                "sentence_with_digit": sentence_with_digit,
                 "template_type": template_type,
                 "recorded_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "checksum_sha256": checksum_sha256
