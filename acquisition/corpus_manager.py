@@ -280,7 +280,7 @@ class CorpusManager:
         # et s'il reste encore des phrases disponibles.
         if self.sentence_mode in (0, 2) and self.corpus_data["template_2"]["sentences"]:
             self.current_sentence = self.corpus_data["template_2"]["sentences"][-1]["text"]
-            self.metadata_sentence = self.corpus_data["template_2"]["sentences"][-1]["numeric"]
+            self.sentence_with_digit = self.corpus_data["template_2"]["sentences"][-1]["numeric"]
             self.current_template_type = "template_2"
             return self.current_sentence
 
@@ -298,11 +298,11 @@ class CorpusManager:
 
         Deux versions sont produites :
             - self.sentence : phrase affichée à l'utilisateur, avec le nombre en lettres ;
-            - self.metadata_sentence : phrase destinée aux métadonnés, avec la valeur numérique du nombre.
+            - self.sentence_with_digit : phrase avec la valeur numérique du nombre.
 
         Exemple :
             self.sentence = "Patrick demande dix montagnes sombres"
-            self.metadata_sentence = "Patrick demande 10 montagnes sombres"
+            self.sentence_with_digit = "Patrick demande 10 montagnes sombres"
         """
 
         # Récupère l'ordre syntaxique défini dans le JSON.
@@ -312,8 +312,8 @@ class CorpusManager:
         # Contient les morceaux de la phrase affichée à l'utilisateur.
         display_sentence_parts = []
 
-        # Contient les morceaux de la phrase enregistrée dans les métadonnées.
-        metadata_sentence_parts = []
+        # Contient les morceaux de la phrase avec les nombres en chiffres.
+        sentence_with_digit_parts = []
 
         # Parcourt chaque bloc dans l'ordre défini.
         for list_name in structure:
@@ -327,7 +327,7 @@ class CorpusManager:
                 display_sentence_parts.append(number_data["text"])
 
                 # Version métadonées : valeur numérique.
-                metadata_sentence_parts.append(str(number_data["value"]))
+                sentence_with_digit_parts.append(str(number_data["value"]))
 
             else:
                 # Pour les autres blocs, le contenu est une simple chaîne de caractères.
@@ -335,13 +335,13 @@ class CorpusManager:
 
                 # Même contenu pour l'affichage et pour les métadonnées.
                 display_sentence_parts.append(word)
-                metadata_sentence_parts.append(word)
+                sentence_with_digit_parts.append(word)
 
         # Assemble la phrase affichée.
         sentence = " ".join(display_sentence_parts)
 
         # Assemble la phrase de métadonnées.
-        self.metadata_sentence = " ".join(metadata_sentence_parts)
+        self.sentence_with_digit = " ".join(sentence_with_digit_parts)
 
         # Retourne la phrase affichée à l'utilisateur.
         return sentence
