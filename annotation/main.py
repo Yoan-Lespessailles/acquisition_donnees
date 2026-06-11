@@ -85,7 +85,7 @@ if __name__ == "__main__":
             print(f"{move_videos_cpt} fichiers vidéos déplacés")
             print(f"{move_metadata_cpt} fichiers de métadonnées déplacés")
         else:
-            print("Aucun fichier à déplacer")
+            print("Aucun fichier isolé à déplacer")
 
         whisper_manager = WhisperManager(args.model, valid_pairs)
 

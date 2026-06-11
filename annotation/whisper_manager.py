@@ -27,7 +27,7 @@ class WhisperManager:
             )
 
             text_result = normalize_for_reading_check(result["text"])
-            sentence_annotation = normalize_for_reading_check(metadata["sentence_annotation"])
+            sentence_annotation = normalize_for_reading_check(metadata["sentence_metadata"])
             sentence_display = normalize_for_reading_check(metadata["sentence_display"])
 
             text_result_letters = normalize_letters_only(text_result)
@@ -44,13 +44,13 @@ class WhisperManager:
             else:
                 print(f"Transcription de Whisper : {text_result}")
                 print(f"Phrase d’annotation attendue : {sentence_annotation}")
-                print(f"Phrase affichée à l’utilisateur : {sentence_display}")    
+                print(f"Phrase affichée à l’utilisateur : {sentence_display} \n")    
 
                 final_transcription = result["text"]
                 self.non_compliant_pairs.append([files, final_transcription])
 
-            print(f"Nombres de paires conformes : {len(self.compliant_pairs)} \n")
-            print(f"Nombres de paires non conformes : {len(self.non_compliant_pairs)}")
+            print(f"Nombres de paires conformes : {len(self.compliant_pairs)}")
+            print(f"Nombres de paires non conformes : {len(self.non_compliant_pairs)} \n")
 
 
     def update_metadata_with_whisper_result(self):
