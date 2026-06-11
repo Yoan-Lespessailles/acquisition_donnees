@@ -20,7 +20,11 @@ class WhisperManager:
 
             metadata = csv_reader(metadata_path)
 
-            result = self.model.transcribe(str(media_path),language = metadata["whisper_code"],fp16=False)
+            result = self.model.transcribe(
+                str(media_path),
+                language = metadata["whisper_code"],
+                fp16=False,
+            )
 
             text_result = normalize_for_reading_check(result["text"])
             sentence_annotation = normalize_for_reading_check(metadata["sentence_annotation"])
@@ -50,6 +54,9 @@ class WhisperManager:
 
 
     def update_metadata_with_whisper_result(self):
+        if not self.non_compliant_pairs :
+            return False
+
         for non_compliant_pair in self.non_compliant_pairs :
             metadata_path = Path(non_compliant_pair[0][1])
 
@@ -71,8 +78,8 @@ class WhisperManager:
                 writer.writeheader()
                 writer.writerows(rows)
 
-
+        return True
         
-
+    
 
 

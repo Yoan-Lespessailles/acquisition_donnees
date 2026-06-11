@@ -76,24 +76,24 @@ if __name__ == "__main__":
 
     if args.dry_run:
         annotation_context.display_files()
+    else :
+        valid_pairs, videos_without_metadata, metadata_without_video = match_video_and_metadata_files(annotation_context.video_files, annotation_context.metadata_files, annotation_context.videos_dir, annotation_context.metadata_dir)
+
+        move_videos_cpt, move_metadata_cpt = move_unmatched_files(annotation_context.language_dir, videos_without_metadata, metadata_without_video)
+
+        if move_videos_cpt > 0 or move_metadata_cpt > 0 :
+            print(f"{move_videos_cpt} fichiers vidéos déplacés")
+            print(f"{move_metadata_cpt} fichiers de métadonnées déplacés")
+        else:
+            print("Aucun fichier à déplacer")
+
+        whisper_manager = WhisperManager(args.model, valid_pairs)
+
+        whisper_manager.oral_transcription()
+
+        if not whisper_manager.update_metadata_with_whisper_result():
+            print("Aucune paire non conforme détectée")
+        else:
+            move_files_cpt = move_pair_to_human_review(annotation_context.language_dir, whisper_manager.non_compliant_pairs)
+            print(f"{move_files_cpt} fichiers déplacés")
     
-    valid_pairs, videos_without_metadata, metadatas_without_video = match_video_and_metadata_files(annotation_context.video_files, annotation_context.metadata_files, annotation_context.videos_dir, annotation_context.metadatas_dir)
-
-    move_videos_cpt, move_metadatas_cpt = move_unmatched_files (annotation_context.language_dir, videos_without_metadata, metadatas_without_video)
-
-    if move_videos_cpt > 0 or move_metadatas_cpt > 0 :
-        print(f"{move_videos_cpt} fichiers vidéos déplacés")
-        print(f"{move_metadatas_cpt} fichiers de métadonnées déplacés")
-    else:
-        print("Aucun fichier à déplacer")
-
-    whisper_manager = WhisperManager(args.model, valid_pairs)
-
-    whisper_manager.oral_transcription()
-
-    move_files_cpt = move_pair_to_human_review (annotation_context.language_dir, whisper_manager.non_compliant_pairs)
-
-    if move_files_cpt > 0 :
-        print(f"{move_files_cpt} fichiers déplacés")
-    else:
-        print("Aucun fichier à déplacer")

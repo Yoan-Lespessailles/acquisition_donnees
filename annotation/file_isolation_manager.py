@@ -6,11 +6,11 @@ def create_destination_path(unmatched_dir, file_type) :
 
 
 
-def create_unmatched_directories(language_dir, videos_without_metadata, metadatas_without_video) :
+def create_unmatched_directories(language_dir, videos_without_metadata, metadata_without_video) :
     
     unmatched_dir = Path(language_dir) / "unmatched"
     unmatched_videos_dir = None
-    unmatched_metadatas_dir = None
+    unmatched_metadata_dir = None
 
 
     unmatched_dir.mkdir(parents=True, exist_ok=True)
@@ -21,23 +21,23 @@ def create_unmatched_directories(language_dir, videos_without_metadata, metadata
         unmatched_videos_dir.mkdir(parents=True, exist_ok=True)
     
 
-    if metadatas_without_video :
-        unmatched_metadatas_dir = create_destination_path(unmatched_dir, "metadatas")
-        unmatched_metadatas_dir.mkdir(parents=True, exist_ok=True)
+    if metadata_without_video :
+        unmatched_metadata_dir = create_destination_path(unmatched_dir, "metadata")
+        unmatched_metadata_dir.mkdir(parents=True, exist_ok=True)
     
 
-    return unmatched_videos_dir, unmatched_metadatas_dir
+    return unmatched_videos_dir, unmatched_metadata_dir
 
 
 
-def move_unmatched_files (language_dir, videos_without_metadata, metadatas_without_video):
+def move_unmatched_files (language_dir, videos_without_metadata, metadata_without_video):
     #Si aucun fichier n’est non appairé, aucun dossier unmatched n’est créé.
-    if not videos_without_metadata and not metadatas_without_video :
+    if not videos_without_metadata and not metadata_without_video :
         return 0, 0
     
-    unmatched_videos_dir, unmatched_metadatas_dir = create_unmatched_directories(language_dir, videos_without_metadata, metadatas_without_video)
+    unmatched_videos_dir, unmatched_metadata_dir = create_unmatched_directories(language_dir, videos_without_metadata, metadata_without_video)
     move_videos_cpt = 0
-    move_metadatas_cpt = 0
+    move_metadata_cpt = 0
 
 
     if unmatched_videos_dir is not None :
@@ -47,19 +47,16 @@ def move_unmatched_files (language_dir, videos_without_metadata, metadatas_witho
             shutil.move(video, unmatched_videos_dir / Path(video).name)
             move_videos_cpt += 1
     
-    if unmatched_metadatas_dir is not None :
-         for metadata in metadatas_without_video :
-            shutil.move(metadata, unmatched_metadatas_dir / Path(metadata).name)
-            move_metadatas_cpt +=1
+    if unmatched_metadata_dir is not None :
+         for metadata in metadata_without_video :
+            shutil.move(metadata, unmatched_metadata_dir / Path(metadata).name)
+            move_metadata_cpt +=1
     
-    return move_videos_cpt, move_metadatas_cpt
+    return move_videos_cpt, move_metadata_cpt
 
 
 
 def move_pair_to_human_review(language_dir, non_compliant_pairs):
-    if not non_compliant_pairs:
-        return 0
-        
     non_compliant_video_dir, non_compliant_metadata_dir = create_non_compliant_directories(language_dir)
     move_files_cpt = 0
 
@@ -81,7 +78,7 @@ def create_non_compliant_directories(language_dir):
     non_compliant_dir.mkdir(parents=True, exist_ok=True)
 
     non_compliant_video_dir = non_compliant_dir / "videos"
-    non_compliant_metadata_dir = non_compliant_dir / "metadatas"
+    non_compliant_metadata_dir = non_compliant_dir / "metadata"
 
     non_compliant_video_dir.mkdir(parents=True, exist_ok=True)
     non_compliant_metadata_dir.mkdir(parents=True, exist_ok=True)

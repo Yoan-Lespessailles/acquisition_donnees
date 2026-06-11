@@ -1,19 +1,19 @@
 from pathlib import Path
 
-def match_video_and_metadata_files(video_files, metadata_files, videos_dir, metadatas_dir):
+def match_video_and_metadata_files(video_files, metadata_files, videos_dir, metadata_dir):
     video_extension = "mp4"
     metadata_extension = "csv"
 
     videos_set = extract_file_stems(video_files)
-    metadatas_set = extract_file_stems(metadata_files)
+    metadata_set = extract_file_stems(metadata_files)
 
-    pairs = videos_set & metadatas_set
-    videos_without_annotation = videos_set - metadatas_set
-    metadatas_without_video = metadatas_set - videos_set
+    pairs = videos_set & metadata_set
+    videos_without_annotation = videos_set - metadata_set
+    metadata_without_video = metadata_set - videos_set
 
-    print_match(videos_set, metadatas_set, pairs, videos_without_annotation, metadatas_without_video)
+    print_match(videos_set, metadata_set, pairs, videos_without_annotation, metadata_without_video)
 
-    return build_pairs(pairs, videos_dir, metadatas_dir, video_extension, metadata_extension), rebuild_file_paths_from_stems(videos_without_annotation, videos_dir, video_extension), rebuild_file_paths_from_stems(metadatas_without_video, metadatas_dir, metadata_extension)
+    return build_pairs(pairs, videos_dir, metadata_dir, video_extension, metadata_extension), rebuild_file_paths_from_stems(videos_without_annotation, videos_dir, video_extension), rebuild_file_paths_from_stems(metadata_without_video, metadata_dir, metadata_extension)
     
 
 def print_match(videos_set, annotations_set, pairs, videos_without_annotation, annotations_without_video):
@@ -42,10 +42,10 @@ def rebuild_file_paths_from_stems(file_stems, source_dir, extension):
     return rebuilt_file_paths
 
 
-def build_pairs(pairs, videos_dir, metadatas_dir, video_extension, metadata_extension):
+def build_pairs(pairs, videos_dir, metadata_dir, video_extension, metadata_extension):
     built_file_pairs = []
 
     for file_stem in pairs :
-        built_file_pairs.append((Path(videos_dir) / f"{file_stem}.{video_extension}", Path(metadatas_dir) / f"{file_stem}.{metadata_extension}"))
+        built_file_pairs.append((Path(videos_dir) / f"{file_stem}.{video_extension}", Path(metadata_dir) / f"{file_stem}.{metadata_extension}"))
     
     return built_file_pairs

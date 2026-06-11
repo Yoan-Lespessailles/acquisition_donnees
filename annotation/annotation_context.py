@@ -9,7 +9,7 @@ class AnnotationContext:
 
         self.language_dir = Path()
         self.videos_dir = Path()
-        self.metadatas_dir = Path()
+        self.metadata_dir = Path()
 
         self.video_files = []
         self.metadata_files = []
@@ -25,7 +25,7 @@ class AnnotationContext:
         self.videos_dir = self.language_dir / "videos"
 
         # construit le chemin du dossier annotations
-        self.metadatas_dir = self.language_dir / "annotations"
+        self.metadata_dir = self.language_dir / "annotations"
 
     def validate_paths(self):
         # Vérifie que le dossier de langue existe.
@@ -37,8 +37,8 @@ class AnnotationContext:
             raise FileNotFoundError(f"Dossier vidéos introuvable : {self.videos_dir}")
 
         # Vérifie que le dossier des annotations existe.
-        if not self.metadatas_dir.is_dir():
-            raise FileNotFoundError(f"Dossier annotations introuvable : {self.metadatas_dir}")
+        if not self.metadata_dir.is_dir():
+            raise FileNotFoundError(f"Dossier annotations introuvable : {self.metadata_dir}")
 
         return True
 
@@ -47,7 +47,7 @@ class AnnotationContext:
         for video_file in self.videos_dir.glob(f"{self.language_code}*.mp4"):
             self.video_files.append(Path(video_file))
 
-        for annotation_file in self.metadatas_dir.glob(f"{self.language_code}*.csv"):
+        for annotation_file in self.metadata_dir.glob(f"{self.language_code}*.csv"):
             self.metadata_files.append(Path(annotation_file))
     
 
