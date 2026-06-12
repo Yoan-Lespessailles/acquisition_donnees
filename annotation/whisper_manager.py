@@ -13,6 +13,13 @@ class WhisperManager:
         self.non_compliant_pairs = []
 
     def oral_transcription(self):
+        """
+        Transcrit chaque paire vidéo/métadonnées avec Whisper, puis vérifie si la transcription correspond à la phrase attendue.
+
+        La comparaison accepte deux formes :
+            - la phrase affichée à l'utilisateur, généralement en toutes lettres ;
+            - une variante avec certains nombres en chiffres, car Whisper peut parfois transcrire les nombres sous forme numérique.
+        """
         for files in self.valid_pairs:
             media_path = files[0]
             metadata_path = files[1]
@@ -26,25 +33,35 @@ class WhisperManager:
                 fp16=False,
             )
 
-            text_result = normalize_for_reading_check(result["text"])
-            sentence_annotation = normalize_for_reading_check(metadata["sentence_metadata"])
-            sentence_display = normalize_for_reading_check(metadata["sentence_display"])
+            # Normalise la transcription produite par Whisper.
+            whisper_text = normalize_for_reading_check(result["text"])
 
-            text_result_letters = normalize_letters_only(text_result)
-            sentence_annotation_letters = normalize_letters_only(sentence_annotation)
-            sentence_display_letters = normalize_letters_only(sentence_display)
+            # Normalise la phrase affichée à l'utilisateur.
+            expected_sentence_display = normalize_for_reading_check(metadata["sentence_display"])
 
-            if text_result_letters != sentence_annotation_letters and text_result_letters != sentence_display_letters:
+            # Normalise la variante utilisée pour accepter les nombres écrits en chiffres.
+            expected_sentence_digits = normalize_for_reading_check(metadata["sentence_with_digit"])
+
+            # Supprime les espaces et caractères non alphabétiques pour une comparaison plus robuste.
+            whisper_letters = normalize_letters_only(whisper_text)
+            expected_display_letters = normalize_letters_only(expected_sentence_display)
+            expected_digits_letters = normalize_letters_only(expected_sentence_digits)
+
+            # La transcription est non conforme uniquement si elle ne correspond
+            # ni à la phrase affichée, ni à la variante avec nombres en chiffres.
+            if whisper_letters != expected_digits_letters and whisper_letters != expected_display_letters:
                 compliant = False
 
             if compliant:
+                # Si la lecture est conforme, on conserve la phrase affichée comme transcription finale.
                 final_transcription = metadata["sentence_display"]
                 self.compliant_pairs.append([files, final_transcription])
 
             else:
-                print(f"Transcription de Whisper : {text_result}")
-                print(f"Phrase d’annotation attendue : {sentence_annotation}")
-                print(f"Phrase affichée à l’utilisateur : {sentence_display} \n")    
+                # Si la lecture est non conforme, on conserve la transcription réelle de Whisper
+                print(f"Transcription de Whisper : {whisper_text}")
+                print(f"Phrase d’annotation attendue : {expected_sentence_digits}")
+                print(f"Phrase affichée à l’utilisateur : {expected_sentence_display} \n")    
 
                 final_transcription = result["text"]
                 self.non_compliant_pairs.append([files, final_transcription])
