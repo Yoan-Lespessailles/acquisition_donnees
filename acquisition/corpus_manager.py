@@ -84,7 +84,7 @@ class CorpusManager:
         # Si au moins une langue existe, on sélectionne la première par défaut.
         if self.languages and self.language_selected is None:
             self.language_selected = self.languages[0]
-            print(f"Langue sélectionnée par défaut : {self.language_selected}")
+            # print(f"Langue sélectionnée par défaut : {self.language_selected}")
 
         elif not self.languages:
             print("Aucune langue disponible dans le dossier corpus")

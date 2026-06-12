@@ -94,44 +94,44 @@
         "type": "fixed",
         "sentences": [
             {
-                "text": "Un oignon brun cuit doucement dans la poêle chaude",
-                "numeric": "Un oignon brun cuit doucement dans la poêle chaude"
+                "text": "D'après la recette, on caramélise un oignon dans une poêle bien chaude",
+                "numeric": "D'après la recette, on caramélise un oignon dans une poêle bien chaude"
             },
             {
-                "text": "Le musicien joyeux joue un air ancien",
-                "numeric": "Le musicien joyeux joue un air ancien"
+                "text": "Un jeune musicien joue joyeusement un air médiéval puis salue le public",
+                "numeric": "Un jeune musicien joue joyeusement un air médiéval puis salue le public"
             },
             {
-                "text": "Une grenouille regarde le feu dans la grotte sombre",
-                "numeric": "Une grenouille regarde le feu dans la grotte sombre"
+                "text": "Une grenouille croasse près de l'étang et gobe quelques moustiques",
+                "numeric": "Une grenouille croasse près de l'étang et gobe quelques moustiques"
             },
             {
-                "text": "Un chien mignon marche lentement dans la montagne",
-                "numeric": "Un chien mignon marche lentement dans la montagne"
+                "text": "Dans la montagne, ce matin, j'ai croisé un chien de berger et son troupeau",
+                "numeric": "Dans la montagne, ce matin, j'ai croisé un chien de berger et son troupeau"
             },
             {
-                "text": "Le vent froid souffle sur les feuilles jaunes",
-                "numeric": "Le vent froid souffle sur les feuilles jaunes"
+                "text": "Des nuages couvrent le ciel et un vent froid d'automne souffle sur les feuilles jaunes",
+                "numeric": "Des nuages couvrent le ciel et un vent froid d'automne souffle sur les feuilles jaunes"
             },
             {
-                "text": "Un peintre soigneux nettoie un vieux mur humide",
-                "numeric": "Un peintre soigneux nettoie un vieux mur humide"
+                "text": "Le peintre applique soigneusement une couche de peinture blanche sur le mur",
+                "numeric": "Le peintre applique soigneusement une couche de peinture blanche sur le mur"
             },
             {
-                "text": "La nuit tombe sur une grande vallée silencieuse",
-                "numeric": "La nuit tombe sur une grande vallée silencieuse"
+                "text": "Le crépuscule tombe sur cette grande vallée silencieuse",
+                "numeric": "Le crépuscule tombe sur cette grande vallée silencieuse"
             },
             {
-                "text": "Un nageur plonge dans une eau profonde et calme",
-                "numeric": "Un nageur plonge dans une eau profonde et calme"
+                "text": "Un nageur plonge dans les eaux calmes et profondes de la Seine",
+                "numeric": "Un nageur plonge dans les eaux calmes et profondes de la Seine"
             },
             {
-                "text": "Le boulanger gagne une médaille pour son pain croustillant",
-                "numeric": "Le boulanger gagne une médaille pour son pain croustillant"
+                "text": "Le boulanger gagne une médaille pour son pain croustillant et moelleux",
+                "numeric": "Le boulanger gagne une médaille pour son pain croustillant et moelleux"
             },
             {
-                "text": "Un joueur lance une balle contre un grand mur gris",
-                "numeric": "Un joueur lance une balle contre un grand mur gris"
+                "text": "Après l'averse, le vieux monsieur range son parapluie puis regarde l'arc-en-ciel se former",
+                "numeric": "Après l'averse, le vieux monsieur range son parapluie puis regarde l'arc-en-ciel se former"
             }
         ]
     }
