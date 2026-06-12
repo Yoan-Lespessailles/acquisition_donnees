@@ -94,44 +94,44 @@
         "type": "fixed",
         "sentences": [
             {
-                "text": "Der junge Koch bäckt frische Brötchen, streut Pfeffer und zählt zehn Gäste.",
-                "numeric": "Der junge Koch bäckt frische Brötchen, streut Pfeffer und zählt 10 Gäste."
+                "text": "Der junge Koch würzt die Suppe mit Gewürzen und bereitet einen Brotteig vor.",
+                "numeric": "Der junge Koch würzt die Suppe mit Gewürzen und bereitet einen Brotteig vor."
             },
             {
-                "text": "Mädchen lernen heute spät Deutsch und trinken süßen Tee.",
-                "numeric": "Mädchen lernen heute spät Deutsch und trinken süßen Tee."
+                "text": "Die Mädchen treffen sich heute, um Deutsch zu lernen und guten süßen Tee zu trinken.",
+                "numeric": "Die Mädchen treffen sich heute, um Deutsch zu lernen und guten süßen Tee zu trinken."
             },
             {
-                "text": "Clara kauft zwölf bunte deutsche Bücher für Felix.",
-                "numeric": "Clara kauft 12 bunte deutsche Bücher für Felix."
+                "text": "Clara kauft Felix zwölf Bücher deutscher Autoren mit bunten Umschlägen.",
+                "numeric": "Clara kauft Felix 12 Bücher deutscher Autoren mit bunten Umschlägen."
             },
             {
-                "text": "Jonas prüft die dünnen Kissen neben dem offenen Fenster.",
-                "numeric": "Jonas prüft die dünnen Kissen neben dem offenen Fenster."
+                "text": "Jonas legt die Kissen ans offene Fenster, damit er sich dort hinsetzen kann.",
+                "numeric": "Jonas legt die Kissen ans offene Fenster, damit er sich dort hinsetzen kann."
             },
             {
-                "text": "Hanna holt drei schwere Taschen zum grünen Haus.",
-                "numeric": "Hanna holt 3 schwere Taschen zum grünen Haus."
+                "text": "Hannas Mutter bittet sie, drei schwere Taschen voller Sachen zur Nachbarin zu bringen.",
+                "numeric": "Hannas Mutter bittet sie, 3 schwere Taschen voller Sachen zur Nachbarin zu bringen."
             },
             {
-                "text": "Ben sucht oft acht schöne gelbe Blumen neben dem langen Weg.",
-                "numeric": "Ben sucht oft 8 schöne gelbe Blumen neben dem langen Weg."
+                "text": "Ben pflückt am langen Weg acht schöne gelbe Blumen und bindet daraus einen Strauß.",
+                "numeric": "Ben pflückt am langen Weg 8 schöne gelbe Blumen und bindet daraus einen Strauß."
             },
             {
-                "text": "Sophie zeigt Laura neun schöne Bilder am Rhein.",
-                "numeric": "Sophie zeigt Laura 9 schöne Bilder am Rhein."
+                "text": "Sophie zeigt Laura neun schöne Bilder vom Rhein, und Laura freut sich darüber.",
+                "numeric": "Sophie zeigt Laura 9 schöne Bilder vom Rhein, und Laura freut sich darüber."
             },
             {
-                "text": "David findet kleine Pakete auf dem weiten Feld.",
-                "numeric": "David findet kleine Pakete auf dem weiten Feld."
+                "text": "David findet einen kleinen verletzten Vogel im Hof und trägt ihn vorsichtig ins Haus.",
+                "numeric": "David findet einen kleinen verletzten Vogel im Hof und trägt ihn vorsichtig ins Haus."
             },
             {
-                "text": "Emma nimmt fünf süße Äpfel aus dem Korb.",
-                "numeric": "Emma nimmt 5 süße Äpfel aus dem Korb."
+                "text": "Emma nimmt fünf große süße Äpfel aus dem Weidenkorb.",
+                "numeric": "Emma nimmt 5 große süße Äpfel aus dem Weidenkorb."
             },
             {
-                "text": "Felix spricht deutlich, dann sagt er Tschüss und lacht.",
-                "numeric": "Felix spricht deutlich, dann sagt er Tschüss und lacht."
+                "text": "Felix ist bei seinen Freunden, doch es ist Zeit zu gehen; er sagt Tschüss und geht nach Hause.",
+                "numeric": "Felix ist bei seinen Freunden, doch es ist Zeit zu gehen; er sagt Tschüss und geht nach Hause."
             }
         ]
     }
