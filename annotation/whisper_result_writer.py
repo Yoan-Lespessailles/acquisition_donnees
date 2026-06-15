@@ -40,3 +40,32 @@ def create_pair_results_dir(results_dir, language_code, media_path):
     pair_results_dir.mkdir(parents=True, exist_ok=True)
 
     return pair_results_dir
+
+
+def copy_source_files(pair_results_dir, media_path, metadata_path):
+    """
+    Copie la vidéo et le fichier metadata dans le dossier de résultats.
+
+    Les fichiers originaux dans data/ ne sont pas modifiés.
+    """
+
+    # Convertit les chemins en objets Path.
+    pair_results_dir = Path(pair_results_dir)
+    media_path = Path(media_path)
+    metadata_path = Path(metadata_path)
+
+    # Crée un sous-dossier pour garder les fichiers d'origine.
+    source_dir = pair_results_dir / "source_files"
+    source_dir.mkdir(parents=True, exist_ok=True)
+
+    # Copie la vidéo dans le dossier de résultats.
+    shutil.copy2(
+        media_path,
+        source_dir / media_path.name,
+    )
+
+    # Copie le fichier metadata dans le dossier de résultats.
+    shutil.copy2(
+        metadata_path,
+        source_dir / metadata_path.name,
+    )

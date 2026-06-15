@@ -10,7 +10,8 @@ from annotation.metadata_reader import (
 
 from annotation.whisper_result_writer import (
     write_whisper_json, 
-    create_pair_results_dir
+    create_pair_results_dir,
+    copy_source_files
 )
 
 class WhisperManager:
@@ -114,8 +115,12 @@ class WhisperManager:
                     media_path,
                 )
 
+                # Copie la vidéo et le fichier metadata dans le dossier de résultats.
+                copy_source_files(pair_results_dir, media_path, metadata_path)
+
                 # Écrit le résultat complet de Whisper en JSON.
                 write_whisper_json(pair_results_dir, whisper_result)
+
 
             else:
                 non_compliant_cpt+=1
@@ -123,13 +128,13 @@ class WhisperManager:
                 # Stocke les fichiers dont le contrôle a échoué.
                 invalid_control.append([media_path, metadata_path])
                 
-             # Affiche le résumé après le traitement complet.
-            print(f"Transcriptions conformes : {compliant_cpt}")
-            print(f"Transcriptions non conformes : {non_compliant_cpt}")
+        # Affiche le résumé après le traitement complet.
+        print(f"Transcriptions conformes : {compliant_cpt}")
+        print(f"Transcriptions non conformes : {non_compliant_cpt}")
 
-            if invalid_control:
-                print("\nFichiers dont le contrôle n'a pas abouti :")
+        if invalid_control:
+            print("\nFichiers dont le contrôle n'a pas abouti :")
 
-                for files in invalid_control:
-                    print(f"{files[0]} | {files[1]}")
+            for files in invalid_control:
+                print(f"{files[0]} | {files[1]}")
             
