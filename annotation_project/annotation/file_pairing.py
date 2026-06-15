@@ -30,8 +30,8 @@ def match_video_and_metadata_files(video_files, metadata_files, videos_dir, meta
     videos_set = extract_file_stems(video_files)
     metadata_set = extract_file_stems(metadata_files)
 
-    # Identifie les fichiers présents à la fois côté vidéo et côté métadonnées.
-    pairs = videos_set & metadata_set
+    # Identifie les noms de fichiers présents à la fois côté vidéo et côté métadonnées.
+    matching_stems = videos_set & metadata_set
 
     # Identifie les vidéos qui n'ont pas de fichier de métadonnées correspondant.
     videos_without_metadata = videos_set - metadata_set
@@ -43,14 +43,14 @@ def match_video_and_metadata_files(video_files, metadata_files, videos_dir, meta
     print_match(
         videos_set,
         metadata_set,
-        pairs,
+        matching_stems,
         videos_without_metadata,
         metadata_without_video
     )
 
     # Reconstruit les chemins complets des paires valides.
     built_file_pairs = build_pairs(
-        pairs,
+        matching_stems,
         videos_dir,
         metadata_dir,
         video_extension,
@@ -74,14 +74,14 @@ def match_video_and_metadata_files(video_files, metadata_files, videos_dir, meta
     return built_file_pairs, rebuilt_file_paths_video, rebuilt_file_paths_metadata
 
 
-def print_match(videos_set, metadata_set, pairs, videos_without_metadata, metadata_without_video):
+def print_match(videos_set, metadata_set, matching_stems, videos_without_metadata, metadata_without_video):
     """
     Affiche un résumé du résultat de l'association entre vidéos et métadonnées.
 
     Paramètres :
         videos_set (set) : ensemble des noms de vidéos sans extension.
         metadata_set (set) : ensemble des noms de métadonnées sans extension.
-        pairs (set) : ensemble des noms présents dans les deux dossiers.
+        matching_stems (set) : ensemble des noms présents dans les deux dossiers.
         videos_without_metadata (set) : ensemble des vidéos sans métadonnées associées.
         metadata_without_video (set) : ensemble des métadonnées sans vidéo associée.
 
@@ -91,7 +91,7 @@ def print_match(videos_set, metadata_set, pairs, videos_without_metadata, metada
 
     print(f"Vidéos trouvées : {len(videos_set)}")
     print(f"Metadata trouvées : {len(metadata_set)}")
-    print(f"Paires valides : {len(pairs)}")
+    print(f"Paires valides : {len(matching_stems)}")
     print(f"Vidéos sans metadata : {len(videos_without_metadata)}")
     print(f"Metadata sans vidéo : {len(metadata_without_video)}")
 
@@ -151,7 +151,7 @@ def rebuild_file_paths_from_stems(file_stems, source_dir, extension):
     return rebuilt_file_paths
 
 
-def build_pairs(pairs, videos_dir, metadata_dir, video_extension, metadata_extension):
+def build_pairs(matching_stems, videos_dir, metadata_dir, video_extension, metadata_extension):
     """
     Construit les paires de chemins vidéo/métadonnées à partir des noms communs.
 
@@ -164,7 +164,7 @@ def build_pairs(pairs, videos_dir, metadata_dir, video_extension, metadata_exten
         )
 
     Paramètres :
-        pairs (set) : ensemble des noms de fichiers présents dans les deux dossiers.
+        matching_stems (set) : ensemble des noms de fichiers présents dans les deux dossiers.
         videos_dir (Path | str) : dossier contenant les vidéos.
         metadata_dir (Path | str) : dossier contenant les métadonnées.
         video_extension (str) : extension des fichiers vidéo.
@@ -177,7 +177,7 @@ def build_pairs(pairs, videos_dir, metadata_dir, video_extension, metadata_exten
     built_file_pairs = []
 
     # Pour chaque nom commun, reconstruit le chemin vidéo et le chemin métadonnées.
-    for file_stem in pairs:
+    for file_stem in matching_stems:
         video_path = Path(videos_dir) / f"{file_stem}.{video_extension}"
         metadata_path = Path(metadata_dir) / f"{file_stem}.{metadata_extension}"
 
