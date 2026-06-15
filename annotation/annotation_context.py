@@ -28,15 +28,15 @@ class AnnotationContext:
         self.metadata_dir = self.language_dir / "metadata"
 
     def validate_paths(self):
-        # Vérifie que le dossier de langue existe.
+        # Vérifie que le dossier de langue existe
         if not self.language_dir.is_dir():
             raise FileNotFoundError(f"Dossier de langue introuvable : {self.language_dir}")
 
-        # Vérifie que le dossier des vidéos existe.
+        # Vérifie que le dossier des vidéos existe
         if not self.videos_dir.is_dir():
             raise FileNotFoundError(f"Dossier vidéos introuvable : {self.videos_dir}")
 
-        # Vérifie que le dossier de métadonnées existe.
+        # Vérifie que le dossier de métadonnées existe
         if not self.metadata_dir.is_dir():
             raise FileNotFoundError(f"Dossier metadata introuvable : {self.metadata_dir}")
 

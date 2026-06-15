@@ -11,28 +11,28 @@ def csv_reader(metadata_path):
     return metadata
 
 def normalize_for_reading_check(text):
-    # Supprime les espaces au début et à la fin.
+    # Supprime les espaces au début et à la fin
     normalized_text = text.strip()
 
-    # Met le texte en minuscules de manière robuste.
+    # Met le texte en minuscules de manière robuste
     normalized_text = normalized_text.casefold()
 
-    # Décompose les caractères accentués.
-    # Exemple : "é" devient "e" + accent séparé.
+    # Décompose les caractères accentués
+    # Exemple : "é" devient "e" + accent séparé
     normalized_text = unicodedata.normalize("NFD", normalized_text)
 
-    # Supprime les accents et signes diacritiques.
+    # Supprime les accents et signes diacritiques
     normalized_text = "".join(
         char for char in normalized_text
         if unicodedata.category(char) != "Mn"
     )
 
-    # Supprime la ponctuation classique.
+    # Supprime la ponctuation classique
     normalized_text = normalized_text.translate(
         str.maketrans("", "", string.punctuation)
     )
 
-    # Réduit les espaces multiples à un seul espace.
+    # Réduit les espaces multiples à un seul espace
     normalized_text = " ".join(normalized_text.split())
 
     return normalized_text

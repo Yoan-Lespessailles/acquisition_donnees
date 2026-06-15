@@ -13,7 +13,11 @@ def match_video_and_metadata_files(video_files, metadata_files, videos_dir, meta
 
     print_match(videos_set, metadata_set, pairs, videos_without_metadata, metadata_without_video)
 
-    return build_pairs(pairs, videos_dir, metadata_dir, video_extension, metadata_extension), rebuild_file_paths_from_stems(videos_without_metadata, videos_dir, video_extension), rebuild_file_paths_from_stems(metadata_without_video, metadata_dir, metadata_extension)
+    built_file_pairs = build_pairs(pairs, videos_dir, metadata_dir, video_extension, metadata_extension)
+    rebuilt_file_paths_video = rebuild_file_paths_from_stems(videos_without_metadata, videos_dir, video_extension)
+    rebuilt_file_paths_metadata = rebuild_file_paths_from_stems(metadata_without_video, metadata_dir, metadata_extension)
+
+    return built_file_pairs, rebuilt_file_paths_video, rebuilt_file_paths_metadata
     
 
 def print_match(videos_set, metadata_set, pairs, videos_without_metadata, metadata_without_video):
