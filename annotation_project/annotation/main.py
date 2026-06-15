@@ -5,9 +5,9 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from annotation.annotation_context import AnnotationContext
-from annotation.whisper_manager import WhisperManager
-from annotation.file_pairing import match_video_and_metadata_files
+from annotation_project.annotation.annotation_context import AnnotationContext
+from annotation_project.annotation.whisper_manager import WhisperManager
+from annotation_project.annotation.file_pairing import match_video_and_metadata_files
 
 def parse_arguments():
     """

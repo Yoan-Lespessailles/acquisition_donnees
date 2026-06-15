@@ -2,13 +2,13 @@ import whisper
 
 from pathlib import Path
 
-from annotation.metadata_reader import (
+from annotation_project.annotation.metadata_reader import (
     csv_reader, 
     normalize_for_reading_check, 
     normalize_letters_only
 )
 
-from annotation.whisper_result_writer import (
+from annotation_project.annotation.whisper_result_writer import (
     write_whisper_json, 
     create_pair_results_dir,
     copy_source_files
