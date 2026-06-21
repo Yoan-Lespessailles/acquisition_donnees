@@ -55,6 +55,8 @@ if __name__ == "__main__":
 
     # création de l’application Qt
     app = QApplication(sys.argv)
+    app.setApplicationName("AVDataCollector")
+    app.setApplicationDisplayName("AVDataCollector")
     
     # Crée la fenêtre principale en lui transmettant le prénom éventuel.
     window = MyWindow(user_firstname=args.firstname)

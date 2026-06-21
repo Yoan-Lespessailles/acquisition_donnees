@@ -1,4 +1,6 @@
 from pathlib import Path
+import sys
+
 import yaml
 
 
@@ -12,11 +14,15 @@ def load_config():
     """
 
     # Dossier du package acquisition_project.
-    acquisition_project_dir = Path(__file__).resolve().parents[1]
+    if getattr(sys, "frozen", False):
+        # En production, config.yaml reste modifiable a cote de l'executable.
+        acquisition_project_dir = Path(sys.executable).resolve().parent
+        base_dir = acquisition_project_dir.parent
+    else:
+        acquisition_project_dir = Path(__file__).resolve().parents[1]
+        base_dir = acquisition_project_dir.parent
 
     # Dossier racine du dépôt, situé au-dessus de acquisition_project.
-    base_dir = Path(__file__).resolve().parents[2]
-
     # Chemin du fichier YAML.
     config_path = acquisition_project_dir / "config.yaml"
 

@@ -7,6 +7,8 @@ Description-Content-Type: text/markdown
 Requires-Dist: av>=12.0
 Requires-Dist: PySide6==6.11.0
 Requires-Dist: PyYAML==6.0.3
+Provides-Extra: build
+Requires-Dist: PyInstaller>=6; extra == "build"
 
 ## Présentation générale de l'application d'acquisition
 

@@ -47,11 +47,11 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Initialise la fenêtre Qt.
         super().__init__()
 
-        self.setWindowTitle("Prototype Application")
         self.resize(600, 400)
 
         # Charge l'interface créée avec Qt Designer
         self.setupUi(self)
+        self.setWindowTitle("AVDataCollector")
 
         # Si un prénom est fourni en ligne de commande, on l'utilise directement.
         if user_firstname is not None and user_firstname.strip():
