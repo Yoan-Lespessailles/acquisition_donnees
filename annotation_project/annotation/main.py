@@ -2,7 +2,7 @@ import argparse
 import sys
 
 from pathlib import Path
-
+from annotation_project.annotation.mfa_manager import MfaManager
 
 # Récupère la racine du projet.
 # Ici :
@@ -26,6 +26,56 @@ if __package__ in (None, ""):
 from annotation_project.annotation.annotation_context import AnnotationContext
 from annotation_project.annotation.whisper_manager import WhisperManager
 from annotation_project.annotation.file_pairing import match_video_and_metadata_files
+
+
+def resolve_mfa_settings(language_code):
+    """
+    Détermine automatiquement les ressources MFA à utiliser
+    à partir du code langue.
+
+    Paramètre :
+        language_code (str) : code de la langue à traiter, par exemple "fr".
+
+    Retourne :
+        tuple[Path, str] : chemin du dictionnaire personnalisé et nom du modèle acoustique.
+    """
+
+    # Associe chaque code langue au modèle acoustique MFA correspondant.
+    acoustic_models = {
+        "fr": "french_mfa",
+        "en": "english_mfa",
+        "it": "italian_mfa",
+        "es": "spanish_mfa",
+        "de": "german_mfa",
+    }
+
+    # Normalise le code langue pour éviter les différences du type "FR" / "fr".
+    language_code = language_code.lower()
+
+    # Construit automatiquement le chemin du dictionnaire personnalisé.
+    dictionary_path = (
+        PROJECT_ROOT
+        / "mfa"
+        / "dictionaries"
+        / f"{language_code}_custom.dict"
+    )
+
+    # Récupère le modèle acoustique associé à la langue.
+    acoustic_model = acoustic_models.get(language_code)
+
+    # Si aucun modèle n'est défini, on bloque avec un message explicite.
+    if acoustic_model is None:
+        raise ValueError(
+            f"Aucun modèle acoustique MFA n'est défini pour la langue : {language_code}"
+        )
+
+    # Si le dictionnaire personnalisé n'existe pas, on bloque aussi clairement.
+    if not dictionary_path.exists():
+        raise FileNotFoundError(
+            f"Dictionnaire MFA personnalisé introuvable : {dictionary_path}"
+        )
+
+    return dictionary_path, acoustic_model
 
 
 def parse_arguments():
@@ -84,6 +134,13 @@ def parse_arguments():
         help="Affiche les fichiers qui seraient traités sans lancer Whisper."
     )
 
+    # Permet de tester directement MFA
+    parser.add_argument(
+        "--mfa-test",
+        action="store_true",
+        help="Prépare un corpus MFA et lance mfa validate sans lancer Whisper."
+    )
+
     # Analyse les arguments saisis dans le terminal.
     return parser.parse_args()
 
@@ -105,7 +162,6 @@ if __name__ == "__main__":
     if args.dry_run:
         annotation_context.display_files()
 
-    # En mode normal, le programme associe les vidéos aux metadata puis lance Whisper.
     else:
         # Associe les vidéos et les fichiers metadata ayant le même nom de base.
         valid_pairs, videos_without_metadata, metadata_without_video = match_video_and_metadata_files(
@@ -115,8 +171,35 @@ if __name__ == "__main__":
             annotation_context.metadata_dir
         )
 
-        # Crée le gestionnaire Whisper avec le modèle demandé et les paires valides.
-        whisper_manager = WhisperManager(args.model, valid_pairs)
+        # Récupère automatiquement le dictionnaire et le modèle MFA selon la langue.
+        mfa_dictionary_path, mfa_acoustic_model = resolve_mfa_settings(args.language)
 
-        # Lance la transcription et le contrôle de conformité.
-        whisper_manager.oral_transcription()
+        if args.mfa_test:
+            # Mode test : lance MFA directement sur les paires valides,
+            # sans passer par Whisper.
+            mfa_manager = MfaManager(
+                valid_pairs=valid_pairs,
+                results_dir=PROJECT_ROOT / "results",
+                language_code=args.language,
+                dictionary_path=mfa_dictionary_path,
+                acoustic_model=mfa_acoustic_model,
+            )
+
+            mfa_manager.prepare_validate_and_align()
+
+        else:
+            # Mode normal : lance Whisper puis contrôle la conformité.
+            whisper_manager = WhisperManager(args.model, valid_pairs)
+
+            compliant_pairs, invalid_pairs = whisper_manager.oral_transcription() # type: ignore
+
+            # Lance MFA uniquement sur les fichiers validés par Whisper.
+            mfa_manager = MfaManager(
+                valid_pairs=compliant_pairs,
+                results_dir=PROJECT_ROOT / "results",
+                language_code=args.language,
+                dictionary_path=mfa_dictionary_path,
+                acoustic_model=mfa_acoustic_model,
+            )
+
+            mfa_manager.prepare_validate_and_align()
