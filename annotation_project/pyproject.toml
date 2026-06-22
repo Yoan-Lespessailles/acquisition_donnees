@@ -1,0 +1,17 @@
+[project]
+name = "annotation-project"
+version = "0.1.0"
+description = "Application d'annotation automatique avec Whisper et Montreal Forced Aligner."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "openai-whisper",
+]
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["annotation*"]

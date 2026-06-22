@@ -2,7 +2,6 @@ import argparse
 import sys
 
 from pathlib import Path
-from annotation_project.annotation.mfa_manager import MfaManager
 
 # Récupère la racine du projet.
 # Ici :
@@ -20,12 +19,13 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 # Sans cette condition, les imports absolus peuvent échouer si Python
 # ne trouve pas correctement la racine du projet.
 if __package__ in (None, ""):
-    sys.path.insert(0, str(PROJECT_ROOT))
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 
-from annotation_project.annotation.annotation_context import AnnotationContext
-from annotation_project.annotation.whisper_manager import WhisperManager
-from annotation_project.annotation.file_pairing import match_video_and_metadata_files
+from annotation.annotation_context import AnnotationContext
+from annotation.file_pairing import match_video_and_metadata_files
+from annotation.mfa_manager import MfaManager
+from annotation.whisper_manager import WhisperManager
 
 
 def resolve_mfa_settings(language_code):
@@ -99,7 +99,7 @@ def parse_arguments():
 
     # Ajoute l'argument obligatoire correspondant au code langue.
     # Exemple :
-    # python -m annotation_project.annotation.main --language fr
+    # python -m annotation.main --language fr
     parser.add_argument(
         "--language",
         type=str,

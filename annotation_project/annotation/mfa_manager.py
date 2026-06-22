@@ -4,7 +4,7 @@ import subprocess
 
 from pathlib import Path
 
-from annotation_project.annotation.metadata_reader import csv_reader
+from annotation.metadata_reader import csv_reader
 
 
 class MfaManager:
