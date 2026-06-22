@@ -12,6 +12,7 @@ class AnnotationContext:
         - les listes des fichiers vidéo et metadata trouvés.
     """
 
+
     def __init__(self, language_code, data_dir):
         """
         Initialise le contexte d'annotation pour une langue.
@@ -24,24 +25,24 @@ class AnnotationContext:
             None
         """
 
-        # Normalise le code langue en minuscules pour éviter les différences du type "FR" / "fr".
+        # Normalise le code langue en minuscules pour éviter les différences du type "FR" / "fr"
         self.language_code = language_code.lower()
 
-        # Stocke le dossier racine contenant les données.
+        # Stocke le dossier racine contenant les données
         self.data_dir = Path(data_dir)
 
-        # Initialise les chemins principaux avec des objets Path vides.
-        # Ils seront construits ensuite par la méthode build_paths().
+        # Initialise les chemins principaux avec des objets Path vides
         self.language_dir = Path()
         self.videos_dir = Path()
         self.metadata_dir = Path()
 
-        # Initialise les listes qui contiendront les fichiers trouvés.
+        # Initialise les listes qui contiendront les fichiers trouvés
         self.video_files = []
         self.metadata_files = []
 
-        # Construit immédiatement les chemins utiles à partir du dossier racine et du code langue.
+        # Construit immédiatement les chemins utiles à partir du dossier racine et du code langue
         self.build_paths()
+
 
     def build_paths(self):
         """
@@ -56,17 +57,18 @@ class AnnotationContext:
             None
         """
 
-        # Construit le chemin du dossier de langue.
+        # Construit le chemin du dossier de langue
         # Exemple : data/fr
         self.language_dir = self.data_dir / self.language_code
 
-        # Construit le chemin du dossier contenant les vidéos.
+        # Construit le chemin du dossier contenant les vidéos
         # Exemple : data/fr/videos
         self.videos_dir = self.language_dir / "videos"
 
-        # Construit le chemin du dossier contenant les fichiers de métadonnées.
+        # Construit le chemin du dossier contenant les fichiers de métadonnées
         # Exemple : data/fr/metadata
         self.metadata_dir = self.language_dir / "metadata"
+
 
     def validate_paths(self):
         """
@@ -84,19 +86,20 @@ class AnnotationContext:
             FileNotFoundError : si l'un des dossiers attendus est introuvable.
         """
 
-        # Vérifie que le dossier associé à la langue existe.
+        # Vérifie que le dossier associé à la langue existe
         if not self.language_dir.is_dir():
             raise FileNotFoundError(f"Dossier de langue introuvable : {self.language_dir}")
 
-        # Vérifie que le dossier contenant les vidéos existe.
+        # Vérifie que le dossier contenant les vidéos existe
         if not self.videos_dir.is_dir():
             raise FileNotFoundError(f"Dossier vidéos introuvable : {self.videos_dir}")
 
-        # Vérifie que le dossier contenant les métadonnées existe.
+        # Vérifie que le dossier contenant les métadonnées existe
         if not self.metadata_dir.is_dir():
             raise FileNotFoundError(f"Dossier metadata introuvable : {self.metadata_dir}")
 
         return True
+
 
     def load_file_list(self):
         """
@@ -115,18 +118,18 @@ class AnnotationContext:
             None
         """
 
-        # Vide les listes avant le chargement pour éviter les doublons
-        # si la méthode est appelée plusieurs fois.
+        # Vide les listes avant le chargement pour éviter les doublons si la méthode est appelée plusieurs fois
         self.video_files.clear()
         self.metadata_files.clear()
 
-        # Recherche les vidéos dont le nom commence par le code langue.
+        # Recherche les vidéos dont le nom commence par le code langue
         for video_file in self.videos_dir.glob(f"{self.language_code}*.mp4"):
             self.video_files.append(Path(video_file))
 
-        # Recherche les fichiers metadata dont le nom commence par le code langue.
+        # Recherche les fichiers metadata dont le nom commence par le code langue
         for metadata_file in self.metadata_dir.glob(f"{self.language_code}*.csv"):
             self.metadata_files.append(Path(metadata_file))
+
 
     def display_files(self):
         """
@@ -138,10 +141,10 @@ class AnnotationContext:
             None
         """
 
-        # Affiche les fichiers vidéo trouvés.
+        # Affiche les fichiers vidéo trouvés
         for video_file in self.video_files:
             print(video_file)
 
-        # Affiche les fichiers de métadonnées trouvés.
+        # Affiche les fichiers de métadonnées trouvés
         for metadata_file in self.metadata_files:
             print(metadata_file)

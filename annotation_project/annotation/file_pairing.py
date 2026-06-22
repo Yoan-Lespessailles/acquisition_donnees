@@ -21,25 +21,25 @@ def match_video_and_metadata_files(video_files, metadata_files, videos_dir, meta
             - rebuilt_file_paths_metadata : liste des fichiers de métadonnées sans vidéo associée.
     """
 
-    # Extensions attendues pour les fichiers vidéo et les fichiers de métadonnées.
+    # Extensions attendues pour les fichiers vidéo et les fichiers de métadonnées
     video_extension = "mp4"
     metadata_extension = "csv"
 
-    # Récupère uniquement les noms de fichiers sans extension.
-    # Exemple : "fr_20260602_092105.mp4" devient "fr_20260602_092105".
+    # Récupère uniquement les noms de fichiers sans extension
+    # Exemple : "fr_20260602_092105.mp4" devient "fr_20260602_092105"
     videos_set = extract_file_stems(video_files)
     metadata_set = extract_file_stems(metadata_files)
 
-    # Identifie les noms de fichiers présents à la fois côté vidéo et côté métadonnées.
+    # Identifie les noms de fichiers présents à la fois côté vidéo et côté métadonnées
     matching_stems = videos_set & metadata_set
 
-    # Identifie les vidéos qui n'ont pas de fichier de métadonnées correspondant.
+    # Identifie les vidéos qui n'ont pas de fichier de métadonnées correspondant
     videos_without_metadata = videos_set - metadata_set
 
-    # Identifie les fichiers de métadonnées qui n'ont pas de vidéo correspondante.
+    # Identifie les fichiers de métadonnées qui n'ont pas de vidéo correspondante
     metadata_without_video = metadata_set - videos_set
 
-    # Affiche un résumé du résultat de l'association.
+    # Affiche un résumé du résultat de l'association
     print_match(
         videos_set,
         metadata_set,
@@ -48,7 +48,7 @@ def match_video_and_metadata_files(video_files, metadata_files, videos_dir, meta
         metadata_without_video
     )
 
-    # Reconstruit les chemins complets des paires valides.
+    # Reconstruit les chemins complets des paires valides
     built_file_pairs = build_pairs(
         matching_stems,
         videos_dir,
@@ -57,14 +57,14 @@ def match_video_and_metadata_files(video_files, metadata_files, videos_dir, meta
         metadata_extension
     )
 
-    # Reconstruit les chemins complets des vidéos sans métadonnées.
+    # Reconstruit les chemins complets des vidéos sans métadonnées
     rebuilt_file_paths_video = rebuild_file_paths_from_stems(
         videos_without_metadata,
         videos_dir,
         video_extension
     )
 
-    # Reconstruit les chemins complets des métadonnées sans vidéo.
+    # Reconstruit les chemins complets des métadonnées sans vidéo
     rebuilt_file_paths_metadata = rebuild_file_paths_from_stems(
         metadata_without_video,
         metadata_dir,
@@ -114,7 +114,7 @@ def extract_file_stems(files):
 
     file_stems = set()
 
-    # Parcourt chaque fichier pour récupérer uniquement son nom sans extension.
+    # Parcourt chaque fichier pour récupérer uniquement son nom sans extension
     for file_path in files:
         file_stems.add(Path(file_path).stem)
 
@@ -144,7 +144,7 @@ def rebuild_file_paths_from_stems(file_stems, source_dir, extension):
 
     rebuilt_file_paths = []
 
-    # Reconstruit chaque chemin en combinant le dossier, le nom du fichier et l'extension.
+    # Reconstruit chaque chemin en combinant le dossier, le nom du fichier et l'extension
     for file_stem in file_stems:
         rebuilt_file_paths.append(Path(source_dir) / f"{file_stem}.{extension}")
 
@@ -176,7 +176,7 @@ def build_pairs(matching_stems, videos_dir, metadata_dir, video_extension, metad
 
     built_file_pairs = []
 
-    # Pour chaque nom commun, reconstruit le chemin vidéo et le chemin métadonnées.
+    # Pour chaque nom commun, reconstruit le chemin vidéo et le chemin métadonnées
     for file_stem in matching_stems:
         video_path = Path(videos_dir) / f"{file_stem}.{video_extension}"
         metadata_path = Path(metadata_dir) / f"{file_stem}.{metadata_extension}"

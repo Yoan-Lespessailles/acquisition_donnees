@@ -32,28 +32,28 @@ class MfaManager:
             acoustic_model : nom du modèle acoustique MFA à utiliser
         """
 
-        # Stocke les paires vidéo / métadonnées valides.
+        # Stocke les paires vidéo / métadonnées valides
         self.valid_pairs = valid_pairs
 
-        # Stocke le dossier racine des résultats.
+        # Stocke le dossier racine des résultats
         self.results_dir = Path(results_dir)
 
-        # Stocke le code de langue.
+        # Stocke le code de langue
         self.language_code = language_code
 
-        # Stocke le chemin du dictionnaire personnalisé.
+        # Stocke le chemin du dictionnaire personnalisé
         self.dictionary_path = Path(dictionary_path)
 
-        # Stocke le nom du modèle acoustique MFA.
+        # Stocke le nom du modèle acoustique MFA
         self.acoustic_model = acoustic_model
 
-        # Dossier contenant les fichiers préparés pour MFA.
+        # Dossier contenant les fichiers préparés pour MFA
         # Exemple : results/fr/mfa/input/
         self.mfa_input_dir = (
             self.results_dir / self.language_code / "mfa" / "input"
         )
 
-        # Dossier contenant les résultats produits par MFA.
+        # Dossier contenant les résultats produits par MFA
         # Exemple : results/fr/mfa/aligned/
         self.mfa_aligned_dir = (
             self.results_dir / self.language_code / "mfa" / "aligned"
@@ -70,16 +70,16 @@ class MfaManager:
             l'arc-en-ciel
         """
 
-        # Met la phrase en minuscules.
+        # Met la phrase en minuscules
         sentence = sentence.lower()
 
-        # Remplace les apostrophes typographiques par des apostrophes simples.
+        # Remplace les apostrophes typographiques par des apostrophes simples
         sentence = sentence.replace("’", "'")
 
-        # Supprime la ponctuation qui ne doit pas devenir un mot MFA.
+        # Supprime la ponctuation qui ne doit pas devenir un mot MFA
         sentence = re.sub(r"[.,;:!?«»\"]", "", sentence)
 
-        # Remplace les espaces multiples par un seul espace.
+        # Remplace les espaces multiples par un seul espace
         sentence = re.sub(r"\s+", " ", sentence)
 
         return sentence.strip()
@@ -93,37 +93,37 @@ class MfaManager:
             - écrit la phrase attendue dans un fichier .lab.
         """
 
-        # Supprime l'ancien dossier d'entrée MFA pour éviter les fichiers périmés.
+        # Supprime l'ancien dossier d'entrée MFA pour éviter les fichiers périmés
         if self.mfa_input_dir.exists():
             shutil.rmtree(self.mfa_input_dir)
 
-        # Crée le dossier d'entrée MFA.
+        # Crée le dossier d'entrée MFA
         self.mfa_input_dir.mkdir(parents=True, exist_ok=True)
 
         for media_path, metadata_path in self.valid_pairs:
             media_path = Path(media_path)
             metadata_path = Path(metadata_path)
 
-            # Lit les métadonnées associées à la vidéo.
+            # Lit les métadonnées associées à la vidéo
             metadata = csv_reader(metadata_path)
 
-            # Récupère le nom du fichier sans extension.
+            # Récupère le nom du fichier sans extension
             file_stem = media_path.stem
 
-            # Définit les chemins de sortie pour MFA.
+            # Définit les chemins de sortie pour MFA
             wav_path = self.mfa_input_dir / f"{file_stem}.wav"
             lab_path = self.mfa_input_dir / f"{file_stem}.lab"
 
-            # Extrait l'audio de la vidéo en WAV mono 16 kHz.
+            # Extrait l'audio de la vidéo en WAV mono 16 kHz
             self.extract_audio_to_wav(media_path, wav_path)
 
-            # Récupère la phrase attendue.
+            # Récupère la phrase attendue
             sentence = metadata["sentence_display"]
 
-            # Normalise la phrase pour MFA.
+            # Normalise la phrase pour MFA
             sentence = self.normalize_sentence_for_mfa(sentence)
 
-            # Écrit la phrase dans le fichier .lab.
+            # Écrit la phrase dans le fichier .lab
             with lab_path.open("w", encoding="utf-8") as lab_file:
                 lab_file.write(sentence)
 
@@ -157,13 +157,13 @@ class MfaManager:
             - le modèle acoustique est compatible.
         """
 
-        # Vérifie que le dictionnaire personnalisé existe.
+        # Vérifie que le dictionnaire personnalisé existe
         if not self.dictionary_path.exists():
             raise FileNotFoundError(
                 f"Dictionnaire MFA introuvable : {self.dictionary_path}"
             )
 
-        # Prépare la commande MFA.
+        # Prépare la commande MFA
         command = [
             "mfa",
             "validate",
@@ -172,11 +172,11 @@ class MfaManager:
             self.acoustic_model,
         ]
 
-        # Affiche la commande pour faciliter le débogage.
+        # Affiche la commande pour faciliter le débogage
         print("Commande MFA validate lancée :")
         print(" ".join(command))
 
-        # Lance MFA.
+        # Lance MFA
         subprocess.run(command, check=True)
 
     def align(self):
@@ -187,20 +187,20 @@ class MfaManager:
         généralement au format TextGrid.
         """
 
-        # Vérifie que le dictionnaire personnalisé existe.
+        # Vérifie que le dictionnaire personnalisé existe
         if not self.dictionary_path.exists():
             raise FileNotFoundError(
                 f"Dictionnaire MFA introuvable : {self.dictionary_path}"
             )
 
-        # Supprime l'ancien dossier d'alignement pour éviter les anciens résultats.
+        # Supprime l'ancien dossier d'alignement pour éviter les anciens résultats
         if self.mfa_aligned_dir.exists():
             shutil.rmtree(self.mfa_aligned_dir)
 
-        # Crée le dossier de sortie des alignements.
+        # Crée le dossier de sortie des alignements
         self.mfa_aligned_dir.mkdir(parents=True, exist_ok=True)
 
-        # Prépare la commande MFA.
+        # Prépare la commande MFA
         command = [
             "mfa",
             "align",
@@ -210,11 +210,11 @@ class MfaManager:
             str(self.mfa_aligned_dir),
         ]
 
-        # Affiche la commande pour faciliter le débogage.
+        # Affiche la commande pour faciliter le débogage
         print("Commande MFA align lancée :")
         print(" ".join(command))
 
-        # Lance MFA.
+        # Lance MFA
         subprocess.run(command, check=True)
 
     def prepare_validate_and_align(self):
@@ -223,11 +223,11 @@ class MfaManager:
         puis lance l'alignement final.
         """
 
-        # Prépare les fichiers .wav et .lab.
+        # Prépare les fichiers .wav et .lab
         self.prepare_mfa_input()
 
-        # Vérifie que les fichiers et le dictionnaire sont compatibles.
+        # Vérifie que les fichiers et le dictionnaire sont compatibles
         self.validate()
 
-        # Produit les annotations MFA.
+        # Produit les annotations MFA
         self.align()
