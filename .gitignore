@@ -3,3 +3,5 @@ __pycache__/
 .env
 venv/
 /data
+/acquisition_project/build/
+/distribution/
