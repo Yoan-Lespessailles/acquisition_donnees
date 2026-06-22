@@ -2,6 +2,8 @@ name: annotation
 
 channels:
   - conda-forge
+  # N'utilise pas les canaux Anaconda "defaults" configurés globalement.
+  - nodefaults
 
 dependencies:
   # Version de Python attendue par le projet.
