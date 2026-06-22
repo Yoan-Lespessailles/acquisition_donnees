@@ -1,0 +1,12 @@
+# Détecte automatiquement les fichiers texte et normalise leur stockage Git.
+* text=auto
+
+# Conserve les fichiers du projet avec des fins de ligne LF sur tous les OS.
+.gitattributes text eol=lf
+.gitignore text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.toml text eol=lf
+*.csv text eol=lf
