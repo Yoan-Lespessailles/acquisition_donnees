@@ -1,12 +1,10 @@
 [project]
 name = "annotation-project"
 version = "0.1.0"
-description = "Application d'annotation automatique avec Whisper et Montreal Forced Aligner."
+description = "Application d'annotation automatique avec Montreal Forced Aligner."
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
-dependencies = [
-    "openai-whisper",
-]
+dependencies = []
 
 [build-system]
 requires = ["setuptools>=69"]

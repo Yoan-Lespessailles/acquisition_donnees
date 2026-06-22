@@ -15,7 +15,7 @@ dependencies:
   - kaldi=*=cpu*
 
   # Installe ensuite le projet et ses dependances Python declarees dans
-  # pyproject.toml, notamment openai-whisper.
+  # pyproject.toml.
   - pip
   - pip:
       - -e .

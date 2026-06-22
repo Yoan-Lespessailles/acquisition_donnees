@@ -25,7 +25,6 @@ if __package__ in (None, ""):
 from annotation.annotation_context import AnnotationContext
 from annotation.file_pairing import match_video_and_metadata_files
 from annotation.mfa_manager import MfaManager
-from annotation.whisper_manager import WhisperManager
 
 
 def resolve_mfa_settings(language_code):
@@ -85,7 +84,6 @@ def parse_arguments():
     Cette fonction définit les options disponibles pour lancer le programme :
         - la langue à traiter ;
         - le dossier contenant les données ;
-        - le modèle Whisper à utiliser ;
         - le mode dry-run.
 
     Retourne :
@@ -94,7 +92,7 @@ def parse_arguments():
 
     # Crée le parseur principal de la commande.
     parser = argparse.ArgumentParser(
-        description="Annotation automatique des vidéos avec Whisper."
+        description="Annotation automatique des mots et des phones avec MFA."
     )
 
     # Ajoute l'argument obligatoire correspondant au code langue.
@@ -116,29 +114,13 @@ def parse_arguments():
         help="Dossier racine des données. Par défaut : dossier data à la racine du projet."
     )
 
-    # Ajoute l'argument permettant de choisir le modèle Whisper.
-    parser.add_argument(
-        "--model",
-        type=str,
-        default="large",
-        choices=["tiny", "base", "small", "medium", "large"],
-        help="Modèle Whisper à utiliser."
-    )
-
     # Ajoute le mode simulation.
     # Si cette option est présente, le programme affiche les fichiers trouvés
-    # sans lancer réellement la transcription Whisper.
+    # sans lancer MFA.
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Affiche les fichiers qui seraient traités sans lancer Whisper."
-    )
-
-    # Permet de tester directement MFA
-    parser.add_argument(
-        "--mfa-test",
-        action="store_true",
-        help="Prépare un corpus MFA et lance mfa validate sans lancer Whisper."
+        help="Affiche les fichiers qui seraient traités sans lancer MFA."
     )
 
     # Analyse les arguments saisis dans le terminal.
@@ -164,7 +146,7 @@ if __name__ == "__main__":
 
     else:
         # Associe les vidéos et les fichiers metadata ayant le même nom de base.
-        valid_pairs, videos_without_metadata, metadata_without_video = match_video_and_metadata_files(
+        valid_pairs, _, _ = match_video_and_metadata_files(
             annotation_context.video_files,
             annotation_context.metadata_files,
             annotation_context.videos_dir,
@@ -174,32 +156,13 @@ if __name__ == "__main__":
         # Récupère automatiquement le dictionnaire et le modèle MFA selon la langue.
         mfa_dictionary_path, mfa_acoustic_model = resolve_mfa_settings(args.language)
 
-        if args.mfa_test:
-            # Mode test : lance MFA directement sur les paires valides,
-            # sans passer par Whisper.
-            mfa_manager = MfaManager(
-                valid_pairs=valid_pairs,
-                results_dir=PROJECT_ROOT / "results",
-                language_code=args.language,
-                dictionary_path=mfa_dictionary_path,
-                acoustic_model=mfa_acoustic_model,
-            )
+        # MFA produit directement les annotations de mots et de phones.
+        mfa_manager = MfaManager(
+            valid_pairs=valid_pairs,
+            results_dir=PROJECT_ROOT / "results",
+            language_code=args.language,
+            dictionary_path=mfa_dictionary_path,
+            acoustic_model=mfa_acoustic_model,
+        )
 
-            mfa_manager.prepare_validate_and_align()
-
-        else:
-            # Mode normal : lance Whisper puis contrôle la conformité.
-            whisper_manager = WhisperManager(args.model, valid_pairs)
-
-            compliant_pairs, invalid_pairs = whisper_manager.oral_transcription() # type: ignore
-
-            # Lance MFA uniquement sur les fichiers validés par Whisper.
-            mfa_manager = MfaManager(
-                valid_pairs=compliant_pairs,
-                results_dir=PROJECT_ROOT / "results",
-                language_code=args.language,
-                dictionary_path=mfa_dictionary_path,
-                acoustic_model=mfa_acoustic_model,
-            )
-
-            mfa_manager.prepare_validate_and_align()
+        mfa_manager.prepare_validate_and_align()
