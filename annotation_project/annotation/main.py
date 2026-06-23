@@ -16,6 +16,7 @@ if __package__ in (None, ""):
 from annotation.annotation_context import AnnotationContext
 from annotation.file_pairing import match_video_and_metadata_files
 from annotation.mfa_manager import MfaManager
+from annotation_project.annotation.subtitle_manager import SubtitleManager
 
 
 def resolve_mfa_settings(language_code):
@@ -155,3 +156,11 @@ if __name__ == "__main__":
         )
 
         mfa_manager.prepare_validate_and_align()
+
+        subtitle_manager = SubtitleManager(
+            valid_pairs=valid_pairs,
+            results_dir=PROJECT_ROOT / "results",
+            language_code=args.language,
+        )
+
+        subtitle_manager.generate_subtitled_videos()

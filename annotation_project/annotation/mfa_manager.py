@@ -1,5 +1,4 @@
 import re
-import shutil
 import subprocess
 
 from pathlib import Path
@@ -9,8 +8,28 @@ from annotation.metadata_reader import csv_reader
 
 class MfaManager:
     """
-    Gère la préparation des fichiers d'entrée MFA
-    et le lancement des commandes MFA en ligne de commande.
+    Gère la préparation des fichiers d'entrée MFA et le lancement des commandes MFA.
+
+    Logique générale :
+        1. Récupérer les paires vidéo / métadonnées validées
+
+        2. Pour chaque vidéo, préparer les fichiers attendus par MFA :
+           - un fichier .wav contenant l'audio extrait de la vidéo
+           - un fichier .lab contenant la phrase attendue
+
+        3. Stocker ces fichiers dans :
+           results/<code_langue>/mfa/input/
+
+        4. Lancer mfa validate pour vérifier que :
+           - les fichiers audio sont lisibles
+           - les fichiers .lab sont présents
+           - les mots sont connus du dictionnaire
+           - le modèle acoustique est compatible
+
+        5. Lancer mfa align pour produire les fichiers TextGrid contenant le découpage par mots et par phones
+
+        6. Stocker les fichiers TextGrid dans :
+           results/<code_langue>/mfa/aligned/
     """
 
     def __init__(
@@ -86,18 +105,17 @@ class MfaManager:
 
     def prepare_mfa_input(self):
         """
-        Prépare le dossier d'entrée MFA.
+        Prépare les fichiers d'entrée MFA.
 
         Pour chaque paire vidéo / metadata :
-            - extrait l'audio de la vidéo en .wav ;
-            - écrit la phrase attendue dans un fichier .lab.
+            - extrait l'audio de la vidéo en .wav
+            - écrit la phrase attendue dans un fichier .lab
+
+        Si un fichier .wav ou .lab portant le même nom existe déjà,
+        il est remplacé.
         """
 
-        # Supprime l'ancien dossier d'entrée MFA pour éviter les fichiers périmés
-        if self.mfa_input_dir.exists():
-            shutil.rmtree(self.mfa_input_dir)
-
-        # Crée le dossier d'entrée MFA
+        # Crée le dossier d'entrée MFA si nécessaire
         self.mfa_input_dir.mkdir(parents=True, exist_ok=True)
 
         for media_path, metadata_path in self.valid_pairs:
@@ -110,9 +128,17 @@ class MfaManager:
             # Récupère le nom du fichier sans extension
             file_stem = media_path.stem
 
-            # Définit les chemins de sortie pour MFA
+            # Définit les chemins des fichiers d'entrée MFA
             wav_path = self.mfa_input_dir / f"{file_stem}.wav"
             lab_path = self.mfa_input_dir / f"{file_stem}.lab"
+
+            # Supprime l'ancien fichier WAV s'il existe déjà
+            if wav_path.exists():
+                wav_path.unlink()
+
+            # Supprime l'ancien fichier LAB s'il existe déjà
+            if lab_path.exists():
+                lab_path.unlink()
 
             # Extrait l'audio de la vidéo en WAV mono 16 kHz
             self.extract_audio_to_wav(media_path, wav_path)
@@ -130,6 +156,10 @@ class MfaManager:
     def extract_audio_to_wav(self, media_path, wav_path):
         """
         Extrait l'audio d'une vidéo vers un fichier WAV mono 16 kHz.
+
+        Paramètres :
+            media_path (Path | str) : chemin de la vidéo source
+            wav_path (Path | str) : chemin du fichier WAV à générer
         """
 
         command = [
@@ -151,10 +181,10 @@ class MfaManager:
         Lance la commande mfa validate sur les fichiers préparés.
 
         Cette étape vérifie que :
-            - les fichiers audio sont lisibles ;
-            - les fichiers .lab existent ;
-            - les mots sont présents dans le dictionnaire ;
-            - le modèle acoustique est compatible.
+            - les fichiers audio sont lisibles
+            - les fichiers .lab existent
+            - les mots sont présents dans le dictionnaire
+            - le modèle acoustique est compatible
         """
 
         # Vérifie que le dictionnaire personnalisé existe
@@ -179,6 +209,27 @@ class MfaManager:
         # Lance MFA
         subprocess.run(command, check=True)
 
+    def remove_existing_textgrids(self):
+        """
+        Supprime uniquement les anciens fichiers TextGrid correspondant
+        aux vidéos en cours de traitement.
+
+        Les autres fichiers présents dans le dossier aligned/ sont conservés.
+        """
+
+        # Crée le dossier de sortie des alignements si nécessaire
+        self.mfa_aligned_dir.mkdir(parents=True, exist_ok=True)
+
+        for media_path, metadata_path in self.valid_pairs:
+            media_path = Path(media_path)
+
+            # Construit le chemin du TextGrid attendu pour cette vidéo
+            textgrid_path = self.mfa_aligned_dir / f"{media_path.stem}.TextGrid"
+
+            # Supprime l'ancien TextGrid s'il existe déjà
+            if textgrid_path.exists():
+                textgrid_path.unlink()
+
     def align(self):
         """
         Lance l'alignement MFA.
@@ -193,12 +244,8 @@ class MfaManager:
                 f"Dictionnaire MFA introuvable : {self.dictionary_path}"
             )
 
-        # Supprime l'ancien dossier d'alignement pour éviter les anciens résultats
-        if self.mfa_aligned_dir.exists():
-            shutil.rmtree(self.mfa_aligned_dir)
-
-        # Crée le dossier de sortie des alignements
-        self.mfa_aligned_dir.mkdir(parents=True, exist_ok=True)
+        # Supprime uniquement les anciens TextGrid correspondant aux vidéos traitées
+        self.remove_existing_textgrids()
 
         # Prépare la commande MFA
         command = [
