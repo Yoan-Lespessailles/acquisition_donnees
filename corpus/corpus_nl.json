@@ -1,7 +1,7 @@
 {
     "language_code": "nl",
     "language_name": "Néerlandais",
-    "whisper_code": "nl",
+    "mfa_model_name": "dutch_cv",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",

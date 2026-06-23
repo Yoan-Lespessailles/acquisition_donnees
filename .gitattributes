@@ -1,0 +1,23 @@
+# Normalise les fins de ligne pour éviter les différences Windows/Linux/macOS.
+* text=auto
+
+# Fichiers texte du projet : stockage Git en LF.
+.gitattributes text eol=lf
+.gitignore text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.toml text eol=lf
+*.csv text eol=lf
+*.json text eol=lf
+*.txt text eol=lf
+*.lab text eol=lf
+
+# Fichiers binaires : aucune conversion de fins de ligne.
+*.mp4 binary
+*.wav binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.pdf binary

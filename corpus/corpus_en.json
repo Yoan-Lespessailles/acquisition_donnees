@@ -1,7 +1,7 @@
 {
     "language_code": "en",
     "language_name": "Anglais",
-    "whisper_code": "en",
+    "mfa_model_name": "english_mfa",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",

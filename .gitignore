@@ -1,9 +1,33 @@
-__pycache__/
-*.pyc
+# Environnements locaux
 .env
+.venv/
 venv/
-/data
+env/
+.conda/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Packaging / build
 build/
 dist/
 /distribution/
-*.egg-info/
+
+# Données et sorties générées localement
+/data/
+/results/
+
+# Logs
+*.log
+debug.log
+
+# Fichiers système / éditeurs
+.DS_Store
+Thumbs.db
+.vscode/

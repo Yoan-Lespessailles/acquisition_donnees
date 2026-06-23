@@ -48,7 +48,7 @@ class MetadataManager:
             "audio_bitrate",
             "language_code",
             "language_name",
-            "whisper_code",
+            "mfa_model_name",
             "sentence_display",
             "sentence_with_digit",
             "template_type",
@@ -85,7 +85,7 @@ class MetadataManager:
         template_type = corpus_manager.current_template_type
         language_code = corpus_manager.language_selected[1] # type: ignore
         language_name = corpus_manager.language_selected[0] # type: ignore
-        whisper_code = corpus_manager.language_selected[2] # type: ignore
+        mfa_model_name = corpus_manager.language_selected[2] # type: ignore
 
         # Périphériques utilisés pour l'enregistrement.
         selected_camera = media_manager.get_selected_camera()
@@ -105,7 +105,7 @@ class MetadataManager:
             video_path_rel,
             language_code,
             language_name,
-            whisper_code,
+            mfa_model_name,
             sentence_display,
             sentence_with_digit,
             template_type,
@@ -136,7 +136,7 @@ class MetadataManager:
         video_path_rel,
         language_code,
         language_name,
-        whisper_code,
+        mfa_model_name,
         sentence_display,
         sentence_with_digit,
         template_type,
@@ -169,7 +169,8 @@ class MetadataManager:
             video_path_rel : chemin relatif de la vidéo enregistrée.
             checksum_sha256 : empreinte SHA-256 calculée à partir du contenu du fichier vidéo.
 
-            whisper_code : code de langue utilisé par Whisper pour la transcription.
+            mfa_model_name : nom du modèle MFA à utiliser pour l'annotation,
+                par exemple "french_mfa" ou "english_mfa".
             language_code : code interne de la langue, par exemple "fr" ou "en".
             language_name : nom lisible de la langue, par exemple "Français" ou "Anglais".
 
@@ -239,7 +240,7 @@ class MetadataManager:
                 "audio_bitrate": audio_bitrate,
                 "language_code": language_code,
                 "language_name" : language_name,
-                "whisper_code" : whisper_code,
+                "mfa_model_name" : mfa_model_name,
                 "sentence_display": sentence_display,
                 "sentence_with_digit": sentence_with_digit,
                 "template_type": template_type,

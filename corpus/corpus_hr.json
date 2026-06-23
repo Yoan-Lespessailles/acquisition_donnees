@@ -1,7 +1,7 @@
 {
     "language_code": "hr",
     "language_name": "Croate",
-    "whisper_code": "hr",
+    "mfa_model_name": "croatian_mfa",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",

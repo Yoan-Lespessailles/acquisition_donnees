@@ -1,7 +1,7 @@
 {
     "language_code": "it",
     "language_name": "Italien",
-    "whisper_code": "it",
+    "mfa_model_name": "italian_cv",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",
