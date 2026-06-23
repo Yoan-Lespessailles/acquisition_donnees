@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from annotation.metadata_reader import csv_reader
+
 
 class AnnotationContext:
     """
@@ -39,6 +41,10 @@ class AnnotationContext:
         # Initialise les listes qui contiendront les fichiers trouvés
         self.video_files = []
         self.metadata_files = []
+
+        # Nom du modèle MFA lu dans les métadonnées
+        # Exemple : "french_mfa", "german_mfa", "italian_cv"
+        self.mfa_model_name = None
 
         # Construit immédiatement les chemins utiles à partir du dossier racine et du code langue
         self.build_paths()
@@ -129,6 +135,18 @@ class AnnotationContext:
         # Recherche les fichiers metadata dont le nom commence par le code langue
         for metadata_file in self.metadata_dir.glob(f"{self.language_code}*.csv"):
             self.metadata_files.append(Path(metadata_file))
+
+
+    def load_mfa_model_name(self):
+        """
+        Lit le nom du modèle MFA depuis le premier fichier de métadonnées.
+
+        Le résultat est stocké dans l'attribut self.mfa_model_name.
+        """
+
+        metadata = csv_reader(self.metadata_files[0])
+
+        self.mfa_model_name = metadata["mfa_model_name"]
 
 
     def display_files(self):

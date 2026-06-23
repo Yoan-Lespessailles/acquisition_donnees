@@ -47,7 +47,8 @@ class MfaManager:
             valid_pairs : liste des paires valides [(video_path, metadata_path), ...]
             results_dir : dossier racine des résultats
             language_code : code de la langue traitée, par exemple "fr"
-            dictionary_path : chemin vers le dictionnaire personnalisé MFA
+            dictionary_path : chemin vers un dictionnaire personnalisé MFA
+                ou nom d'un dictionnaire MFA installé
             acoustic_model : nom du modèle acoustique MFA à utiliser
         """
 
@@ -60,8 +61,9 @@ class MfaManager:
         # Stocke le code de langue
         self.language_code = language_code
 
-        # Stocke le chemin du dictionnaire personnalisé
-        self.dictionary_path = Path(dictionary_path)
+        # Stocke le dictionnaire MFA
+        # Soit c'est un chemin local ou alors le nom d'un dictionnaire MFA installé
+        self.dictionary_path = dictionary_path
 
         # Stocke le nom du modèle acoustique MFA
         self.acoustic_model = acoustic_model
@@ -187,8 +189,9 @@ class MfaManager:
             - le modèle acoustique est compatible
         """
 
-        # Vérifie que le dictionnaire personnalisé existe
-        if not self.dictionary_path.exists():
+        # Vérifie que le dictionnaire local existe si un chemin local est utilisé
+        # Si self.dictionary_path est un objet Path et si le chemin n'existe pas sur le disque
+        if isinstance(self.dictionary_path, Path) and not self.dictionary_path.exists():
             raise FileNotFoundError(
                 f"Dictionnaire MFA introuvable : {self.dictionary_path}"
             )
@@ -237,12 +240,6 @@ class MfaManager:
         Cette étape produit les fichiers d'annotation finale,
         généralement au format TextGrid.
         """
-
-        # Vérifie que le dictionnaire personnalisé existe
-        if not self.dictionary_path.exists():
-            raise FileNotFoundError(
-                f"Dictionnaire MFA introuvable : {self.dictionary_path}"
-            )
 
         # Supprime uniquement les anciens TextGrid correspondant aux vidéos traitées
         self.remove_existing_textgrids()

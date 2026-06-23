@@ -1,4 +1,5 @@
 import argparse
+import subprocess
 import sys
 
 from pathlib import Path
@@ -19,26 +20,52 @@ from annotation.mfa_manager import MfaManager
 from annotation_project.annotation.subtitle_manager import SubtitleManager
 
 
-def resolve_mfa_settings(language_code):
+def mfa_dictionary_is_installed(dictionary_name):
     """
-    Détermine automatiquement les ressources MFA à utiliser
-    à partir du code langue.
+    Vérifie si un dictionnaire MFA est installé localement.
+
+    Paramètre :
+        dictionary_name (str) : nom du dictionnaire MFA, par exemple "french_mfa".
+
+    Retourne :
+        bool : True si le dictionnaire est installé, False sinon.
+    """
+
+    command = ["mfa", "model", "inspect", "dictionary", dictionary_name]
+
+    try:
+        subprocess.run(
+            command,
+            check=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        return True
+
+    except FileNotFoundError as error:
+        raise FileNotFoundError(
+            "Commande MFA introuvable. Vérifie que l'environnement d'annotation "
+            "est activé et que Montreal Forced Aligner est installé."
+        ) from error
+
+    except subprocess.CalledProcessError:
+        return False
+
+
+def resolve_mfa_dictionary(language_code, mfa_model_name):
+    """
+    Détermine le dictionnaire MFA à utiliser.
+
+    Le dictionnaire personnalisé est prioritaire. S'il n'existe pas, on utilise
+    le dictionnaire MFA installé portant le même nom que le modèle MFA.
 
     Paramètre :
         language_code (str) : code de la langue à traiter, par exemple "fr".
+        mfa_model_name (str) : nom du modèle MFA, par exemple "french_mfa".
 
     Retourne :
-        tuple[Path, str] : chemin du dictionnaire personnalisé et nom du modèle acoustique.
+        Path | str : chemin du dictionnaire personnalisé ou nom du dictionnaire MFA.
     """
-
-    # Associe chaque code langue au modèle acoustique MFA correspondant
-    acoustic_models = {
-        "fr": "french_mfa",
-        "en": "english_mfa",
-        "it": "italian_mfa",
-        "es": "spanish_mfa",
-        "de": "german_mfa",
-    }
 
     # Normalise le code langue pour éviter les différences du type "FR" / "fr"
     language_code = language_code.lower()
@@ -51,22 +78,21 @@ def resolve_mfa_settings(language_code):
         / f"{language_code}_custom.dict"
     )
 
-    # Récupère le modèle acoustique associé à la langue
-    acoustic_model = acoustic_models.get(language_code)
+    # Si le dictionnaire personnalisé existe, on l'utilise en priorité
+    if dictionary_path.exists():
+        return dictionary_path
 
-    # Si aucun modèle n'est défini, on bloque avec un message explicite
-    if acoustic_model is None:
-        raise ValueError(
-            f"Aucun modèle acoustique MFA n'est défini pour la langue : {language_code}"
-        )
+    # Sinon, on vérifie que le dictionnaire MFA officiel est installé
+    if mfa_dictionary_is_installed(mfa_model_name):
+        return mfa_model_name
 
-    # Si le dictionnaire personnalisé n'existe pas, on bloque aussi clairement
-    if not dictionary_path.exists():
-        raise FileNotFoundError(
-            f"Dictionnaire MFA personnalisé introuvable : {dictionary_path}"
-        )
-
-    return dictionary_path, acoustic_model
+    raise FileNotFoundError(
+        "Aucun dictionnaire MFA utilisable n'a été trouvé.\n"
+        f"- Dictionnaire personnalisé introuvable : {dictionary_path}\n"
+        f"- Dictionnaire MFA non installé : {mfa_model_name}\n"
+        "Pour l'installer : "
+        f"mfa model download dictionary {mfa_model_name}"
+    )
 
 
 def parse_arguments():
@@ -143,16 +169,22 @@ if __name__ == "__main__":
             annotation_context.metadata_dir
         )
 
-        # Récupère automatiquement le dictionnaire et le modèle MFA selon la langue
-        mfa_dictionary_path, mfa_acoustic_model = resolve_mfa_settings(args.language)
+        # Récupère le modèle MFA depuis les métadonnées chargées
+        annotation_context.load_mfa_model_name()
+
+        # Récupère le dictionnaire personnalisé ou le dictionnaire MFA installé
+        mfa_dictionary = resolve_mfa_dictionary(
+            args.language,
+            annotation_context.mfa_model_name,
+        )
 
         # MFA produit directement les annotations de mots et de phones
         mfa_manager = MfaManager(
             valid_pairs=valid_pairs,
             results_dir=PROJECT_ROOT / "results",
             language_code=args.language,
-            dictionary_path=mfa_dictionary_path,
-            acoustic_model=mfa_acoustic_model,
+            dictionary_path=mfa_dictionary,
+            acoustic_model=annotation_context.mfa_model_name,
         )
 
         mfa_manager.prepare_validate_and_align()
