@@ -2,22 +2,20 @@ name: annotation
 
 channels:
   - conda-forge
-  # N'utilise pas les canaux Anaconda "defaults" configurés globalement.
+  # N'utilise pas les canaux Anaconda "defaults" configurés globalement
   - nodefaults
 
 dependencies:
-  # Version de Python attendue par le projet.
+  # Version de Python attendue par le projet
   - python=3.12
 
-  # Outils externes appeles par annotation/mfa_manager.py.
-  - ffmpeg
   - montreal-forced-aligner=3.3.9
 
-  # Evite que Conda installe la variante CUDA beaucoup plus lourde de Kaldi.
+  # Evite que Conda installe la variante CUDA beaucoup plus lourde de Kaldi
   - kaldi=*=cpu*
 
   # Installe ensuite le projet et ses dependances Python declarees dans
-  # pyproject.toml.
+  # pyproject.toml
   - pip
   - pip:
       - -e .

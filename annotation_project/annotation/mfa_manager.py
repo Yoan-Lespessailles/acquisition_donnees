@@ -3,33 +3,13 @@ import subprocess
 
 from pathlib import Path
 
+from annotation.ffmpeg_utils import find_ffmpeg_executable
 from annotation.metadata_reader import csv_reader
 
 
 class MfaManager:
     """
     Gère la préparation des fichiers d'entrée MFA et le lancement des commandes MFA.
-
-    Logique générale :
-        1. Récupérer les paires vidéo / métadonnées validées
-
-        2. Pour chaque vidéo, préparer les fichiers attendus par MFA :
-           - un fichier .wav contenant l'audio extrait de la vidéo
-           - un fichier .lab contenant la phrase attendue
-
-        3. Stocker ces fichiers dans :
-           results/<code_langue>/mfa/input/
-
-        4. Lancer mfa validate pour vérifier que :
-           - les fichiers audio sont lisibles
-           - les fichiers .lab sont présents
-           - les mots sont connus du dictionnaire
-           - le modèle acoustique est compatible
-
-        5. Lancer mfa align pour produire les fichiers TextGrid contenant le découpage par mots et par phones
-
-        6. Stocker les fichiers TextGrid dans :
-           results/<code_langue>/mfa/aligned/
     """
 
     def __init__(
@@ -167,7 +147,7 @@ class MfaManager:
         """
 
         command = [
-            "ffmpeg",
+            find_ffmpeg_executable(),
             "-y",
             "-i",
             str(media_path),

@@ -4,7 +4,9 @@ Ce projet utilise [Montreal Forced Aligner (MFA)](https://montreal-forced-aligne
 
 ## 1. Prérequis
 
-Installer une distribution Conda, par exemple Miniconda ou Miniforge. Les autres outils nécessaires (`ffmpeg`, MFA et Kaldi en version CPU) seront installés dans l'environnement du projet.
+Installer une distribution Conda, par exemple Miniconda ou Miniforge.
+
+FFmpeg doit aussi être installé sur le système, avec le filtre `ass`, car l'application l'utilise pour extraire l'audio des vidéos et incruster les sous-titres phonétiques.
 
 Le fichier `environment.yml` utilise exclusivement le canal communautaire `conda-forge`. Les canaux Anaconda `defaults` sont désactivés pour cet environnement.
 
@@ -14,14 +16,27 @@ L'environnement se nomme `annotation` et utilise Python 3.12. Choisir la procéd
 
 ### Windows
 
-Ouvrir PowerShell ou le terminal Conda, puis exécuter :
+Installer d'abord une version complète de FFmpeg :
+
+```powershell
+winget install Gyan.FFmpeg
+```
+
+Fermer puis rouvrir PowerShell, puis vérifier :
+
+```powershell
+where.exe ffmpeg
+ffmpeg -filters | findstr ass
+```
+
+La commande doit afficher une ligne contenant `ass`. Ensuite, créer l'environnement :
 
 ```powershell
 cd C:\chemin\vers\acquisition_donnees\annotation_project
 conda env create -f environment.yml
 conda activate annotation
 mfa version
-ffmpeg -version
+ffmpeg -filters | findstr ass
 ```
 
 La commande de création doit être lancée lorsque l'invite de commande se termine par `annotation_project>` : c'est dans ce dossier que se trouve `environment.yml`.
@@ -38,26 +53,50 @@ Ces canaux appartiennent à l'installation Anaconda. L'environnement du projet c
 
 ### Linux
 
-Ouvrir un terminal, puis exécuter :
+Installer d'abord FFmpeg :
+
+```bash
+sudo apt install ffmpeg
+```
+
+Puis vérifier :
+
+```bash
+ffmpeg -filters | grep ass
+```
+
+Créer ensuite l'environnement :
 
 ```bash
 cd /chemin/vers/acquisition_donnees/annotation_project
 conda env create -f environment.yml
 conda activate annotation
 mfa version
-ffmpeg -version
+ffmpeg -filters | grep ass
 ```
 
 ### macOS
 
-Ouvrir Terminal, puis exécuter :
+Installer d'abord FFmpeg :
+
+```bash
+brew install ffmpeg
+```
+
+Puis vérifier :
+
+```bash
+ffmpeg -filters | grep ass
+```
+
+Créer ensuite l'environnement :
 
 ```bash
 cd /chemin/vers/acquisition_donnees/annotation_project
 conda env create -f environment.yml
 conda activate annotation
 mfa version
-ffmpeg -version
+ffmpeg -filters | grep ass
 ```
 
 L'environnement n'a besoin d'être créé qu'une seule fois. Pour les utilisations suivantes, seule son activation est nécessaire :
@@ -66,37 +105,60 @@ L'environnement n'a besoin d'être créé qu'une seule fois. Pour les utilisatio
 conda activate annotation
 ```
 
-## 3. Installer le modèle acoustique MFA
+## 3. Vérifier le support des sous-titres ASS
 
-Télécharger le modèle correspondant à la langue à traiter. Pour le français :
+L'application génère des fichiers de sous-titres `.ass`, puis FFmpeg les incruste dans les vidéos. FFmpeg doit donc disposer du filtre `ass`.
+
+La vérification ci-dessous est obligatoire avant de générer les vidéos sous-titrées.
+
+Sous Windows :
 
 ```powershell
-mfa model download acoustic french_mfa
+ffmpeg -filters | findstr ass
 ```
 
-Les modèles configurés dans l'application sont :
+Sous Linux ou macOS :
 
-| Code | Modèle acoustique |
-|------|-------------------|
-| `fr` | `french_mfa` |
-| `en` | `english_mfa` |
-| `it` | `italian_mfa` |
-| `es` | `spanish_mfa` |
-| `de` | `german_mfa` |
+```bash
+ffmpeg -filters | grep ass
+```
 
-Il suffit de remplacer `french_mfa` dans la commande de téléchargement pour installer un autre de ces modèles.
+La sortie doit contenir une ligne proche de :
+
+```text
+ass               V->V       Render ASS subtitles onto input video
+```
+
+Si le filtre `ass` est absent sous Windows, installer une version complète de FFmpeg :
+
+```powershell
+winget install Gyan.FFmpeg
+```
+
+Fermer puis rouvrir le terminal, et vérifier à nouveau :
+
+```powershell
+where ffmpeg
+ffmpeg -filters | findstr ass
+```
+
+Si `where.exe ffmpeg` ne trouve rien après activation de Conda, le programme cherchera aussi automatiquement le FFmpeg installé par `winget` dans le dossier utilisateur Windows.
 
 ## 4. Préparer les données
 
 Glisser le dossier `data` généré par l'application **AVDataCollector** à la racine du dépôt `acquisition_donnees`. L'application d'acquisition se charge déjà de produire des données conformes au format attendu.
 
-Le dictionnaire de prononciation personnalisé doit se trouver ici :
+Le modèle MFA à utiliser est lu automatiquement dans les fichiers de métadonnées CSV, via la colonne `mfa_model_name`.
+
+Si un dictionnaire de prononciation personnalisé existe, il est utilisé en priorité. Il doit se trouver ici :
 
 ```text
 mfa/dictionaries/fr_custom.dict
 ```
 
-Un dictionnaire français est déjà présent. Pour une autre langue, créer le fichier `<code>_custom.dict`, par exemple `en_custom.dict`, et y inclure tous les mots susceptibles d'apparaître dans les phrases.
+Pour une autre langue, créer le fichier `<code>_custom.dict`, par exemple `it_custom.dict`, et y inclure tous les mots susceptibles d'apparaître dans les phrases.
+
+Si aucun dictionnaire personnalisé n'existe, le programme vérifie si le dictionnaire MFA officiel correspondant est installé. S'il est absent, il le télécharge automatiquement. Le modèle acoustique MFA est également vérifié et téléchargé automatiquement si nécessaire.
 
 ## 5. Lancer l'annotation
 
@@ -106,7 +168,7 @@ Depuis le dossier `annotation_project`, avec l'environnement activé, contrôler
 python -m annotation.main --language fr --dry-run
 ```
 
-Puis lancer la validation et l'alignement MFA :
+Puis lancer l'annotation :
 
 ```powershell
 python -m annotation.main --language fr
@@ -127,9 +189,11 @@ results/
 └── fr/
     └── mfa/
         ├── input/     # fichiers WAV et LAB préparés pour MFA
-        └── aligned/   # fichiers TextGrid contenant les mots et les phones
+        ├── aligned/   # fichiers TextGrid contenant les mots et les phones
+        ├── subtitles/ # fichiers ASS générés depuis les TextGrid
+        └── subtitled_videos/ # vidéos avec les sous-titres incrustés
 ```
 
-Les dossiers `input` et `aligned` sont recréés à chaque exécution pour éviter de conserver des résultats périmés.
+Les dossiers de résultats nécessaires sont créés automatiquement si `results/` n'existe pas encore.
 
 Si MFA signale un mot absent du dictionnaire pendant la validation, ajouter sa prononciation au dictionnaire personnalisé, puis relancer la commande d'annotation.

@@ -3,6 +3,8 @@ import subprocess
 
 from pathlib import Path
 
+from annotation.ffmpeg_utils import find_ffmpeg_executable
+
 
 class SubtitleManager:
     """
@@ -81,6 +83,41 @@ class SubtitleManager:
         self.subtitled_videos_dir = (
             self.results_dir / self.language_code / "mfa" / "subtitled_videos"
         )
+
+        # Stocke l'exécutable FFmpeg détecté
+        self.ffmpeg_executable = None
+
+    def ensure_ffmpeg_ass_filter_available(self):
+        """
+        Vérifie que le FFmpeg disponible possède le filtre ASS.
+
+        Ce filtre est nécessaire pour incruster les fichiers de sous-titres .ass
+        dans les vidéos.
+        """
+
+        self.ffmpeg_executable = find_ffmpeg_executable()
+        command = [self.ffmpeg_executable, "-filters"]
+
+        try:
+            completed_process = subprocess.run(
+                command,
+                check=True,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+
+        filters_output = completed_process.stdout + completed_process.stderr
+
+        if " ass " not in filters_output:
+            raise RuntimeError(
+                "Le FFmpeg utilisé ne possède pas le filtre 'ass', nécessaire "
+                "pour incruster les sous-titres.\n"
+                "Sous Windows, installe une version complète avec : "
+                "winget install Gyan.FFmpeg\n"
+                "Puis vérifie avec : ffmpeg -filters | findstr ass"
+            )
 
 
     def parse_textgrid_intervals(self, textgrid_path):
@@ -479,7 +516,7 @@ class SubtitleManager:
         # -vf ass=... : incruste les sous-titres dans l'image
         # -c:a copy : conserve l'audio sans le réencoder
         command = [
-            "ffmpeg",
+            self.ffmpeg_executable or find_ffmpeg_executable(),
             "-y",
             "-i",
             str(video_path),
@@ -511,6 +548,9 @@ class SubtitleManager:
         """
 
         subtitled_videos = []
+
+        # Vérifie que FFmpeg peut incruster les sous-titres ASS
+        self.ensure_ffmpeg_ass_filter_available()
 
         # Génère tous les fichiers ASS à partir des TextGrid
         ass_files = self.generate_all_ass_files()
