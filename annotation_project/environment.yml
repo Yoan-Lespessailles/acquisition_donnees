@@ -11,6 +11,9 @@ dependencies:
 
   - montreal-forced-aligner=3.3.9
 
+  # MFA 3.3.9 n'est pas compatible avec kalpy 0.10
+  - kalpy<0.10
+
   # Evite que Conda installe la variante CUDA beaucoup plus lourde de Kaldi
   - kaldi=*=cpu*
 
