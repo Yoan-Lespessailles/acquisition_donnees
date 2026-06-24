@@ -107,6 +107,10 @@ class SubtitleManager:
                 encoding="utf-8",
                 errors="replace",
             )
+        except subprocess.CalledProcessError as error:
+            raise RuntimeError(
+                "Impossible de vérifier les filtres FFmpeg disponibles."
+            ) from error
 
         filters_output = completed_process.stdout + completed_process.stderr
 
