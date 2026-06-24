@@ -6,5 +6,4 @@ venv/
 /acquisition_project/build/
 /distribution/
 *.egg-info/
-__pycache__/
-*.pyc
+/results

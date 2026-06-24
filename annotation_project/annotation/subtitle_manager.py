@@ -471,7 +471,7 @@ class SubtitleManager:
         if output_video_path.exists():
             output_video_path.unlink()
 
-        # Prépare le chemin ASS pour FFmpeg
+        # Prépare le chemin ASS pour le filtre FFmpeg sous Windows
         ass_filter_path = str(ass_path).replace("\\", "/").replace(":", r"\:")
 
         # Prépare la commande FFmpeg
@@ -484,7 +484,7 @@ class SubtitleManager:
             "-i",
             str(video_path),
             "-vf",
-            f"ass={ass_filter_path}",
+            f"ass=filename='{ass_filter_path}'",
             "-c:a",
             "copy",
             str(output_video_path),
