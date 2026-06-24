@@ -37,8 +37,8 @@ class MfaManager:
         valid_pairs,
         results_dir,
         language_code,
-        dictionary_path,
         acoustic_model,
+        project_root,
     ):
         """
         Initialise le gestionnaire MFA.
@@ -47,9 +47,8 @@ class MfaManager:
             valid_pairs : liste des paires valides [(video_path, metadata_path), ...]
             results_dir : dossier racine des résultats
             language_code : code de la langue traitée, par exemple "fr"
-            dictionary_path : chemin vers un dictionnaire personnalisé MFA
-                ou nom d'un dictionnaire MFA installé
             acoustic_model : nom du modèle acoustique MFA à utiliser
+            project_root : racine du projet, utilisée pour trouver les dictionnaires personnalisés
         """
 
         # Stocke les paires vidéo / métadonnées valides
@@ -61,12 +60,15 @@ class MfaManager:
         # Stocke le code de langue
         self.language_code = language_code
 
-        # Stocke le dictionnaire MFA
-        # Soit c'est un chemin local ou alors le nom d'un dictionnaire MFA installé
-        self.dictionary_path = dictionary_path
-
         # Stocke le nom du modèle acoustique MFA
         self.acoustic_model = acoustic_model
+
+        # Stocke la racine du projet
+        self.project_root = Path(project_root)
+
+        # Stocke le dictionnaire MFA après résolution
+        # Soit c'est un chemin local ou alors le nom d'un dictionnaire MFA installé
+        self.dictionary_path = None
 
         # Dossier contenant les fichiers préparés pour MFA
         # Exemple : results/fr/mfa/input/
@@ -178,6 +180,70 @@ class MfaManager:
 
         subprocess.run(command, check=True)
 
+    def mfa_dictionary_is_installed(self):
+        """
+        Vérifie si le dictionnaire MFA est installé localement.
+
+        Retourne :
+            bool : True si le dictionnaire est installé, False sinon.
+        """
+
+        command = ["mfa", "model", "inspect", "dictionary", self.acoustic_model]
+
+        try:
+            subprocess.run(
+                command,
+                check=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            return True
+
+        except FileNotFoundError as error:
+            raise FileNotFoundError(
+                "Commande MFA introuvable. Vérifie que l'environnement d'annotation "
+                "est activé et que Montreal Forced Aligner est installé."
+            ) from error
+
+        except subprocess.CalledProcessError:
+            return False
+
+    def install_mfa_dictionary(self):
+        """
+        Télécharge le dictionnaire MFA associé au modèle acoustique.
+        """
+
+        command = ["mfa", "model", "download", "dictionary", self.acoustic_model]
+
+        print("Dictionnaire MFA non installé, téléchargement :")
+        print(" ".join(command))
+
+        subprocess.run(command, check=True)
+
+    def resolve_mfa_dictionary(self):
+        """
+        Détermine le dictionnaire MFA à utiliser.
+
+        Le dictionnaire personnalisé est prioritaire. S'il n'existe pas, on utilise
+        le dictionnaire MFA installé portant le même nom que le modèle MFA.
+        """
+
+        dictionary_path = (
+            self.project_root
+            / "mfa"
+            / "dictionaries"
+            / f"{self.language_code}_custom.dict"
+        )
+
+        if dictionary_path.exists():
+            self.dictionary_path = dictionary_path
+            return
+
+        if not self.mfa_dictionary_is_installed():
+            self.install_mfa_dictionary()
+
+        self.dictionary_path = self.acoustic_model
+
     def acoustic_model_is_installed(self):
         """
         Vérifie si le modèle acoustique MFA est installé localement.
@@ -240,12 +306,8 @@ class MfaManager:
             - le modèle acoustique est compatible
         """
 
-        # Vérifie que le dictionnaire local existe si un chemin local est utilisé
-        # Si self.dictionary_path est un objet Path et si le chemin n'existe pas sur le disque
-        if isinstance(self.dictionary_path, Path) and not self.dictionary_path.exists():
-            raise FileNotFoundError(
-                f"Dictionnaire MFA introuvable : {self.dictionary_path}"
-            )
+        # Résout le dictionnaire MFA à utiliser
+        self.resolve_mfa_dictionary()
 
         # Vérifie que le modèle acoustique est installé, et l'installe si besoin
         self.ensure_acoustic_model_installed()

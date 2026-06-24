@@ -1,5 +1,4 @@
 import argparse
-import subprocess
 import sys
 
 from pathlib import Path
@@ -17,82 +16,7 @@ if __package__ in (None, ""):
 from annotation.annotation_context import AnnotationContext
 from annotation.file_pairing import match_video_and_metadata_files
 from annotation.mfa_manager import MfaManager
-from annotation_project.annotation.subtitle_manager import SubtitleManager
-
-
-def mfa_dictionary_is_installed(dictionary_name):
-    """
-    Vérifie si un dictionnaire MFA est installé localement.
-
-    Paramètre :
-        dictionary_name (str) : nom du dictionnaire MFA, par exemple "french_mfa".
-
-    Retourne :
-        bool : True si le dictionnaire est installé, False sinon.
-    """
-
-    command = ["mfa", "model", "inspect", "dictionary", dictionary_name]
-
-    try:
-        subprocess.run(
-            command,
-            check=True,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
-        return True
-
-    except FileNotFoundError as error:
-        raise FileNotFoundError(
-            "Commande MFA introuvable. Vérifie que l'environnement d'annotation "
-            "est activé et que Montreal Forced Aligner est installé."
-        ) from error
-
-    except subprocess.CalledProcessError:
-        return False
-
-
-def resolve_mfa_dictionary(language_code, mfa_model_name):
-    """
-    Détermine le dictionnaire MFA à utiliser.
-
-    Le dictionnaire personnalisé est prioritaire. S'il n'existe pas, on utilise
-    le dictionnaire MFA installé portant le même nom que le modèle MFA.
-
-    Paramètre :
-        language_code (str) : code de la langue à traiter, par exemple "fr".
-        mfa_model_name (str) : nom du modèle MFA, par exemple "french_mfa".
-
-    Retourne :
-        Path | str : chemin du dictionnaire personnalisé ou nom du dictionnaire MFA.
-    """
-
-    # Normalise le code langue pour éviter les différences du type "FR" / "fr"
-    language_code = language_code.lower()
-
-    # Construit automatiquement le chemin du dictionnaire personnalisé
-    dictionary_path = (
-        PROJECT_ROOT
-        / "mfa"
-        / "dictionaries"
-        / f"{language_code}_custom.dict"
-    )
-
-    # Si le dictionnaire personnalisé existe, on l'utilise en priorité
-    if dictionary_path.exists():
-        return dictionary_path
-
-    # Sinon, on vérifie que le dictionnaire MFA officiel est installé
-    if mfa_dictionary_is_installed(mfa_model_name):
-        return mfa_model_name
-
-    raise FileNotFoundError(
-        "Aucun dictionnaire MFA utilisable n'a été trouvé.\n"
-        f"- Dictionnaire personnalisé introuvable : {dictionary_path}\n"
-        f"- Dictionnaire MFA non installé : {mfa_model_name}\n"
-        "Pour l'installer : "
-        f"mfa model download dictionary {mfa_model_name}"
-    )
+from annotation.subtitle_manager import SubtitleManager
 
 
 def parse_arguments():
@@ -172,19 +96,13 @@ if __name__ == "__main__":
         # Récupère le modèle MFA depuis les métadonnées chargées
         annotation_context.load_mfa_model_name()
 
-        # Récupère le dictionnaire personnalisé ou le dictionnaire MFA installé
-        mfa_dictionary = resolve_mfa_dictionary(
-            args.language,
-            annotation_context.mfa_model_name,
-        )
-
         # MFA produit directement les annotations de mots et de phones
         mfa_manager = MfaManager(
             valid_pairs=valid_pairs,
             results_dir=PROJECT_ROOT / "results",
             language_code=args.language,
-            dictionary_path=mfa_dictionary,
             acoustic_model=annotation_context.mfa_model_name,
+            project_root=PROJECT_ROOT,
         )
 
         mfa_manager.prepare_validate_and_align()
