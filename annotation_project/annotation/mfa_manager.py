@@ -178,11 +178,62 @@ class MfaManager:
 
         subprocess.run(command, check=True)
 
+    def acoustic_model_is_installed(self):
+        """
+        Vérifie si le modèle acoustique MFA est installé localement.
+
+        Retourne :
+            bool : True si le modèle est installé, False sinon.
+        """
+
+        command = ["mfa", "model", "inspect", "acoustic", self.acoustic_model]
+
+        try:
+            subprocess.run(
+                command,
+                check=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            return True
+
+        except FileNotFoundError as error:
+            raise FileNotFoundError(
+                "Commande MFA introuvable. Vérifie que l'environnement d'annotation "
+                "est activé et que Montreal Forced Aligner est installé."
+            ) from error
+
+        except subprocess.CalledProcessError:
+            return False
+
+    def install_acoustic_model(self):
+        """
+        Télécharge le modèle acoustique MFA utilisé pour l'alignement.
+        """
+
+        command = ["mfa", "model", "download", "acoustic", self.acoustic_model]
+
+        print("Modèle acoustique MFA non installé, téléchargement :")
+        print(" ".join(command))
+
+        subprocess.run(command, check=True)
+
+    def ensure_acoustic_model_installed(self):
+        """
+        Vérifie que le modèle acoustique MFA est disponible localement.
+
+        Si le modèle n'est pas installé, il est téléchargé automatiquement.
+        """
+
+        if not self.acoustic_model_is_installed():
+            self.install_acoustic_model()
+
     def validate(self):
         """
         Lance la commande mfa validate sur les fichiers préparés.
 
         Cette étape vérifie que :
+            - le modèle acoustique MFA est installé, ou l'installe si nécessaire
             - les fichiers audio sont lisibles
             - les fichiers .lab existent
             - les mots sont présents dans le dictionnaire
@@ -195,6 +246,9 @@ class MfaManager:
             raise FileNotFoundError(
                 f"Dictionnaire MFA introuvable : {self.dictionary_path}"
             )
+
+        # Vérifie que le modèle acoustique est installé, et l'installe si besoin
+        self.ensure_acoustic_model_installed()
 
         # Prépare la commande MFA
         command = [
