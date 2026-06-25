@@ -1,6 +1,6 @@
 {
     "language_code": "fr",
-    "language_name": "Français",
+    "language_name": "French",
     "mfa_model_name": "french_mfa",
     "syntax_order": "SVO",
     "template_1": {
@@ -85,7 +85,7 @@
             "lapins peureux",
             "grands gâteaux",
             "ballons ronds",
-            "oiseaux sauvages",
+            "poissons sauvages",
             "chats mignons",
             "fleurs blanches"
         ]

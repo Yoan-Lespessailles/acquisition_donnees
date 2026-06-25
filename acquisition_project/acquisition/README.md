@@ -66,37 +66,74 @@ Le fonctionnement général suit une logique de session. L'utilisateur renseigne
 
 L'objectif principal de cette application est de garantir une acquisition structurée et exploitable des données. Les vidéos sont sauvegardées dans une arborescence organisée par langue, tandis que les métadonnées associées permettent ensuite à l'application d'annotation de retrouver automatiquement les informations nécessaires au traitement avec MFA.
 
-Le diagramme de flux ci-dessous présente le déroulement fonctionnel d'une session d'acquisition.
+Les diagrammes de flux ci-dessous présentent le déroulement fonctionnel d'une session d'acquisition.
+Le déroulement fonctionnel a été divisé en deux parties : la première correspond à la préparation de la session et la deuxième à la boucle d'acquisition.
+
+### Préparation de la session d'acquisition
 
 ```mermaid
 flowchart TD
-    A([Début]) --> A1[Prénom utilisateur]
-    A1 --> B[Configuration caméra / micro]
-    B --> C[Positionnement + preview]
-    C --> D[Test micro]
+    A([Début]) --> B[Demande du prénom de l'utilisateur]
+    B --> C[Choix des périphériques audio et vidéo]
+    C --> D[Positionnement de la personne sur l'aperçu vidéo]
+    D --> E[Test du microphone]
 
-    D --> E{Micro OK ?}
-    E -- Non --> B
-    E -- Oui --> F[Choix langue]
-    F --> G[Chargement corpus]
+    E --> F{Niveau micro satisfaisant ?}
+    F -- Non --> C
+    F -- Oui --> G[Choix de la langue]
+    G --> H[Chargement du corpus associé]
+    H --> I([Début de l'acquisition])
 
-    G --> H{Session terminée ?}
-    H -- Oui --> Z([Fin])
-    H -- Non --> I[Affichage phrase]
+    classDef startend fill:#d9ead3,stroke:#6aa84f,stroke-width:2px,color:#000;
+    classDef process fill:#d9eaf7,stroke:#3d85c6,stroke-width:1.5px,color:#000;
+    classDef decision fill:#fce5cd,stroke:#e69138,stroke-width:2px,color:#000;
+    classDef retry fill:#f4cccc,stroke:#cc0000,stroke-width:1.5px,color:#000;
 
-    I --> J[Enregistrement]
+    class A,I startend;
+    class B,C,D,E,G,H process;
+    class F decision;
+```
 
-    J --> K{Validation 1 :<br/>Oui / Non}
-    K -- Oui --> L[Sauvegarde vidéo + CSV]
-    K -- Non --> M[Réenregistrement]
+### Boucle d'enregistrement des phrases
 
-    M --> N{Validation suivante :<br/>Oui / Non / Skip}
-    N -- Oui --> L
-    N -- Non --> M
-    N -- Skip --> O[Passage à la phrase suivante]
+```mermaid
+flowchart TD
+    A([Début de l'acquisition]) --> B{Toutes les phrases ont-elles été traitées ?}
 
-    O --> H
-    L --> H
+    B -- Oui --> Z([Fin de la session])
+
+    B -- Non --> C[Affichage de la phrase courante]
+    C --> D[Enregistrement de la phrase avec le visage et la voix]
+
+    D --> E{Premier essai pour cette phrase ?}
+
+    E -- Oui --> J{Pop-up de validation :<br/>Oui / Non}
+    E -- Non --> H{Pop-up de validation :<br/>Oui / Non / Skip}
+
+    J -- Oui --> F[Enregistrement de la vidéo et des métadonnées]
+    F --> B
+
+    J -- Non --> G[Suppression de la vidéo refusée<br/>phrase courante conservée]
+    G --> C
+
+    H -- Oui --> F
+    H -- Non --> G
+    H -- Skip --> I[Phrase ignorée / passage à la suivante]
+    I --> B
+
+    classDef startend fill:#d9ead3,stroke:#6aa84f,stroke-width:2px,color:#000;
+    classDef process fill:#d9eaf7,stroke:#3d85c6,stroke-width:1.5px,color:#000;
+    classDef decision fill:#fce5cd,stroke:#e69138,stroke-width:2px,color:#000;
+    classDef save fill:#d9ead3,stroke:#38761d,stroke-width:2px,color:#000;
+    classDef retry fill:#f4cccc,stroke:#cc0000,stroke-width:1.5px,color:#000;
+    classDef skip fill:#fff2cc,stroke:#bf9000,stroke-width:1.5px,color:#000;
+
+    class A,Z startend;
+    class C,D process;
+    class B,E,J,H decision;
+    class F save;
+    class G retry;
+    class I skip;
 ```
 
 ## Architecture de l'application d'acquisition
