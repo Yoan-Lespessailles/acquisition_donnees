@@ -150,7 +150,7 @@ border-radius: 10px;</string>
                 </font>
                </property>
                <property name="text">
-                <string>Micro :</string>
+                <string>Microphone:</string>
                </property>
                <property name="buddy">
                 <cstring>select_micro</cstring>
@@ -216,7 +216,7 @@ border-radius: 10px;</string>
                 </font>
                </property>
                <property name="text">
-                <string>Volume du micro :</string>
+                <string>Microphone volume:</string>
                </property>
               </widget>
              </item>
@@ -258,7 +258,7 @@ border-radius: 10px;</string>
              </font>
             </property>
             <property name="text">
-             <string>Caméra :</string>
+             <string>Camera:</string>
             </property>
             <property name="buddy">
              <cstring>select_camera</cstring>
@@ -297,7 +297,7 @@ border-radius: 10px;</string>
              </font>
             </property>
             <property name="text">
-             <string>Langue :</string>
+             <string>Language:</string>
             </property>
             <property name="buddy">
              <cstring>select_camera</cstring>

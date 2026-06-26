@@ -42,7 +42,39 @@ Il est aussi possible de fournir directement le prénom de l'utilisateur :
 python -m acquisition.main --firstname Alice
 ```
 
-### 3. Construire l'exécutable Windows
+### 3. Modifier l'interface Qt
+
+L'interface graphique est décrite dans le fichier Qt Designer :
+
+```text
+acquisition/ui/main_pyside.ui
+```
+
+Depuis le dossier `acquisition_project`, avec l'environnement activé, ouvrir l'interface dans Qt Designer :
+
+```powershell
+pyside6-designer acquisition\ui\main_pyside.ui
+```
+
+Si la commande `pyside6-designer` n'est pas reconnue, utiliser la commande Python équivalente :
+
+```powershell
+python -m PySide6.scripts.pyside_tool designer acquisition\ui\main_pyside.ui
+```
+
+Après modification du fichier `.ui`, régénérer le fichier Python utilisé par l'application :
+
+```powershell
+pyside6-uic acquisition\ui\main_pyside.ui -o acquisition\ui\ui_main_pyside6.py
+```
+
+Relancer ensuite l'application pour vérifier les changements :
+
+```powershell
+python -m acquisition.main
+```
+
+### 4. Construire l'exécutable Windows
 
 La construction de l'exécutable est optionnelle. Elle nécessite les dépendances de build :
 
