@@ -17,13 +17,13 @@ class MetadataManager:
         Initialise le gestionnaire de métadonnées.
         """
 
-        # Nom de la machine utilisée pour les enregistrements.
+        # Nom de la machine utilisée pour les enregistrements
         self.machine_name = socket.gethostname()
 
-        # Système d'exploitation utilisé.
+        # Système d'exploitation utilisé
         self.operating_system = platform.system()
 
-        # Colonnes du fichier CSV.
+        # Colonnes du fichier CSV
         self.fieldnames = [
             "file_name",
             "machine_name",
@@ -72,14 +72,14 @@ class MetadataManager:
             user_firstname : prénom de l'utilisateur qui réalise l'enregistrement.
         """
 
-        # Informations produites par MediaManager pendant l'enregistrement.
+        # Informations produites par MediaManager pendant l'enregistrement
         file_name = media_manager.file_name
         video_path_abs = media_manager.video_filepath
         video_path_rel = media_manager.video_filepath_rel
         metadata_file_path_abs = media_manager.metadata_filepath
         metadata_file_path_rel = media_manager.metadata_filepath_rel
 
-        # Informations du corpus correspondant à la phrase qui vient d'être lue.
+        # Informations du corpus correspondant à la phrase qui vient d'être lue
         sentence_display = corpus_manager.current_sentence
         sentence_with_digit = corpus_manager.sentence_with_digit
         template_type = corpus_manager.current_template_type
@@ -87,16 +87,16 @@ class MetadataManager:
         language_name = corpus_manager.language_selected[0] # type: ignore
         mfa_model_name = corpus_manager.language_selected[2] # type: ignore
 
-        # Périphériques utilisés pour l'enregistrement.
+        # Périphériques utilisés pour l'enregistrement
         selected_camera = media_manager.get_selected_camera()
         selected_microphone = media_manager.get_selected_microphone()
         camera_name = selected_camera.description() if selected_camera is not None else "unknown"
         microphone_name = selected_microphone.description() if selected_microphone is not None else "unknown"
 
-        # Métadonnées réelles du fichier vidéo écrit sur disque.
+        # Métadonnées réelles du fichier vidéo écrit sur disque
         video_metadata = extract_video_metadata(media_manager.video_filepath)
 
-        # Écriture de la ligne CSV avec les données préparées.
+        # Écriture de la ligne CSV avec les données préparées
         self.save_metadata(
             metadata_file_path_abs,
             metadata_file_path_rel,
@@ -201,21 +201,21 @@ class MetadataManager:
             user_firstname : prénom de l’utilisateur ayant lancé l’application.
         """
         
-        # Vérifie si le fichier CSV existe déjà.
+        # Vérifie si le fichier CSV existe déjà
         file_exists = metadata_file_path_abs.exists()
 
-        # Ouvre le fichier en mode ajout.
-        # newline="" évite les lignes vides en trop dans les fichiers CSV.
+        # Ouvre le fichier en mode ajout
+        # newline="" évite les lignes vides en trop dans les fichiers CSV
         with open(metadata_file_path_abs, "a", encoding="utf-8", newline="") as csv_file:
             
-            # Crée un writer CSV basé sur les noms de colonnes.
+            # Crée un writer CSV basé sur les noms de colonnes
             writer = csv.DictWriter(csv_file, fieldnames=self.fieldnames)
             
-            # Si le fichier n'existait pas, on écrit d'abord l'en-tête.
+            # Si le fichier n'existait pas, on écrit d'abord l'en-tête
             if not file_exists:
                 writer.writeheader()
             
-            # Écrit une nouvelle ligne d'metadata.
+            # Écrit une nouvelle ligne d'metadata
             writer.writerow({
                 "file_name": file_name,
                 "user_firstname": user_firstname,

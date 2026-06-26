@@ -22,29 +22,29 @@ class CorpusManager:
         # Dossier contenant les fichiers JSON de corpus
         self.corpus_dir = CONFIG["paths"]["corpus_dir"]
 
-        # Nombre total de phrases prévues pour une session.
+        # Nombre total de phrases prévues pour une session
         # Dépend de la manière dont on veut utiliser le corpus
         self.sentence_total = 0
 
-        # Récupère le mode choisi dans la configuration.
+        # Récupère le mode choisi dans la configuration
         self.sentence_mode = CONFIG["sentence"]["mode"]
 
-        # Compteur de phrases affichées / enregistrées.
+        # Compteur de phrases affichées / enregistrées
         self.sentence_count = 0
 
-        # Liste des langues disponibles.
+        # Liste des langues disponibles
         self.languages = []
 
-        # Langue actuellement sélectionnée.
+        # Langue actuellement sélectionnée
         self.language_selected = None
         
-        # Données JSON du corpus actuellement chargé.
+        # Données JSON du corpus actuellement chargé
         self.corpus_data = None
 
-        # Phrase actuellement affichée.
+        # Phrase actuellement affichée
         self.current_sentence = ""
 
-        # Template de la phrase actuellement affichée.
+        # Template de la phrase actuellement affichée
         self.current_template_type = None
         
 
@@ -56,23 +56,23 @@ class CorpusManager:
             Une liste de listes : [[language_name, language_code, mfa_model_name], ...]
         """
 
-        # On vide la liste pour éviter les doublons si la méthode est rappelée.
+        # On vide la liste pour éviter les doublons si la méthode est rappelée
         self.languages.clear()
 
-        # Parcourt tous les fichiers .json du dossier corpus.
+        # Parcourt tous les fichiers .json du dossier corpus
         for json_file in self.corpus_dir.glob("*.json"):
             try:
-                # Ouvre le fichier JSON en lecture.
+                # Ouvre le fichier JSON en lecture
                 with open(json_file, "r", encoding="utf-8") as file:
                     data = json.load(file)
 
-                # Récupère le nom et le code de la langue.
+                # Récupère le nom et le code de la langue
                 language_name = data.get("language_name")
                 language_code = data.get("language_code")
-                # Nom du modèle MFA à utiliser pour l'annotation, par exemple "french_mfa".
+                # Nom du modèle MFA à utiliser pour l'annotation, par exemple "french_mfa"
                 mfa_model_name = data.get("mfa_model_name")
 
-                # Si les deux informations existent, on ajoute la langue.
+                # Si les deux informations existent, on ajoute la langue
                 if language_name and language_code:
                     self.languages.append([language_name, language_code, mfa_model_name])
 
@@ -82,10 +82,10 @@ class CorpusManager:
             except Exception as error:
                 print(f"Erreur lors de la lecture de {json_file} : {error}")
 
-        # Trie les langues par ordre alphabétique du nom de langue.
+        # Trie les langues par ordre alphabétique du nom de langue
         self.languages.sort(key=lambda language: language[0].lower())
 
-        # Si au moins une langue existe, on sélectionne la première par défaut.
+        # Si au moins une langue existe, on sélectionne la première par défaut
         if self.languages and self.language_selected is None:
             self.language_selected = self.languages[0]
             # print(f"Langue sélectionnée par défaut : {self.language_selected}")
@@ -104,17 +104,17 @@ class CorpusManager:
             index : position de la langue dans self.languages.
         """
 
-        # Vérifie que l'index existe bien dans la liste.
+        # Vérifie que l'index existe bien dans la liste
         if index < 0 or index >= len(self.languages):
             print(f"Index de langue invalide : {index}")
             return False
 
-        # Met à jour la langue sélectionnée.
+        # Met à jour la langue sélectionnée
         self.language_selected = self.languages[index]
 
         print(f"Langue sélectionnée : {self.language_selected}")
 
-        # Charge le corpus correspondant à cette langue.
+        # Charge le corpus correspondant à cette langue
         self.load_selected_language_corpus()
 
         return True
@@ -167,11 +167,11 @@ class CorpusManager:
 
                 return True
 
-            # Cette erreur arrive si le fichier existe mais que son contenu n'est pas un JSON valide.
+            # Cette erreur arrive si le fichier existe mais que son contenu n'est pas un JSON valide
             except json.JSONDecodeError:
                 print(f"Erreur JSON dans le fichier : {json_file}")
 
-            # Cette sécurité permet d'afficher les autres erreurs possibles sans faire planter toute l'application.
+            # Cette sécurité permet d'afficher les autres erreurs possibles sans faire planter toute l'application
             except Exception as error:
                 print(f"Erreur lors de la lecture de {json_file} : {error}")
 
@@ -189,32 +189,32 @@ class CorpusManager:
             2 : utilise uniquement le template 2.
         """
 
-        # Si aucun corpus n'est chargé, on ne peut pas compter les phrases.
+        # Si aucun corpus n'est chargé, on ne peut pas compter les phrases
         if self.corpus_data is None:
             print("Impossible de compter : aucun corpus chargé")
             return 0
 
-        # Compte le nombre de phrases générables avec le template 1.
+        # Compte le nombre de phrases générables avec le template 1
         # On compte la liste "subject", car chaque phrase générée consomme
-        # un sujet, un verbe, un nombre et un groupe nominal.
+        # un sujet, un verbe, un nombre et un groupe nominal
         total_template_1 = len(self.corpus_data["template_1"]["subject"])
 
-        # Compte le nombre de phrases naturelles disponibles dans le template 2.
+        # Compte le nombre de phrases naturelles disponibles dans le template 2
         total_template_2 = len(self.corpus_data["template_2"]["sentences"])
 
-        # Mode 0 : on utilise les deux templates.
+        # Mode 0 : on utilise les deux templates
         if self.sentence_mode == 0:
             return total_template_1 + total_template_2
 
-        # Mode 1 : on utilise uniquement le template 1.
+        # Mode 1 : on utilise uniquement le template 1
         if self.sentence_mode == 1:
             return total_template_1
 
-        # Mode 2 : on utilise uniquement le template 2.
+        # Mode 2 : on utilise uniquement le template 2
         if self.sentence_mode == 2:
             return total_template_2
 
-        # Si le mode est invalide, on évite de planter sans explication.
+        # Si le mode est invalide, on évite de planter sans explication
         print(f"Mode de génération inconnu : {self.sentence_mode}")
         return 0
     
@@ -229,19 +229,19 @@ class CorpusManager:
             2 : utilise uniquement le template 2.
         """
 
-        # Si aucun corpus n'est chargé, on ne peut pas mélanger les listes.
+        # Si aucun corpus n'est chargé, on ne peut pas mélanger les listes
         if self.corpus_data is None:
             print("Impossible de mélanger : aucun corpus chargé")
             return False
 
-        # Si le mode utilise le template 1, on mélange ses quatre listes.
+        # Si le mode utilise le template 1, on mélange ses quatre listes
         if self.sentence_mode in (0, 1):
             random.shuffle(self.corpus_data["template_1"]["subject"])
             random.shuffle(self.corpus_data["template_1"]["verb"])
             random.shuffle(self.corpus_data["template_1"]["number"])
             random.shuffle(self.corpus_data["template_1"]["nominal_group"])
 
-        # Si le mode utilise le template 2, on mélange sa liste de phrases.
+        # Si le mode utilise le template 2, on mélange sa liste de phrases
         if self.sentence_mode in (0, 2):
             random.shuffle(self.corpus_data["template_2"]["sentences"])
 
@@ -267,13 +267,13 @@ class CorpusManager:
             2 : utilise uniquement le template 2.
         """
 
-        # Vérifie qu'un corpus est chargé.
+        # Vérifie qu'un corpus est chargé
         if self.corpus_data is None:
             return "Aucun corpus chargé"
 
         # Mode 0 ou 1 :
         # on utilise le template 1 si ce mode l'autorise
-        # et s'il reste encore des éléments disponibles.
+        # et s'il reste encore des éléments disponibles
         if self.sentence_mode in (0, 1) and self.corpus_data["template_1"]["subject"]:
             self.current_sentence = self.build_template_1_sentence()
             self.current_template_type = "template_1"
@@ -281,7 +281,7 @@ class CorpusManager:
 
         # Mode 0 ou 2 :
         # on utilise le template 2 si ce mode l'autorise
-        # et s'il reste encore des phrases disponibles.
+        # et s'il reste encore des phrases disponibles
         if self.sentence_mode in (0, 2) and self.corpus_data["template_2"]["sentences"]:
             self.current_sentence = self.corpus_data["template_2"]["sentences"][-1]["text"]
             self.sentence_with_digit = self.corpus_data["template_2"]["sentences"][-1]["numeric"]
@@ -289,7 +289,7 @@ class CorpusManager:
             return self.current_sentence
 
         # Si aucun contenu compatible avec le mode choisi n'est disponible,
-        # la session est terminée.
+        # la session est terminée
         self.current_sentence = "Fin de la session d'enregistrement"
         self.current_template_type = None
 
@@ -309,45 +309,45 @@ class CorpusManager:
             self.sentence_with_digit = "Patrick demande 10 montagnes sombres"
         """
 
-        # Récupère l'ordre syntaxique défini dans le JSON.
+        # Récupère l'ordre syntaxique défini dans le JSON
         # Exemple : ["subject", "verb", "number", "nominal_group"]
         structure = self.corpus_data["template_1"]["structure"]  # type: ignore
 
-        # Contient les morceaux de la phrase affichée à l'utilisateur.
+        # Contient les morceaux de la phrase affichée à l'utilisateur
         display_sentence_parts = []
 
-        # Contient les morceaux de la phrase avec les nombres en chiffres.
+        # Contient les morceaux de la phrase avec les nombres en chiffres
         sentence_with_digit_parts = []
 
-        # Parcourt chaque bloc dans l'ordre défini.
+        # Parcourt chaque bloc dans l'ordre défini
         for list_name in structure:
 
             # Cas particulier du nombre :
-            # il contient maintenant deux informations : "text" et "value".
+            # il contient maintenant deux informations : "text" et "value"
             if list_name == "number":
                 number_data = self.corpus_data["template_1"][list_name][-1]  # type: ignore
 
-                # Version affichée : nombre en lettres.
+                # Version affichée : nombre en lettres
                 display_sentence_parts.append(number_data["text"])
 
-                # Version métadonées : valeur numérique.
+                # Version métadonées : valeur numérique
                 sentence_with_digit_parts.append(str(number_data["value"]))
 
             else:
-                # Pour les autres blocs, le contenu est une simple chaîne de caractères.
+                # Pour les autres blocs, le contenu est une simple chaîne de caractères
                 word = self.corpus_data["template_1"][list_name][-1]  # type: ignore
 
-                # Même contenu pour l'affichage et pour les métadonnées.
+                # Même contenu pour l'affichage et pour les métadonnées
                 display_sentence_parts.append(word)
                 sentence_with_digit_parts.append(word)
 
-        # Assemble la phrase affichée.
+        # Assemble la phrase affichée
         sentence = " ".join(display_sentence_parts)
 
-        # Assemble la phrase de métadonnées.
+        # Assemble la phrase de métadonnées
         self.sentence_with_digit = " ".join(sentence_with_digit_parts)
 
-        # Retourne la phrase affichée à l'utilisateur.
+        # Retourne la phrase affichée à l'utilisateur
         return sentence
 
 
@@ -363,36 +363,36 @@ class CorpusManager:
         Ici, on consomme simplement ce qui a réellement été affiché.
         """
 
-        # Vérifie qu'un corpus est chargé.
+        # Vérifie qu'un corpus est chargé
         if self.corpus_data is None:
             print("Impossible de consommer une phrase : aucun corpus chargé")
             return False
 
-        # Si toutes les phrases ont déjà été lues, on ne consomme rien.
+        # Si toutes les phrases ont déjà été lues, on ne consomme rien
         if self.is_session_finished():
             print("Toutes les phrases ont été lues")
             return False
 
         # Si la phrase courante vient du template 1,
-        # on retire le dernier élément de chaque liste utilisée pour construire la phrase.
+        # on retire le dernier élément de chaque liste utilisée pour construire la phrase
         if self.current_template_type == "template_1":
             for list_name in self.corpus_data["template_1"]["structure"]:
                 self.corpus_data["template_1"][list_name].pop()
 
         # Si la phrase courante vient du template 2,
-        # on retire la phrase naturelle actuellement utilisée.
+        # on retire la phrase naturelle actuellement utilisée
         elif self.current_template_type == "template_2":
             self.corpus_data["template_2"]["sentences"].pop()
 
-        # Si aucun template courant n'est défini, on évite de consommer au hasard.
+        # Si aucun template courant n'est défini, on évite de consommer au hasard
         else:
             print("Impossible de consommer : aucun type de template courant défini")
             return False
 
-        # Une phrase vient d'être consommée.
+        # Une phrase vient d'être consommée
         self.sentence_count += 1
 
-        # Prépare la prochaine phrase.
+        # Prépare la prochaine phrase
         self.current_sentence = self.get_current_sentence()
 
         return True
@@ -413,33 +413,33 @@ class CorpusManager:
             False s'il reste encore au moins une phrase à lire.
     """
 
-        # Si aucun corpus n'est chargé, on considère que la session est terminée.
-        # Cela évite d'autoriser un enregistrement sans phrase disponible.
+        # Si aucun corpus n'est chargé, on considère que la session est terminée
+        # Cela évite d'autoriser un enregistrement sans phrase disponible
         if self.corpus_data is None:
             return True
 
-        # Vérifie s'il reste des éléments dans le template 1.
+        # Vérifie s'il reste des éléments dans le template 1
         template_1_has_sentences = bool(self.corpus_data["template_1"]["subject"])
 
-        # Vérifie s'il reste des phrases naturelles dans le template 2.
+        # Vérifie s'il reste des phrases naturelles dans le template 2
         template_2_has_sentences = bool(self.corpus_data["template_2"]["sentences"])
 
-        # Mode 0 : la session utilise les deux templates.
-        # Elle est terminée uniquement quand les deux sont vides.
+        # Mode 0 : la session utilise les deux templates
+        # Elle est terminée uniquement quand les deux sont vides
         if self.sentence_mode == 0:
             return not template_1_has_sentences and not template_2_has_sentences
 
-        # Mode 1 : la session utilise uniquement le template 1.
-        # Elle est terminée dès que le template 1 est vide.
+        # Mode 1 : la session utilise uniquement le template 1
+        # Elle est terminée dès que le template 1 est vide
         if self.sentence_mode == 1:
             return not template_1_has_sentences
 
-        # Mode 2 : la session utilise uniquement le template 2.
-        # Elle est terminée dès que le template 2 est vide.
+        # Mode 2 : la session utilise uniquement le template 2
+        # Elle est terminée dès que le template 2 est vide
         if self.sentence_mode == 2:
             return not template_2_has_sentences
 
-        # Si le mode est invalide, on bloque la session par sécurité.
+        # Si le mode est invalide, on bloque la session par sécurité
         print(f"Mode de génération inconnu : {self.sentence_mode}")
         return True
     

@@ -1,23 +1,23 @@
-# QMainWindow est la classe de base de la fenêtre principale.
+# QMainWindow est la classe de base de la fenêtre principale
 from PySide6.QtWidgets import QMainWindow, QSizePolicy, QMessageBox, QDialogButtonBox, QInputDialog, QApplication, QLineEdit
 
-# Slot permet de déclarer explicitement certaines méthodes connectées aux signaux Qt.
+# Slot permet de déclarer explicitement certaines méthodes connectées aux signaux Qt
 from PySide6.QtCore import Slot, QTimer, Qt
 
-# QFontMetrics permet de mesurer la place prise par un texte avec une police donnée.
-# On l'utilise pour choisir automatiquement une taille de police qui rentre dans un QLabel.
+# QFontMetrics permet de mesurer la place prise par un texte avec une police donnée
+# On l'utilise pour choisir automatiquement une taille de police qui rentre dans un QLabel
 from PySide6.QtGui import QFontMetrics
 
-# Interface générée depuis Qt Designer.
+# Interface générée depuis Qt Designer
 from acquisition.ui.ui_main_pyside6 import Ui_MainWindow
 
-# Gestion de toute la partie caméra / micro / preview / enregistrement.
+# Gestion de toute la partie caméra / micro / preview / enregistrement
 from acquisition.media_manager import MediaManager
 
-# Gestion du corpus, des langues, des phrases et du compteur.
+# Gestion du corpus, des langues, des phrases et du compteur
 from acquisition.corpus_manager import CorpusManager
 
-# Gestion de l'affichage REC : chrono + point rouge clignotant.
+# Gestion de l'affichage REC : chrono + point rouge clignotant
 from acquisition.recording_indicator import RecordingIndicator
 
 # Gestion du fichier de métadonnées
@@ -44,7 +44,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
                 Si None, une fenêtre de saisie sera affichée.
         """
 
-        # Initialise la fenêtre Qt.
+        # Initialise la fenêtre Qt
         super().__init__()
 
         self.resize(600, 400)
@@ -53,17 +53,17 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.setWindowTitle("AVDataCollector")
 
-        # Si un prénom est fourni en ligne de commande, on l'utilise directement.
+        # Si un prénom est fourni en ligne de commande, on l'utilise directement
         if user_firstname is not None and user_firstname.strip():
             self.user_firstname = user_firstname.strip().capitalize()
             print("Prénom de l'utilisateur : " + user_firstname)
 
-        # Sinon, on demandera le prénom avec une fenêtre Qt après le lancement.
+        # Sinon, on demandera le prénom avec une fenêtre Qt après le lancement
         else:
             QTimer.singleShot(0, self.ask_user_firstname)
 
-        # Le QSS garde les couleurs, bordures et espacements.
-        # Les tailles de police restent gérées en Python par le système responsive.
+        # Le QSS garde les couleurs, bordures et espacements
+        # Les tailles de police restent gérées en Python par le système responsive
         self.setStyleSheet("""
                            
             #button_record[recording="false"], #button_record[recording="true"]{   
@@ -148,30 +148,30 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         
         """)
 
-        # Configure les tailles, alignements et comportements responsive.
-        # Cette méthode prépare les widgets, puis applique un premier calcul de taille.
+        # Configure les tailles, alignements et comportements responsive
+        # Cette méthode prépare les widgets, puis applique un premier calcul de taille
         self.configure_responsive_ui()
 
         # Active le QSS
         self.button_record.setProperty("recording", False)
         self.button_test_micro.setProperty("testing", False)
 
-        # Indique si un enregistrement est actuellement en cours.
+        # Indique si un enregistrement est actuellement en cours
         self.is_recording = False
         
         # Compteur indiquant le nombre d'essais d'enregistrement (fait apparaitre le bouton skip au pour de 2)
         self.cpt_retry_register = 0
 
-        # Initialise les gestionnaires spécialisés.
+        # Initialise les gestionnaires spécialisés
         self.setup_managers()
 
-        # Connecte les signaux Qt aux méthodes Python.
+        # Connecte les signaux Qt aux méthodes Python
         self.connect_signals()
 
-        # Charge les langues disponibles dans la ComboBox.
+        # Charge les langues disponibles dans la ComboBox
         self.load_languages_into_combobox()
 
-        # Affiche la première phrase si un corpus est disponible.
+        # Affiche la première phrase si un corpus est disponible
         self.display_current_sentence()
 
 
@@ -180,9 +180,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         Configure l'interface pour que les textes suivent la taille de la fenêtre.
         """
 
-        # Widgets texte simples : ils partagent une taille de police de base.
+        # Widgets texte simples : ils partagent une taille de police de base
         # On les garde séparés des ComboBox et boutons car ces widgets ont aussi
-        # besoin d'une hauteur minimale adaptée.
+        # besoin d'une hauteur minimale adaptée
         self._standard_text_widgets = [
             self.label_select_language,
             self.label_micro,
@@ -192,30 +192,30 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             self.label_record_timer,
         ]
 
-        # ComboBox qui doivent suivre la taille de la fenêtre.
-        # La police et la hauteur sont recalculées ensemble.
+        # ComboBox qui doivent suivre la taille de la fenêtre
+        # La police et la hauteur sont recalculées ensemble
         self._responsive_combo_boxes = [
             self.select_micro,
             self.select_camera,
             self.select_language,
         ]
 
-        # Boutons responsives.
-        # button_record est traité plus bas avec une taille plus imposante.
+        # Boutons responsives
+        # button_record est traité plus bas avec une taille plus imposante
         self._responsive_buttons = [
             self.button_test_micro,
             self.button_record,
         ]
 
-        # Les labels courts peuvent revenir à la ligne si la fenêtre devient étroite.
+        # Les labels courts peuvent revenir à la ligne si la fenêtre devient étroite
         # Leur QSizePolicy leur permet de s'étendre horizontalement sans imposer
-        # une largeur fixe au layout.
+        # une largeur fixe au layout
         for label in self._standard_text_widgets :
             label.setWordWrap(True)
             label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
 
         # La phrase à lire est l'élément principal de l'interface :
-        # elle prend l'espace disponible et reste centrée dans sa zone.
+        # elle prend l'espace disponible et reste centrée dans sa zone
         self.label_sentence.setWordWrap(True)
         self.label_sentence.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.label_sentence.setSizePolicy(
@@ -224,14 +224,14 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         )
         self.label_sentence.setMinimumHeight(70)
 
-        # Hauteurs minimales de départ.
-        # Elles seront ensuite ajustées plus finement dans update_responsive_text_sizes().
+        # Hauteurs minimales de départ
+        # Elles seront ensuite ajustées plus finement dans update_responsive_text_sizes()
         self.button_test_micro.setMinimumHeight(34)
         self.button_record.setMinimumHeight(48)
         self.progressbar_micro_level.setFixedHeight(20)
 
 
-        # Centre le bouton de test micro dans sa zone si le layout existe bien.
+        # Centre le bouton de test micro dans sa zone si le layout existe bien
         layout_micro_test = self.area_micro_test.layout()
         if layout_micro_test is not None:
             layout_micro_test.setAlignment(
@@ -239,8 +239,8 @@ class MyWindow(QMainWindow, Ui_MainWindow):
                 Qt.AlignmentFlag.AlignHCenter,
             )
 
-        # Premier calcul responsive.
-        # Il sera refait après l'affichage réel de la fenêtre dans showEvent().
+        # Premier calcul responsive
+        # Il sera refait après l'affichage réel de la fenêtre dans showEvent()
         self.update_responsive_text_sizes()
 
 
@@ -251,7 +251,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         super().resizeEvent(event)
         if hasattr(self, "_standard_text_widgets"):
-            # Chaque changement de taille de fenêtre relance le calcul des polices.
+            # Chaque changement de taille de fenêtre relance le calcul des polices
             self.update_responsive_text_sizes()
 
 
@@ -264,7 +264,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         if hasattr(self, "_standard_text_widgets"):
             # Au lancement, Qt ne connaît pas toujours les tailles finales des widgets
             # pendant __init__. singleShot(0, ...) reporte le calcul juste après le
-            # premier passage de layout, lorsque les dimensions sont stabilisées.
+            # premier passage de layout, lorsque les dimensions sont stabilisées
             QTimer.singleShot(0, self.update_responsive_text_sizes)
 
 
@@ -273,12 +273,12 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         Adapte les tailles de police aux dimensions actuelles de la fenêtre.
         """
 
-        # Echelle globale basée sur la taille initiale créée dans Qt Designer.
-        # La valeur est bornée pour éviter des textes trop petits ou trop grands.
+        # Echelle globale basée sur la taille initiale créée dans Qt Designer
+        # La valeur est bornée pour éviter des textes trop petits ou trop grands
         scale = max(0.75, min(1.45, min(self.width() / 820, self.height() / 595)))
 
-        # Tailles de police calculées par catégorie de widgets.
-        # Le bouton principal d'enregistrement est volontairement plus grand.
+        # Tailles de police calculées par catégorie de widgets
+        # Le bouton principal d'enregistrement est volontairement plus grand
         standard_size = round(10 * scale)
         counter_size = round(9 * scale)
         combo_size = round(10 * scale)
@@ -287,7 +287,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         record_dot_size = max(12, round(20 * scale))
 
         # Labels standards : police de base, avec une taille légèrement plus discrète
-        # pour le compteur de phrases.
+        # pour le compteur de phrases
         for widget in self._standard_text_widgets:
             font_size = standard_size
             if widget is self.label_cpt_sentence:
@@ -296,13 +296,13 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             self.set_widget_font_size(widget, font_size)
 
         # ComboBox : on adapte la police mais aussi la hauteur, sinon le texte peut
-        # sembler compressé verticalement lorsque la police augmente.
+        # sembler compressé verticalement lorsque la police augmente
         for combo_box in self._responsive_combo_boxes:
             self.set_widget_font_size(combo_box, combo_size)
             combo_box.setMinimumHeight(max(26, round(30 * scale)))
 
         # Boutons : le bouton d'enregistrement reçoit une taille plus imposante
-        # que le bouton de test micro pour rester visuellement prioritaire.
+        # que le bouton de test micro pour rester visuellement prioritaire
         for button in self._responsive_buttons:
             if button is self.button_record:
                 font_size = record_button_size
@@ -313,11 +313,11 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
             self.set_widget_font_size(button, font_size)
 
-        # Le rond rouge REC suit aussi la taille de la fenêtre.
+        # Le rond rouge REC suit aussi la taille de la fenêtre
         self.set_record_dot_size(record_dot_size)
 
         # La phrase principale est ajustée selon l'espace réellement disponible
-        # dans son QLabel, pas seulement selon la taille globale de la fenêtre.
+        # dans son QLabel, pas seulement selon la taille globale de la fenêtre
         self.fit_label_text(
             self.label_sentence,
             min_size=max(10, round(12 * scale)),
@@ -332,7 +332,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         font = widget.font()
 
-        # Evite de réappliquer exactement la même taille à chaque resize.
+        # Evite de réappliquer exactement la même taille à chaque resize
         if font.pointSize() == point_size:
             return
 
@@ -345,10 +345,10 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         Ajuste le rond rouge d'enregistrement en gardant une forme circulaire.
         """
 
-        # setFixedSize force la largeur et la hauteur à rester identiques.
+        # setFixedSize force la largeur et la hauteur à rester identiques
         self.label_record_dot.setFixedSize(size, size)
 
-        # Le rayon vaut la moitié de la taille : le QLabel reste donc un cercle.
+        # Le rayon vaut la moitié de la taille : le QLabel reste donc un cercle
         self.label_record_dot.setStyleSheet(
             f"background-color: red; border-radius: {size // 2}px;"
         )
@@ -361,18 +361,18 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         text = label.text()
         if not text:
-            # Si le label est vide, on garde la taille maximale possible.
+            # Si le label est vide, on garde la taille maximale possible
             self.set_widget_font_size(label, max_size)
             return
 
-        # contentsRect correspond à la zone réellement utilisable par le texte.
-        # On retire quelques pixels pour éviter que le texte colle aux bords.
+        # contentsRect correspond à la zone réellement utilisable par le texte
+        # On retire quelques pixels pour éviter que le texte colle aux bords
         contents = label.contentsRect()
         available_width = max(20, contents.width() - 8)
         available_height = max(20, contents.height() - 8)
 
         # Flags utilisés par QFontMetrics pour mesurer le texte comme Qt l'affichera :
-        # centré et autorisé à revenir à la ligne.
+        # centré et autorisé à revenir à la ligne
         text_flags = (
             Qt.TextFlag.TextWordWrap.value
             | Qt.AlignmentFlag.AlignCenter.value
@@ -380,8 +380,8 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         best_size = min_size
 
-        # On teste les tailles de la plus grande à la plus petite.
-        # La première qui tient dans la hauteur disponible devient la taille retenue.
+        # On teste les tailles de la plus grande à la plus petite
+        # La première qui tient dans la hauteur disponible devient la taille retenue
         for point_size in range(max_size, min_size - 1, -1):
             font = label.font()
             font.setPointSize(point_size)
@@ -400,7 +400,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
                 best_size = point_size
                 break
 
-        # Applique la taille retenue à la phrase principale.
+        # Applique la taille retenue à la phrase principale
         font = label.font()
         font.setPointSize(best_size)
         font.setBold(True)
@@ -414,16 +414,16 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         Initialise les classes spécialisées utilisées par la fenêtre.
         """
 
-        # Gère les micros, caméras, preview et enregistrements.
+        # Gère les micros, caméras, preview et enregistrements
         self.media_manager = MediaManager(self.select_micro, self.select_camera, self.area_preview)
 
-        # Prépare toute la partie multimédia.
+        # Prépare toute la partie multimédia
         self.media_manager.setup()
 
-        # Gère les langues, corpus, phrases et compteurs.
+        # Gère les langues, corpus, phrases et compteurs
         self.corpus_manager = CorpusManager()
 
-        # Gère l'affichage du timer REC et du point rouge.
+        # Gère l'affichage du timer REC et du point rouge
         self.recording_indicator = RecordingIndicator(self.label_record_timer, self.label_record_dot)
 
         self.metadata_manager = MetadataManager()
@@ -438,29 +438,29 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         Connecte les signaux Qt aux méthodes de l'application.
         """
 
-        # Bouton principal d'enregistrement.
+        # Bouton principal d'enregistrement
         self.button_record.clicked.connect(self.button_record_clicked)
 
-        # Changement de micro sélectionné.
+        # Changement de micro sélectionné
         self.select_micro.currentIndexChanged.connect(self.media_manager.change_microphone)
 
-        # Changement de caméra sélectionnée.
+        # Changement de caméra sélectionnée
         self.select_camera.currentIndexChanged.connect(self.media_manager.change_camera)
 
-        # Changement de langue sélectionnée.
+        # Changement de langue sélectionnée
         self.select_language.currentIndexChanged.connect(self.language_changed)
 
-        # Détection automatique d'un changement dans la liste des micros.
+        # Détection automatique d'un changement dans la liste des micros
         self.media_manager.media_devices.audioInputsChanged.connect(self.media_manager.refresh_microphones)
 
-        # Détection automatique d'un changement dans la liste des caméras.
+        # Détection automatique d'un changement dans la liste des caméras
         self.media_manager.media_devices.videoInputsChanged.connect(self.media_manager.refresh_cameras)
 
         # Bouton de test micro
         self.button_test_micro.clicked.connect(self.button_test_micro_clicked)
 
         # Quand MediaManager calcule un nouveau niveau micro,
-        # on met à jour la ProgressBar.
+        # on met à jour la ProgressBar
         self.media_manager.micro_level_changed.connect(self.update_micro_level)
 
     # -----------------------------------------------------------------
@@ -472,34 +472,34 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         Charge les langues disponibles dans la ComboBox de l'interface.
         """
 
-        # Vide la ComboBox avant de la remplir.
+        # Vide la ComboBox avant de la remplir
         self.select_language.clear()
 
-        # Demande au CorpusManager la liste des langues disponibles.
+        # Demande au CorpusManager la liste des langues disponibles
         languages = self.corpus_manager.load_languages()
 
-        # Ajoute chaque langue dans la ComboBox.
+        # Ajoute chaque langue dans la ComboBox
         for language_name, language_code, _ in languages:
             self.select_language.addItem(language_name, language_code)
 
-        # Si aucune langue n'est disponible, on désactive le bouton d'enregistrement.
+        # Si aucune langue n'est disponible, on désactive le bouton d'enregistrement
         if not languages:
             self.button_record.setEnabled(False)
             self.label_sentence.setText("Aucun corpus disponible")
             self.label_cpt_sentence.setText("0/0")
 
             # Le message d'erreur remplace une phrase normale :
-            # on relance donc le calcul pour adapter sa taille au label.
+            # on relance donc le calcul pour adapter sa taille au label
             self.update_responsive_text_sizes()
             return
 
-        # Sélectionne la première langue par défaut.
+        # Sélectionne la première langue par défaut
         self.corpus_manager.select_language(0)
 
-        # Prépare le corpus de la langue sélectionnée.
+        # Prépare le corpus de la langue sélectionnée
         session_ready = self.corpus_manager.prepare_session()
 
-        # Active ou désactive le bouton selon le résultat.
+        # Active ou désactive le bouton selon le résultat
         self.button_record.setEnabled(session_ready)
 
 
@@ -512,16 +512,16 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             index : position de la langue sélectionnée dans la ComboBox.
         """
 
-        # Informe le CorpusManager de la langue sélectionnée.
+        # Informe le CorpusManager de la langue sélectionnée
         self.corpus_manager.select_language(index)
 
-        # Charge et prépare le corpus de cette langue.
+        # Charge et prépare le corpus de cette langue
         session_ready = self.corpus_manager.prepare_session()
 
-        # Met à jour l'affichage.
+        # Met à jour l'affichage
         self.display_current_sentence()
 
-        # Active le bouton seulement si le corpus est prêt.
+        # Active le bouton seulement si le corpus est prêt
         self.button_record.setEnabled(session_ready)
 
 
@@ -530,20 +530,20 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         Affiche la phrase courante et le compteur de phrases.
         """
 
-        # Récupère la phrase courante depuis le CorpusManager.
+        # Récupère la phrase courante depuis le CorpusManager
         sentence = self.corpus_manager.get_current_sentence()
 
-        # Affiche la phrase dans le label prévu.
+        # Affiche la phrase dans le label prévu
         self.label_sentence.setText(sentence)
 
-        # Affiche le compteur.
+        # Affiche le compteur
         self.label_cpt_sentence.setText(self.corpus_manager.get_sentence_counter_text())
 
-        # Le texte peut avoir une longueur très différente d'une phrase à l'autre.
-        # On recalcule donc la taille de police après chaque changement de phrase.
+        # Le texte peut avoir une longueur très différente d'une phrase à l'autre
+        # On recalcule donc la taille de police après chaque changement de phrase
         self.update_responsive_text_sizes()
 
-        # Lorsque toutes les phrases sont consommées, on désactive le bouton.
+        # Lorsque toutes les phrases sont consommées, on désactive le bouton
         self.button_record.setEnabled(not self.corpus_manager.is_session_finished())       
     
     # -----------------------------------------------------------------
@@ -556,27 +556,27 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         Vérifie si toutes les conditions sont réunies pour démarrer un enregistrement.
         """
 
-        # Vérifie qu'un micro est sélectionné.
+        # Vérifie qu'un micro est sélectionné
         if not self.media_manager.has_selected_microphone():
             print("Aucun micro sélectionné")
             return False
 
-        # Vérifie qu'une caméra est sélectionnée.
+        # Vérifie qu'une caméra est sélectionnée
         if not self.media_manager.has_selected_camera():
             print("Aucune caméra sélectionnée")
             return False
 
-        # Vérifie qu'une langue est sélectionnée.
+        # Vérifie qu'une langue est sélectionnée
         if self.corpus_manager.language_selected is None: # type: ignore
             print("Aucune langue sélectionnée")
             return False
 
-        # Vérifie qu'il reste au moins une phrase à enregistrer.
+        # Vérifie qu'il reste au moins une phrase à enregistrer
         if self.corpus_manager.is_session_finished():
             print("Toutes les phrases ont déjà été enregistrées")
             return False
 
-        # Si tout est bon, on peut enregistrer.
+        # Si tout est bon, on peut enregistrer
         return True
 
     # -----------------------------------------------------------------
@@ -601,20 +601,20 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         if self.media_manager.micro_test_is_running:
             self.media_manager.stop_micro_test()
 
-            # Remet la propriété QSS du bouton de test dans son état inactif.
+            # Remet la propriété QSS du bouton de test dans son état inactif
             self.button_test_micro.setProperty("testing", False)
             self.button_test_micro.setText("Tester le micro")
 
-            # Force Qt à recalculer le style du bouton.
+            # Force Qt à recalculer le style du bouton
             self.update_style(self.button_test_micro)
 
 
-        # Si aucun enregistrement n'est en cours, on démarre.
+        # Si aucun enregistrement n'est en cours, on démarre
         if not self.is_recording:
             self.start_recording_flow()
             return
 
-        # Sinon, on arrête l'enregistrement en cours.
+        # Sinon, on arrête l'enregistrement en cours
         self.stop_recording_flow()
     
 
@@ -624,43 +624,43 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         Démarre toute la séquence d'enregistrement côté interface.
         """
 
-        # Vérifie les conditions nécessaires avant d'enregistrer.
+        # Vérifie les conditions nécessaires avant d'enregistrer
         if not self.can_start_recording():
             return
 
-        # Récupère le code de langue courant.
+        # Récupère le code de langue courant
         language_code = self.corpus_manager.language_selected[1] # type: ignore
 
-        # Demande au MediaManager de démarrer l'enregistrement.
+        # Demande au MediaManager de démarrer l'enregistrement
         recording_started = self.media_manager.start_recording(language_code)
 
-        # Si l'enregistrement n'a pas démarré, on ne change pas l'interface.
+        # Si l'enregistrement n'a pas démarré, on ne change pas l'interface
         if not recording_started:
             return
 
-        # L'application passe en état "enregistrement".
+        # L'application passe en état "enregistrement"
         self.is_recording = True
 
-        # Modifie le texte du bouton.
+        # Modifie le texte du bouton
         self.button_record.setText("Stop recording")
 
-        # Ajoute une propriété Qt pour appliquer un style QSS spécifique si besoin.
+        # Ajoute une propriété Qt pour appliquer un style QSS spécifique si besoin
         self.button_record.setProperty("recording", True)
 
-        # Force Qt à recalculer le style du bouton.
+        # Force Qt à recalculer le style du bouton
         self.button_record.style().unpolish(self.button_record)
         self.button_record.style().polish(self.button_record)
 
-        # Empêche de changer de micro pendant l'enregistrement.
+        # Empêche de changer de micro pendant l'enregistrement
         self.select_micro.setEnabled(False)
 
-        # Empêche de changer de caméra pendant l'enregistrement.
+        # Empêche de changer de caméra pendant l'enregistrement
         self.select_camera.setEnabled(False)
 
-        # Empêche de changer de langue pendant l'enregistrement.
+        # Empêche de changer de langue pendant l'enregistrement
         self.select_language.setEnabled(False)
 
-        # Affiche et lance l'indicateur REC.
+        # Affiche et lance l'indicateur REC
         self.recording_indicator.show()
         self.recording_indicator.start()
 
@@ -670,34 +670,34 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         Arrête toute la séquence d'enregistrement côté interface.
         """
 
-        # Demande au MediaManager d'arrêter l'enregistrement.
+        # Demande au MediaManager d'arrêter l'enregistrement
         self.media_manager.stop_recording()
 
-        # L'application n'est plus en état "enregistrement".
+        # L'application n'est plus en état "enregistrement"
         self.is_recording = False
 
-        # Remet le texte initial du bouton.
+        # Remet le texte initial du bouton
         self.button_record.setText("Start recording")
 
-        # Retire la propriété de style QSS liée à l'enregistrement.
+        # Retire la propriété de style QSS liée à l'enregistrement
         self.button_record.setProperty("recording", False)
 
-        # Force Qt à recalculer le style du bouton.
+        # Force Qt à recalculer le style du bouton
         self.button_record.style().unpolish(self.button_record)
         self.button_record.style().polish(self.button_record)
 
-        # Réactive les sélecteurs.
+        # Réactive les sélecteurs
         self.select_micro.setEnabled(True)
         self.select_camera.setEnabled(True)
         self.select_language.setEnabled(True)
 
-        # Arrête et masque l'indicateur REC.
+        # Arrête et masque l'indicateur REC
         self.recording_indicator.stop()
         self.recording_indicator.hide()
 
 
-        # Attend un peu avant de lire le fichier MP4.
-        # Cela laisse le temps à Qt de finaliser le conteneur vidéo.
+        # Attend un peu avant de lire le fichier MP4
+        # Cela laisse le temps à Qt de finaliser le conteneur vidéo
         QTimer.singleShot(500, self.finalize_recording)
 
 
@@ -713,7 +713,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         user_validation = self.ask_manual_validation()
 
         if user_validation == "yes":
-            # Prépare et sauvegarde la métadonnée de l'enregistrement qui vient de se terminer.
+            # Prépare et sauvegarde la métadonnée de l'enregistrement qui vient de se terminer
             self.metadata_manager.save_recording_metadata(
                 self.media_manager,
                 self.corpus_manager,
@@ -763,10 +763,10 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         la phrase actuelle du corpus, puis affiche la phrase suivante dans l'interface.
         """
 
-        # Supprime du corpus la phrase qui vient d'être lue.
+        # Supprime du corpus la phrase qui vient d'être lue
         self.corpus_manager.consume_current_sentence()
 
-        # Affiche la phrase suivante.
+        # Affiche la phrase suivante
         self.display_current_sentence()
 
     # -----------------------------------------------------------------
@@ -779,14 +779,14 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         Démarre ou arrête le test micro selon l'état actuel du MediaManager.
         """
 
-        # Si le test micro est déjà en cours, on l'arrête.
+        # Si le test micro est déjà en cours, on l'arrête
         if self.media_manager.micro_test_is_running:
             self.media_manager.stop_micro_test()
             self.button_test_micro.setText("Test micro")
 
             self.button_test_micro.setProperty("testing", False)
 
-            # Force Qt à recalculer le style du bouton.
+            # Force Qt à recalculer le style du bouton
             self.update_style(self.button_test_micro)
 
             # Débloque la sélection de micro
@@ -794,16 +794,16 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
             return
 
-        # Sinon, on récupère le micro sélectionné.
+        # Sinon, on récupère le micro sélectionné
         micro = self.media_manager.get_selected_microphone()
 
-        # On démarre le test micro.
+        # On démarre le test micro
         self.media_manager.start_micro_test(micro)
         self.button_test_micro.setText("Stop test")
 
         self.button_test_micro.setProperty("testing", True)
         
-        # Force Qt à recalculer le style du bouton.
+        # Force Qt à recalculer le style du bouton
         self.update_style(self.button_test_micro)
         
         # Bloque la sélection de micro
@@ -834,10 +834,10 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         "re-stylé".
         """
 
-        # Retire temporairement le style actuellement appliqué au widget.
+        # Retire temporairement le style actuellement appliqué au widget
         widget.style().unpolish(widget)
 
-        # Réapplique le style au widget en tenant compte de ses propriétés actuelles.
+        # Réapplique le style au widget en tenant compte de ses propriétés actuelles
         widget.style().polish(widget)
 
 
@@ -995,18 +995,18 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
             result = dialog.exec()
 
-            # Si l'utilisateur clique sur Annuler ou ferme avec la croix.
+            # Si l'utilisateur clique sur Annuler ou ferme avec la croix
             if result != QInputDialog.DialogCode.Accepted:
                 QApplication.quit()
                 return False
 
             firstname = dialog.textValue().strip().capitalize()
 
-            # Si le prénom est vide, on relance la fenêtre.
+            # Si le prénom est vide, on relance la fenêtre
             if not firstname:
                 continue
 
-            # Si le prénom est valide, on le stocke.
+            # Si le prénom est valide, on le stocke
             self.user_firstname = firstname
 
             print("Prénom de l'utilisateur : " + firstname)
