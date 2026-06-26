@@ -160,7 +160,59 @@ Pour une autre langue, créer le fichier `<code>_custom.dict`, par exemple `it_c
 
 Si aucun dictionnaire personnalisé n'existe, le programme vérifie si le dictionnaire MFA officiel correspondant est installé. S'il est absent, il le télécharge automatiquement. Le modèle acoustique MFA est également vérifié et téléchargé automatiquement si nécessaire.
 
-## 5. Lancer l'annotation
+## 5. Organigramme fonctionnel de l'annotation
+
+Le processus d'annotation part d'une langue et d'un dossier `data`, puis associe chaque vidéo à son fichier de métadonnées. Les fichiers compatibles sont préparés pour MFA, alignés, puis transformés en sous-titres phonétiques incrustés dans une copie de la vidéo originale.
+
+```mermaid
+flowchart TD
+    A([Début]) --> B[Lecture des arguments<br/>langue, dossier data, dry-run]
+    B --> C[Construction des chemins<br/>data/langue/videos et data/langue/metadata]
+    C --> D{Dossiers attendus présents ?}
+
+    D -- Non --> E([Arrêt avec erreur])
+    D -- Oui --> F[Chargement des listes<br/>vidéos MP4 et métadonnées CSV]
+
+    F --> G{Mode dry-run ?}
+    G -- Oui --> H[Affichage des fichiers détectés]
+    H --> Z([Fin])
+
+    G -- Non --> I[Association vidéo / metadata<br/>par nom de fichier]
+    I --> J[Lecture du modèle MFA<br/>depuis les métadonnées]
+
+    J --> K[Préparation des entrées MFA]
+    K --> L[Extraction audio WAV<br/>mono 16 kHz avec FFmpeg]
+    L --> M[Création du fichier LAB<br/>à partir de la phrase attendue]
+
+    M --> N{Dictionnaire personnalisé disponible ?}
+    N -- Oui --> O[Utilisation du dictionnaire local<br/>mfa/dictionaries/code_custom.dict]
+    N -- Non --> P[Vérification ou téléchargement<br/>du dictionnaire MFA officiel]
+
+    O --> Q[Vérification ou téléchargement<br/>du modèle acoustique MFA]
+    P --> Q
+
+    Q --> R[Validation MFA<br/>audio, LAB, dictionnaire, modèle]
+    R --> S{Validation réussie ?}
+    S -- Non --> T([Arrêt : corriger les données<br/>ou le dictionnaire])
+
+    S -- Oui --> U[Alignement MFA]
+    U --> V[Génération des TextGrid<br/>mots et phones]
+    V --> W[Création des sous-titres ASS<br/>depuis les TextGrid]
+    W --> X[Incrustation des sous-titres<br/>dans une copie MP4]
+    X --> Y([Fin : résultats dans results/langue/mfa])
+
+    classDef startend fill:#d9ead3,stroke:#6aa84f,stroke-width:2px,color:#000;
+    classDef process fill:#d9eaf7,stroke:#3d85c6,stroke-width:1.5px,color:#000;
+    classDef decision fill:#fce5cd,stroke:#e69138,stroke-width:2px,color:#000;
+    classDef error fill:#f4cccc,stroke:#cc0000,stroke-width:1.5px,color:#000;
+
+    class A,Z,Y startend;
+    class B,C,F,H,I,J,K,L,M,O,P,Q,R,U,V,W,X process;
+    class D,G,N,S decision;
+    class E,T error;
+```
+
+## 6. Lancer l'annotation
 
 Depuis le dossier `annotation_project`, avec l'environnement activé, contrôler d'abord les fichiers détectés :
 
@@ -180,7 +232,7 @@ Pour utiliser un dossier de données différent :
 python -m annotation.main --language fr --data-dir C:\chemin\vers\data
 ```
 
-## 6. Résultats
+## 7. Résultats
 
 Les fichiers produits sont enregistrés à la racine du dépôt :
 
