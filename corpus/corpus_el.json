@@ -2,6 +2,7 @@
     "language_code": "el",
     "language_name": "Greek",
     "mfa_model_name": "greek_cv",
+    "whisper_code": "el",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",

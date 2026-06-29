@@ -2,6 +2,7 @@
     "language_code": "bg",
     "language_name": "Bulgarian",
     "mfa_model_name": "bulgarian_mfa",
+    "whisper_code": "bg",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",

@@ -2,6 +2,7 @@
     "language_code": "cs",
     "language_name": "Czech",
     "mfa_model_name": "czech_mfa",
+    "whisper_code": "cs",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",

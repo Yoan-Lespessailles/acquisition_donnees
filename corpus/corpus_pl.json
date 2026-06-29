@@ -2,6 +2,7 @@
     "language_code": "pl",
     "language_name": "Polish",
     "mfa_model_name": "polish_mfa",
+    "whisper_code": "pl",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",

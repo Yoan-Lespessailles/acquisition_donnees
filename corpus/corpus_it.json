@@ -2,6 +2,7 @@
     "language_code": "it",
     "language_name": "Italian",
     "mfa_model_name": "italian_cv",
+    "whisper_code": "it",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",

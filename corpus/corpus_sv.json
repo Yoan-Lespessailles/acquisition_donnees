@@ -2,6 +2,7 @@
     "language_code": "sv",
     "language_name": "Swedish",
     "mfa_model_name": "swedish_mfa",
+    "whisper_code": "sv",
     "syntax_order": "SVO",
     "template_1": {
         "type": "generated",
