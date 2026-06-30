@@ -95,44 +95,44 @@
         "type": "fixed",
         "sentences": [
             {
-                "text": "The young nurse measures a quiet blue flower near the wall.",
-                "numeric": "The young nurse measures a quiet blue flower near the wall."
+                "text": "The young nurse picks a blue flower in the garden for her patient.",
+                "numeric": "The young nurse picks a blue flower in the garden for her patient."
             },
             {
-                "text": "George shares yellow toys with three tourists.",
-                "numeric": "George shares yellow toys with 3 tourists."
+                "text": "George shares his toys with his little brother at his parents’ request.",
+                "numeric": "George shares his toys with his little brother at his parents’ request."
             },
             {
-                "text": "Alice watches white shells beside the small box.",
-                "numeric": "Alice watches white shells beside the small box."
+                "text": "Alice looks at the white shells in the memory box beside the television.",
+                "numeric": "Alice looks at the white shells in the memory box beside the television."
             },
             {
-                "text": "William brings green chairs through the garden.",
-                "numeric": "William brings green chairs through the garden."
+                "text": "William must bring new chairs into his garden because there are not enough.",
+                "numeric": "William must bring new chairs into his garden because there are not enough."
             },
             {
-                "text": "Rose hears a clear voice during the evening.",
-                "numeric": "Rose hears a clear voice during the evening."
+                "text": "Rose hears a voice during the evening; it is her neighbour asking her to turn the music down.",
+                "numeric": "Rose hears a voice during the evening; it is her neighbour asking her to turn the music down."
             },
             {
-                "text": "Ben chooses large bags for the new shop.",
-                "numeric": "Ben chooses large bags for the new shop."
+                "text": "Ben makes the decision to change the decorations for the opening of his new shop.",
+                "numeric": "Ben makes the decision to change the decorations for the opening of his new shop."
             },
             {
-                "text": "Emma finds red feathers under the table.",
-                "numeric": "Emma finds red feathers under the table."
+                "text": "Emma finds red feathers under the table; her parrot has been there.",
+                "numeric": "Emma finds red feathers under the table; her parrot has been there."
             },
             {
-                "text": "Peter takes thin books from the kitchen.",
-                "numeric": "Peter takes thin books from the kitchen."
+                "text": "Peter takes the cookery book and starts preparing the recipe on page one hundred and eight.",
+                "numeric": "Peter takes the cookery book and starts preparing the recipe on page 108."
             },
             {
-                "text": "Laura loves the warm air after a bright shower.",
-                "numeric": "Laura loves the warm air after a bright shower."
+                "text": "Laura loves the smell of damp air when the rain falls after a sunny day.",
+                "numeric": "Laura loves the smell of damp air when the rain falls after a sunny day."
             },
             {
-                "text": "Jack sees pure jewels in the old drawer.",
-                "numeric": "Jack sees pure jewels in the old drawer."
+                "text": "Jack sorts his old jewels in the old drawer and comes across a treasure: his grandfather’s old watch.",
+                "numeric": "Jack sorts his old jewels in the old drawer and comes across a treasure: his grandfather’s old watch."
             }
         ]
     }
