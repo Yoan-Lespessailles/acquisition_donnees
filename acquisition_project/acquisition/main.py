@@ -17,9 +17,12 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
 
 from acquisition.main_window import MyWindow
+
+APP_ICON_PATH = Path(__file__).resolve().parent / "assets" / "AVDataCollector.png"
 
 
 def parse_arguments():
@@ -57,6 +60,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setApplicationName("AVDataCollector")
     app.setApplicationDisplayName("AVDataCollector")
+    app.setWindowIcon(QIcon(str(APP_ICON_PATH)))
     
     # Crée la fenêtre principale en lui transmettant le prénom éventuel
     window = MyWindow(user_firstname=args.firstname)

@@ -70,7 +70,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
                 color: white;
                 border: none;
                 border-radius: 10px;
-                padding: 12px;
+                padding: 4px;
             }
 
             #button_record[recording="false"]:hover {
@@ -227,7 +227,11 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Hauteurs minimales de départ
         # Elles seront ensuite ajustées plus finement dans update_responsive_text_sizes()
         self.button_test_micro.setMinimumHeight(34)
-        self.button_record.setMinimumHeight(48)
+        self.button_record.setSizePolicy(
+            QSizePolicy.Policy.Fixed,
+            QSizePolicy.Policy.Preferred,
+        )
+        self.button_record.setMinimumHeight(32)
         self.progressbar_micro_level.setFixedHeight(20)
 
 
@@ -283,7 +287,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         counter_size = round(9 * scale)
         combo_size = round(10 * scale)
         test_button_size = round(11 * scale)
-        record_button_size = round(14 * scale)
+        record_button_size = round(12 * scale)
         record_dot_size = max(12, round(20 * scale))
 
         # Labels standards : police de base, avec une taille légèrement plus discrète
@@ -306,7 +310,10 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         for button in self._responsive_buttons:
             if button is self.button_record:
                 font_size = record_button_size
-                button.setMinimumHeight(max(44, round(56 * scale)))
+                button.setMinimumHeight(max(32, round(34 * scale)))
+                button.setMaximumHeight(max(36, round(42 * scale)))
+                button.setMinimumWidth(max(170, round(190 * scale)))
+                button.setMaximumWidth(max(220, round(300 * scale)))
             else:
                 font_size = test_button_size
                 button.setMinimumHeight(max(32, round(38 * scale)))
