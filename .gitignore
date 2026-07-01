@@ -30,4 +30,8 @@ debug.log
 # Fichiers système / éditeurs
 .DS_Store
 Thumbs.db
-.vscode/
+
+# Réglages VS Code partagés au projet
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
