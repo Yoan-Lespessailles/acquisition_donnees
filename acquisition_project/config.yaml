@@ -13,6 +13,6 @@ sentence:
   # 0 = mode par défaut : utilise le template 1 et le template 2
   # 1 = utilise uniquement le template 1
   # 2 = utilise uniquement le template 2
-  mode: 2
+  mode: 0
 
   # Dans le mode par défaut, le nombre de phrases est de longueur d'une des listes composant le template 1 + longueur de la liste des phrases du template 2
