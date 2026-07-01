@@ -5,7 +5,10 @@ a = Analysis(
     ["acquisition/main.py"],
     pathex=["."],
     binaries=[],
-    datas=[],
+    datas=[
+        ("acquisition/assets/AVDataCollector.png", "acquisition/assets"),
+        ("acquisition/assets/AVDataCollector_AppIcon.ico", "acquisition/assets"),
+    ],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -29,6 +32,7 @@ exe = EXE(
     upx=True,
     console=False,
     disable_windowed_traceback=False,
+    icon="acquisition/assets/AVDataCollector_AppIcon.ico",
 )
 
 coll = COLLECT(

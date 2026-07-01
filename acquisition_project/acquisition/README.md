@@ -4,19 +4,31 @@ Cette application correspond à la partie acquisition du projet. Elle permet d'e
 
 Les commandes ci-dessous sont à exécuter depuis la racine du dépôt `acquisition_donnees`.
 
-### 1. Créer un environnement Python
+### 1. Préparer un environnement Python
 
 L'application nécessite Python 3.12.
 
-#### Windows PowerShell
+La version est déclarée dans `pyproject.toml`, mais ce fichier ne sélectionne pas automatiquement l'interpréteur Python. Il indique seulement à `pip` quelles versions sont acceptées. Il faut donc lancer les commandes depuis un environnement qui utilise déjà Python 3.12.
+
+#### Windows PowerShell avec `.venv`
 
 ```powershell
 cd acquisition_project
-python -m venv .venv
+py -3.12 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-pip install -e .
+python -m pip install -e .
 ```
+
+La commande `py -3.12 -m venv .venv` sert uniquement à créer un nouvel environnement virtuel avec Python 3.12. Si l'environnement existe déjà, il suffit de l'activer.
+
+Si la commande `py -3.12` n'est pas reconnue, installer Python 3.12 puis relancer la commande. Il est aussi possible d'utiliser le chemin complet vers `python.exe` 3.12 :
+
+```powershell
+C:\chemin\vers\Python312\python.exe -m venv .venv
+```
+
+Le projet ne s'installe pas avec Python 3.11. Si l'environnement `.venv` a déjà été créé avec Python 3.11, il faut le supprimer puis le recréer avec Python 3.12.
 
 #### Linux / macOS
 
@@ -25,8 +37,28 @@ cd acquisition_project
 python3.12 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
-pip install -e .
+python -m pip install -e .
 ```
+
+#### Avec conda
+
+Si un environnement conda Python 3.12 existe déjà, il peut être utilisé à la place de `.venv`. Si vous n'en avez pas et que vous souhaitez en créer un :
+
+```powershell
+conda create -n acquisition-python312 python=3.12
+```
+
+Dans un terminal où conda est disponible :
+
+```powershell
+conda activate acquisition-python312
+cd acquisition_project
+python --version
+python -m pip install --upgrade pip
+python -m pip install -e .
+```
+
+La commande `python --version` doit afficher Python 3.12. Si `pip` affiche une erreur indiquant Python 3.11, c'est que l'environnement conda n'est pas actif dans ce terminal. Dans ce cas, ouvrir un terminal conda, activer l'environnement, puis utiliser `python -m pip` plutôt que `pip`.
 
 ### 2. Lancer l'application
 
@@ -79,9 +111,17 @@ python -m acquisition.main
 La construction de l'exécutable est optionnelle. Elle nécessite les dépendances de build :
 
 ```powershell
-pip install -e ".[build]"
+cd acquisition_project
+python -m pip install -e ".[build]"
 .\build_exe.ps1
 ```
+
+Ces deux lignes sont deux commandes séparées :
+
+- `python -m pip install -e ".[build]"` installe le projet Python avec les dépendances nécessaires à la construction, en utilisant le Python de l'environnement actif.
+- `.\build_exe.ps1` lance ensuite le script PowerShell qui construit l'exécutable.
+
+Ne pas lancer `pip install -e .\build_exe.ps1` : `build_exe.ps1` est un script, pas un projet Python installable.
 
 L'application compilée est ensuite générée dans :
 
