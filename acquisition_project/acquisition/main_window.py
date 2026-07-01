@@ -492,7 +492,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Si aucune langue n'est disponible, on désactive le bouton d'enregistrement
         if not languages:
             self.button_record.setEnabled(False)
-            self.label_sentence.setText("Aucun corpus disponible")
+            self.label_sentence.setText("No corpus available")
             self.label_cpt_sentence.setText("0/0")
 
             # Le message d'erreur remplace une phrase normale :
@@ -610,7 +610,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
             # Remet la propriété QSS du bouton de test dans son état inactif
             self.button_test_micro.setProperty("testing", False)
-            self.button_test_micro.setText("Tester le micro")
+            self.button_test_micro.setText("Test Mic")
 
             # Force Qt à recalculer le style du bouton
             self.update_style(self.button_test_micro)
@@ -649,7 +649,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.is_recording = True
 
         # Modifie le texte du bouton
-        self.button_record.setText("Stop recording")
+        self.button_record.setText("Stop Recording")
 
         # Ajoute une propriété Qt pour appliquer un style QSS spécifique si besoin
         self.button_record.setProperty("recording", True)
@@ -684,7 +684,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.is_recording = False
 
         # Remet le texte initial du bouton
-        self.button_record.setText("Start recording")
+        self.button_record.setText("Start Recording")
 
         # Retire la propriété de style QSS liée à l'enregistrement
         self.button_record.setProperty("recording", False)
@@ -789,7 +789,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Si le test micro est déjà en cours, on l'arrête
         if self.media_manager.micro_test_is_running:
             self.media_manager.stop_micro_test()
-            self.button_test_micro.setText("Test micro")
+            self.button_test_micro.setText("Test Mic")
 
             self.button_test_micro.setProperty("testing", False)
 
@@ -806,7 +806,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # On démarre le test micro
         self.media_manager.start_micro_test(micro)
-        self.button_test_micro.setText("Stop test")
+        self.button_test_micro.setText("Stop Test")
 
         self.button_test_micro.setProperty("testing", True)
         
@@ -956,8 +956,8 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         while True:
             dialog = QInputDialog(self)
 
-            dialog.setWindowTitle("Identification utilisateur")
-            dialog.setLabelText("Veuillez renseigner votre prénom :")
+            dialog.setWindowTitle("User identification")
+            dialog.setLabelText("Please enter your first name:")
             dialog.setTextEchoMode(QLineEdit.EchoMode.Normal)
 
             dialog.setStyleSheet("""

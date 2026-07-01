@@ -211,7 +211,7 @@
           <string notr="true"/>
          </property>
          <property name="text">
-          <string>Record</string>
+          <string>Start Recording</string>
          </property>
         </widget>
        </item>
@@ -452,7 +452,7 @@ border-radius: 10px;</string>
                    <enum>Qt::ContextMenuPolicy::NoContextMenu</enum>
                   </property>
                   <property name="text">
-                   <string>Test micro</string>
+                   <string>Test Mic</string>
                   </property>
                  </widget>
                 </item>
@@ -464,7 +464,7 @@ border-radius: 10px;</string>
                    </font>
                   </property>
                   <property name="text">
-                   <string>Microphone volume:</string>
+                   <string>Microphone Volume:</string>
                   </property>
                  </widget>
                 </item>
@@ -548,7 +548,7 @@ border-radius: 10px;</string>
      <x>0</x>
      <y>0</y>
      <width>820</width>
-     <height>23</height>
+     <height>33</height>
     </rect>
    </property>
   </widget>

@@ -88,12 +88,6 @@ Depuis le dossier `acquisition_project`, avec l'environnement activé, ouvrir l'
 pyside6-designer acquisition\ui\main_pyside.ui
 ```
 
-Si la commande `pyside6-designer` n'est pas reconnue, utiliser la commande Python équivalente :
-
-```powershell
-python -m PySide6.scripts.pyside_tool designer acquisition\ui\main_pyside.ui
-```
-
 Après modification du fichier `.ui`, régénérer le fichier Python utilisé par l'application :
 
 ```powershell
