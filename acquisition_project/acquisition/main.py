@@ -22,7 +22,43 @@ from PySide6.QtWidgets import QApplication
 
 from acquisition.main_window import MyWindow
 
-APP_ICON_PATH = Path(__file__).resolve().parent / "assets" / "AVDataCollector.png"
+
+def get_asset_path(relative_path):
+    """
+    Retourne le chemin d'un fichier asset en mode développement ou après
+    compilation avec PyInstaller.
+    """
+    # En version compilée, PyInstaller expose les fichiers embarqués via _MEIPASS.
+    if hasattr(sys, "_MEIPASS"):
+        return Path(sys._MEIPASS) / relative_path
+
+    # En mode développement, les assets sont à côté du package acquisition.
+    return Path(__file__).resolve().parents[1] / relative_path
+
+
+APP_ICON_PATH = get_asset_path(Path("acquisition") / "assets" / "AVDataCollector.png")
+
+
+def configure_windows_app_id():
+    """
+    Déclare un identifiant d'application Windows explicite pour que la barre
+    des tâches utilise l'icône de l'application au lieu d'une icône générique.
+    """
+    # Cette configuration est propre à Windows.
+    if sys.platform != "win32":
+        return
+
+    try:
+        # ctypes permet d'appeler l'API Windows sans dépendance supplémentaire.
+        import ctypes
+
+        # L'identifiant doit être défini avant la création de QApplication.
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
+            "AVDataCollector.Acquisition"
+        )
+    except Exception:
+        # L'icône Qt reste configurée même si l'appel Windows échoue.
+        pass
 
 
 def parse_arguments():
@@ -56,14 +92,18 @@ if __name__ == "__main__":
     # Lit les arguments de la ligne de commande
     args = parse_arguments()
 
+    configure_windows_app_id()
+
     # création de l’application Qt
     app = QApplication(sys.argv)
     app.setApplicationName("AVDataCollector")
     app.setApplicationDisplayName("AVDataCollector")
-    app.setWindowIcon(QIcon(str(APP_ICON_PATH)))
+    app_icon = QIcon(str(APP_ICON_PATH))
+    app.setWindowIcon(app_icon)
     
     # Crée la fenêtre principale en lui transmettant le prénom éventuel
     window = MyWindow(user_firstname=args.firstname)
+    window.setWindowIcon(app_icon)
 
     # Affiche la fenêtre principale
     window.show()
