@@ -1,7 +1,6 @@
 # Important :
 # PyAV doit être importé avant PySide6.QtMultimedia
-# Sinon, certaines bibliothèques natives multimédia peuvent être chargées
-# dans un ordre qui provoque une erreur libgobject / glib
+# Sinon, certaines bibliothèques natives multimédia peuvent être chargées dans un ordre qui provoque une erreur libgobject / glib
 import av
 
 import argparse
@@ -11,9 +10,7 @@ from pathlib import Path
 # Quand ce fichier est lancé directement avec :
 #     python acquisition/main.py
 # Python ne connaît pas automatiquement le dossier racine du projet
-# On l'ajoute donc au PYTHONPATH pour que les imports de package
-# comme "from acquisition.main_window import MyWindow" fonctionnent aussi
-# bien en lancement direct qu'avec "python -m acquisition.main"
+# On l'ajoute donc au PYTHONPATH pour que les imports de package comme "from acquisition.main_window import MyWindow" fonctionnent aussi bien en lancement direct qu'avec "python -m acquisition.main"
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -30,7 +27,7 @@ def get_asset_path(relative_path):
     """
     # En version compilée, PyInstaller expose les fichiers embarqués via _MEIPASS.
     if hasattr(sys, "_MEIPASS"):
-        return Path(sys._MEIPASS) / relative_path
+        return Path(sys._MEIPASS) / relative_path # type: ignore
 
     # En mode développement, les assets sont à côté du package acquisition.
     return Path(__file__).resolve().parents[1] / relative_path

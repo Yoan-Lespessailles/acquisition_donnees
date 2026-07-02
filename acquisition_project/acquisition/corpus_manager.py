@@ -23,7 +23,6 @@ class CorpusManager:
         self.corpus_dir = CONFIG["paths"]["corpus_dir"]
 
         # Nombre total de phrases prévues pour une session
-        # Dépend de la manière dont on veut utiliser le corpus
         self.sentence_total = 0
 
         # Récupère le mode choisi dans la configuration
@@ -195,8 +194,7 @@ class CorpusManager:
             return 0
 
         # Compte le nombre de phrases générables avec le template 1
-        # On compte la liste "subject", car chaque phrase générée consomme
-        # un sujet, un verbe, un nombre et un groupe nominal
+        # On compte la liste "subject", car chaque phrase générée consomme un sujet, un verbe, un nombre et un groupe nominal
         total_template_1 = len(self.corpus_data["template_1"]["subject"])
 
         # Compte le nombre de phrases naturelles disponibles dans le template 2
@@ -272,24 +270,21 @@ class CorpusManager:
             return "Aucun corpus chargé"
 
         # Mode 0 ou 1 :
-        # on utilise le template 1 si ce mode l'autorise
-        # et s'il reste encore des éléments disponibles
+        # on utilise le template 1 si ce mode l'autorise et s'il reste encore des éléments disponibles
         if self.sentence_mode in (0, 1) and self.corpus_data["template_1"]["subject"]:
             self.current_sentence = self.build_template_1_sentence()
             self.current_template_type = "template_1"
             return self.current_sentence
 
         # Mode 0 ou 2 :
-        # on utilise le template 2 si ce mode l'autorise
-        # et s'il reste encore des phrases disponibles
+        # on utilise le template 2 si ce mode l'autorise et s'il reste encore des phrases disponibles
         if self.sentence_mode in (0, 2) and self.corpus_data["template_2"]["sentences"]:
             self.current_sentence = self.corpus_data["template_2"]["sentences"][-1]["text"]
             self.sentence_with_digit = self.corpus_data["template_2"]["sentences"][-1]["numeric"]
             self.current_template_type = "template_2"
             return self.current_sentence
 
-        # Si aucun contenu compatible avec le mode choisi n'est disponible,
-        # la session est terminée
+        # Si aucun contenu compatible avec le mode choisi n'est disponible, la session est terminée
         self.current_sentence = "Fin de la session d'enregistrement"
         self.current_template_type = None
 
@@ -323,7 +318,7 @@ class CorpusManager:
         for list_name in structure:
 
             # Cas particulier du nombre :
-            # il contient maintenant deux informations : "text" et "value"
+            # il contient maintenant deux informations : "text" et "value" -> on veut afficher le texte mais garder la valeur numérique pour les métadonnées
             if list_name == "number":
                 number_data = self.corpus_data["template_1"][list_name][-1]  # type: ignore
 
@@ -373,14 +368,12 @@ class CorpusManager:
             print("Toutes les phrases ont été lues")
             return False
 
-        # Si la phrase courante vient du template 1,
-        # on retire le dernier élément de chaque liste utilisée pour construire la phrase
+        # Si la phrase courante vient du template 1, on retire le dernier élément de chaque liste utilisée pour construire la phrase
         if self.current_template_type == "template_1":
             for list_name in self.corpus_data["template_1"]["structure"]:
                 self.corpus_data["template_1"][list_name].pop()
 
-        # Si la phrase courante vient du template 2,
-        # on retire la phrase naturelle actuellement utilisée
+        # Si la phrase courante vient du template 2, on retire la phrase naturelle actuellement utilisée
         elif self.current_template_type == "template_2":
             self.corpus_data["template_2"]["sentences"].pop()
 
@@ -414,7 +407,7 @@ class CorpusManager:
     """
 
         # Si aucun corpus n'est chargé, on considère que la session est terminée
-        # Cela évite d'autoriser un enregistrement sans phrase disponible
+        # Ça évite d'autoriser un enregistrement sans phrase disponible
         if self.corpus_data is None:
             return True
 

@@ -181,8 +181,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         """
 
         # Widgets texte simples : ils partagent une taille de police de base
-        # On les garde séparés des ComboBox et boutons car ces widgets ont aussi
-        # besoin d'une hauteur minimale adaptée
+        # On les garde séparés des ComboBox et boutons car ces widgets ont aussi besoin d'une hauteur minimale adaptée
         self._standard_text_widgets = [
             self.label_select_language,
             self.label_micro,
@@ -208,8 +207,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         ]
 
         # Les labels courts peuvent revenir à la ligne si la fenêtre devient étroite
-        # Leur QSizePolicy leur permet de s'étendre horizontalement sans imposer
-        # une largeur fixe au layout
+        # Leur QSizePolicy leur permet de s'étendre horizontalement sans imposer une largeur fixe au layout
         for label in self._standard_text_widgets :
             label.setWordWrap(True)
             label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
@@ -266,9 +264,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         super().showEvent(event)
         if hasattr(self, "_standard_text_widgets"):
-            # Au lancement, Qt ne connaît pas toujours les tailles finales des widgets
-            # pendant __init__. singleShot(0, ...) reporte le calcul juste après le
-            # premier passage de layout, lorsque les dimensions sont stabilisées
+            # Au lancement, Qt ne connaît pas toujours les tailles finales des widgets pendant __init__. singleShot(0, ...) reporte le calcul juste après le premier passage de layout, lorsque les dimensions sont stabilisées
             QTimer.singleShot(0, self.update_responsive_text_sizes)
 
 
@@ -290,8 +286,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         record_button_size = round(12 * scale)
         record_dot_size = max(12, round(20 * scale))
 
-        # Labels standards : police de base, avec une taille légèrement plus discrète
-        # pour le compteur de phrases
+        # Labels standards : police de base, avec une taille légèrement plus discrète pour le compteur de phrases
         for widget in self._standard_text_widgets:
             font_size = standard_size
             if widget is self.label_cpt_sentence:
@@ -299,14 +294,12 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
             self.set_widget_font_size(widget, font_size)
 
-        # ComboBox : on adapte la police mais aussi la hauteur, sinon le texte peut
-        # sembler compressé verticalement lorsque la police augmente
+        # ComboBox : on adapte la police mais aussi la hauteur, sinon le texte peut sembler compressé verticalement lorsque la police augmente
         for combo_box in self._responsive_combo_boxes:
             self.set_widget_font_size(combo_box, combo_size)
             combo_box.setMinimumHeight(max(26, round(30 * scale)))
 
-        # Boutons : le bouton d'enregistrement reçoit une taille plus imposante
-        # que le bouton de test micro pour rester visuellement prioritaire
+        # Boutons : le bouton d'enregistrement reçoit une taille plus imposante que le bouton de test micro pour rester visuellement prioritaire
         for button in self._responsive_buttons:
             if button is self.button_record:
                 font_size = record_button_size
@@ -323,8 +316,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Le rond rouge REC suit aussi la taille de la fenêtre
         self.set_record_dot_size(record_dot_size)
 
-        # La phrase principale est ajustée selon l'espace réellement disponible
-        # dans son QLabel, pas seulement selon la taille globale de la fenêtre
+        # La phrase principale est ajustée selon l'espace réellement disponible dans son QLabel, pas seulement selon la taille globale de la fenêtre
         self.fit_label_text(
             self.label_sentence,
             min_size=max(10, round(12 * scale)),
@@ -466,8 +458,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Bouton de test micro
         self.button_test_micro.clicked.connect(self.button_test_micro_clicked)
 
-        # Quand MediaManager calcule un nouveau niveau micro,
-        # on met à jour la ProgressBar
+        # Quand MediaManager calcule un nouveau niveau micro, on met à jour la ProgressBar
         self.media_manager.micro_level_changed.connect(self.update_micro_level)
 
     # -----------------------------------------------------------------
@@ -704,7 +695,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
 
         # Attend un peu avant de lire le fichier MP4
-        # Cela laisse le temps à Qt de finaliser le conteneur vidéo
+        # Ça laisse le temps à Qt de finaliser le conteneur vidéo
         QTimer.singleShot(500, self.finalize_recording)
 
 

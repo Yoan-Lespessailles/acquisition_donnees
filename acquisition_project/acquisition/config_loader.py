@@ -8,9 +8,7 @@ def load_config():
     """
     Charge le fichier config.yaml et retourne un dictionnaire de configuration.
 
-    Les chemins définis dans le YAML sont d'abord conservés en version relative
-    avec le suffixe "_rel", puis remplacés par leur version absolue pour le
-    reste de l'application.
+    On conserve les chemins relatifs du YAML ainsi que les chemins absolus. Les chemins relatifs sont stockés avec le suffixe "_rel", puis remplacés par leur version absolue pour le reste de l'application.
     """
 
     # Dossier du package acquisition_project
@@ -28,11 +26,24 @@ def load_config():
 
     # Ouverture et lecture du fichier YAML
     with open(config_path, "r", encoding="utf-8") as file:
-        config = yaml.safe_load(file)
+        user_config = yaml.safe_load(file)
 
-    # Sécurité : si le fichier YAML est vide, on retourne un dictionnaire vide
-    if config is None:
-        config = {}
+    # Si le YAML est vide, on utilise uniquement les valeurs par défaut
+    config = user_config or {}
+
+    # Valeurs par défaut si elles ne sont pas définies dans config.yaml ou si le YAML est incomplet
+    config.setdefault("paths", {})
+    config["paths"].setdefault("data_dir", "data")
+    config["paths"].setdefault("corpus_dir", "corpus")
+
+    config.setdefault("recording", {})
+    config["recording"].setdefault("audio_bitrate", 128000)
+    config["recording"].setdefault("video_bitrate_low", 8000000)
+    config["recording"].setdefault("video_bitrate_medium", 12000000)
+    config["recording"].setdefault("video_bitrate_high", 20000000)
+
+    config.setdefault("sentence", {})
+    config["sentence"].setdefault("mode", 0)
 
     # Ajoute le chemin racine du projet dans la configuration
     config["base_dir"] = base_dir
