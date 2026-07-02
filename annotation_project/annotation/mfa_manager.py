@@ -292,10 +292,11 @@ class MfaManager:
         # Vérifie que le modèle acoustique est installé, et l'installe si besoin
         self.ensure_acoustic_model_installed()
 
-        # Prépare la commande MFA
+        # Force MFA à reconstruire son état interne pour éviter les références vers d'anciens fichiers audio supprimés ou remplacés.
         command = [
             "mfa",
             "validate",
+            "--clean",
             str(self.mfa_input_dir),
             str(self.dictionary_path),
             self.acoustic_model,
@@ -340,10 +341,11 @@ class MfaManager:
         # Supprime uniquement les anciens TextGrid correspondant aux vidéos traitées
         self.remove_existing_textgrids()
 
-        # Prépare la commande MFA
+        # Force MFA à reconstruire son état interne pour éviter les références vers d'anciens fichiers audio supprimés ou remplacés.
         command = [
             "mfa",
             "align",
+            "--clean",
             str(self.mfa_input_dir),
             str(self.dictionary_path),
             self.acoustic_model,
