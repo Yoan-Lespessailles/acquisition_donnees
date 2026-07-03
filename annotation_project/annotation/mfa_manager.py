@@ -1,6 +1,8 @@
+import csv
 import re
 import subprocess
 
+from datetime import datetime
 from pathlib import Path
 
 from annotation.ffmpeg_utils import find_ffmpeg_executable
@@ -292,7 +294,8 @@ class MfaManager:
         # Vérifie que le modèle acoustique est installé, et l'installe si besoin
         self.ensure_acoustic_model_installed()
 
-        # Force MFA à reconstruire son état interne pour éviter les références vers d'anciens fichiers audio supprimés ou remplacés.
+        # Force MFA à reconstruire son état interne
+        # Évite les références vers d'anciens fichiers audio supprimés ou remplacés
         command = [
             "mfa",
             "validate",
@@ -341,7 +344,8 @@ class MfaManager:
         # Supprime uniquement les anciens TextGrid correspondant aux vidéos traitées
         self.remove_existing_textgrids()
 
-        # Force MFA à reconstruire son état interne pour éviter les références vers d'anciens fichiers audio supprimés ou remplacés.
+        # Force MFA à reconstruire son état interne
+        # Évite les références vers d'anciens fichiers audio supprimés ou remplacés
         command = [
             "mfa",
             "align",
@@ -358,6 +362,71 @@ class MfaManager:
 
         # Lance MFA
         subprocess.run(command, check=True)
+
+        # Adapte le fichier d'analyse MFA au vocabulaire et aux métadonnées du projet
+        self.update_alignment_analysis_file()
+
+    def update_alignment_analysis_file(self):
+        """
+        Remplace la colonne MFA "speaker" par "user" dans alignment_analysis.csv.
+
+        MFA utilise le terme "speaker" pour désigner le dossier de regroupement
+        des fichiers audio. Dans ce projet, l'utilisateur vient de user_firstname
+        dans les métadonnées associées à chaque fichier.
+        """
+
+        # Fichier de métriques produit automatiquement par MFA après l'alignement
+        alignment_analysis_path = self.mfa_aligned_dir / "alignment_analysis.csv"
+
+        # Ne fait rien si MFA n'a pas généré le fichier d'analyse
+        if not alignment_analysis_path.exists():
+            return
+
+        # Associe chaque fichier au prénom de l'utilisateur indiqué dans ses métadonnées
+        user_by_file = {}
+
+        for media_path, metadata_path in self.valid_pairs:
+            media_path = Path(media_path)
+            metadata_path = Path(metadata_path)
+            metadata = csv_reader(metadata_path)
+
+            user_by_file[media_path.stem] = metadata.get("user_firstname", "")
+
+        with alignment_analysis_path.open("r", encoding="utf-8", newline="") as csv_file:
+            reader = csv.DictReader(csv_file)
+            rows = list(reader)
+
+            # Ne modifie pas le fichier si la colonne MFA attendue est absente
+            if reader.fieldnames is None or "speaker" not in reader.fieldnames:
+                return
+
+            fieldnames = []
+            # Remplace speaker par user, sans changer l'ordre des autres colonnes
+            # fieldnames est créé automatiquement par DictReader
+            for fieldname in reader.fieldnames:
+                if fieldname == "speaker":
+                    fieldnames.append("user")
+                else:
+                    fieldnames.append(fieldname)
+
+        # Remplit user avec le prénom de l'utilisateur quand il est disponible
+        for row in rows:
+            previous_user = row.pop("speaker")
+            user = user_by_file.get(row.get("file", ""), "")
+            row["user"] = user or previous_user
+
+        # Réécrit le CSV avec l'en-tête adapté au vocabulaire du projet
+        with alignment_analysis_path.open("w", encoding="utf-8", newline="") as csv_file:
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
+
+        # Renomme le fichier d'analyse avec la date et l'heure du traitement
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        timestamped_path = (
+            self.mfa_aligned_dir / f"alignement_analysis_{timestamp}.csv"
+        )
+        alignment_analysis_path.rename(timestamped_path)
 
     def prepare_validate_and_align(self):
         """
