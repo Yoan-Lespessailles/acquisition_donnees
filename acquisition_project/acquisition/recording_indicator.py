@@ -51,7 +51,7 @@ class RecordingIndicator :
         # Le rond rouge est actuellement masqué
         self.blink_visible = False
 
-        # Au lancement de l'application, l'indicateur est caché.
+        # Au lancement de l'application, l'indicateur est caché
         self.hide()
     
 
@@ -61,17 +61,17 @@ class RecordingIndicator :
         Affiche l'indicateur d'enregistrement et remet son affichage à zéro.
         """
 
-        # Remet le compteur à zéro pour un nouvel enregistrement.
+        # Remet le compteur à zéro pour un nouvel enregistrement
         self.record_seconds = 0
 
-        # Affiche le texte initial du chrono.
+        # Affiche le texte initial du chrono
         self.set_timer_text("REC. 00:00")
 
-        # Le point rouge commence visible.
+        # Le point rouge commence visible
         self.blink_visible = True
         self.label_record_dot.setVisible(True)
 
-        # Affiche les deux labels.
+        # Affiche les deux labels
         self.label_record_timer.show()
         self.label_record_dot.show()
 
@@ -90,10 +90,10 @@ class RecordingIndicator :
         Démarre les timers de l'indicateur d'enregistrement.
         """
 
-        # Démarre le clignotement du point rouge.
+        # Démarre le clignotement du point rouge
         self.blink_timer.start()
 
-        # Démarre le chrono.
+        # Démarre le chrono
         self.record_timer.start()
 
 
@@ -102,10 +102,10 @@ class RecordingIndicator :
         Arrête les timers de l'indicateur d'enregistrement.
         """
 
-        # Arrête le clignotement.
+        # Arrête le clignotement
         self.blink_timer.stop()
 
-        # Arrête le chrono.
+        # Arrête le chrono
         self.record_timer.stop()
 
 

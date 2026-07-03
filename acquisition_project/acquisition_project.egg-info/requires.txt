@@ -1,0 +1,6 @@
+av>=12.0
+PySide6==6.11.0
+PyYAML==6.0.3
+
+[build]
+PyInstaller>=6

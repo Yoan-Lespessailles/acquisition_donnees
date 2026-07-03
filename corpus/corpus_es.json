@@ -1,6 +1,7 @@
 {
     "language_code": "es",
-    "language_name": "Espagnol",
+    "language_name": "Spanish",
+    "mfa_model_name": "spanish_mfa",
     "whisper_code": "es",
     "syntax_order": "SVO",
     "template_1": {
@@ -94,44 +95,44 @@
         "type": "fixed",
         "sentences": [
             {
-                "text": "La niña juega con una llave pequeña junto a la fuente.",
-                "numeric": "La niña juega con una llave pequeña junto a la fuente."
+                "text": "La niña juega cerca de la fuente y ve una llave pequeña en el fondo del agua.",
+                "numeric": "La niña juega cerca de la fuente y ve una llave pequeña en el fondo del agua."
             },
             {
-                "text": "Ramón prepara chocolate caliente para Beatriz y Jorge.",
-                "numeric": "Ramón prepara chocolate caliente para Beatriz y Jorge."
+                "text": "Fuera cae la nieve mientras Ramón prepara chocolate caliente para Beatriz y Jorge.",
+                "numeric": "Fuera cae la nieve mientras Ramón prepara chocolate caliente para Beatriz y Jorge."
             },
             {
-                "text": "Guillermo guarda cuatro juguetes viejos en una caja azul.",
-                "numeric": "Guillermo guarda 4 juguetes viejos en una caja azul."
+                "text": "Guillermo guarda en su caja azul cuatro juguetes viejos que ya no usa.",
+                "numeric": "Guillermo guarda en su caja azul 4 juguetes viejos que ya no usa."
             },
             {
-                "text": "El perro corre rápido por la calle seca.",
-                "numeric": "El perro corre rápido por la calle seca."
+                "text": "El perro roba un chorizo seco en una carnicería y sale corriendo por la calle.",
+                "numeric": "El perro roba un chorizo seco en una carnicería y sale corriendo por la calle."
             },
             {
-                "text": "Cecilia dice que cinco platos están limpios.",
-                "numeric": "Cecilia dice que 5 platos están limpios."
+                "text": "Cecilia recoge la mesa, lava cinco platos y guarda los cubiertos.",
+                "numeric": "Cecilia recoge la mesa, lava 5 platos y guarda los cubiertos."
             },
             {
-                "text": "Diego oye un ruido fuerte bajo la ventana.",
-                "numeric": "Diego oye un ruido fuerte bajo la ventana."
+                "text": "Diego oye un ruido sordo bajo la ventana: la vecina ha tirado una maceta.",
+                "numeric": "Diego oye un ruido sordo bajo la ventana: la vecina ha tirado una maceta."
             },
             {
-                "text": "Ángel enseña treinta y dos dibujos nuevos.",
-                "numeric": "Ángel enseña 32 dibujos nuevos."
+                "text": "Ángel enseña a sus padres treinta y dos dibujos nuevos que hizo este mes.",
+                "numeric": "Ángel enseña a sus padres 32 dibujos nuevos que hizo este mes."
             },
             {
-                "text": "Chema recoge flores rojas cerca del jardín.",
-                "numeric": "Chema recoge flores rojas cerca del jardín."
+                "text": "Chema recoge flores rojas en el jardín para regalar un ramo a su madre.",
+                "numeric": "Chema recoge flores rojas en el jardín para regalar un ramo a su madre."
             },
             {
-                "text": "Nuria busca agua fría en la cocina.",
-                "numeric": "Nuria busca agua fría en la cocina."
+                "text": "Cuando vuelve del deporte, Nuria busca una botella de agua fría en la nevera de la cocina.",
+                "numeric": "Cuando vuelve del deporte, Nuria busca una botella de agua fría en la nevera de la cocina."
             },
             {
-                "text": "Pablo vende pan crujiente y queso fresco.",
-                "numeric": "Pablo vende pan crujiente y queso fresco."
+                "text": "Pablo vende pan crujiente, queso fresco y bollos pequeños en la plaza del mercado.",
+                "numeric": "Pablo vende pan crujiente, queso fresco y bollos pequeños en la plaza del mercado."
             }
         ]
     }

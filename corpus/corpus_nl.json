@@ -1,6 +1,7 @@
 {
     "language_code": "nl",
-    "language_name": "Néerlandais",
+    "language_name": "Dutch",
+    "mfa_model_name": "dutch_cv",
     "whisper_code": "nl",
     "syntax_order": "SVO",
     "template_1": {
@@ -94,44 +95,44 @@
         "type": "fixed",
         "sentences": [
             {
-                "text": "De jongen fietst langzaam door de groene straat.",
-                "numeric": "De jongen fietst langzaam door de groene straat."
+                "text": "De jongen fietst langzaam door een rustige straat met hoge bomen.",
+                "numeric": "De jongen fietst langzaam door een rustige straat met hoge bomen."
             },
             {
-                "text": "Een vrouw koopt verse kaas en leuke bloemen op de markt.",
-                "numeric": "Een vrouw koopt verse kaas en leuke bloemen op de markt."
+                "text": "Een vrouw koopt verse kaas en gele bloemen op de markt.",
+                "numeric": "Een vrouw koopt verse kaas en gele bloemen op de markt."
             },
             {
-                "text": "Het kleine meisje geeft haar broer een blauw boek.",
-                "numeric": "Het kleine meisje geeft haar broer een blauw boek."
+                "text": "Het kleine meisje geeft haar broer een boek met een blauwe kaft.",
+                "numeric": "Het kleine meisje geeft haar broer een boek met een blauwe kaft."
             },
             {
-                "text": "Willem vraagt of Julia vandaag thuis blijft.",
-                "numeric": "Willem vraagt of Julia vandaag thuis blijft."
+                "text": "Willem vraagt of Julia vandaag thuis blijft, omdat hij haar wil uitnodigen.",
+                "numeric": "Willem vraagt of Julia vandaag thuis blijft, omdat hij haar wil uitnodigen."
             },
             {
-                "text": "De kat springt rustig achter de zachte bank.",
-                "numeric": "De kat springt rustig achter de zachte bank."
+                "text": "De kat springt rustig op de bank en gaat op een zacht kussen liggen.",
+                "numeric": "De kat springt rustig op de bank en gaat op een zacht kussen liggen."
             },
             {
-                "text": "Noor schrijft negen korte zinnen in haar schrift.",
-                "numeric": "Noor schrijft 9 korte zinnen in haar schrift."
+                "text": "Noor schrijft een kort verhaal in haar schrift en leest het zacht voor.",
+                "numeric": "Noor schrijft een kort verhaal in haar schrift en leest het zacht voor."
             },
             {
-                "text": "Bram brengt warme soep naar zijn oude buurman.",
-                "numeric": "Bram brengt warme soep naar zijn oude buurman."
+                "text": "Bram brengt warme soep naar zijn oude buurman, die verkouden is.",
+                "numeric": "Bram brengt warme soep naar zijn oude buurman, die verkouden is."
             },
             {
-                "text": "Eva hoort muziek uit de open keuken.",
-                "numeric": "Eva hoort muziek uit de open keuken."
+                "text": "De deur van de keuken staat open en Eva hoort zachte muziek.",
+                "numeric": "De deur van de keuken staat open en Eva hoort zachte muziek."
             },
             {
-                "text": "Femke legt vijf rode sleutels naast het raam.",
-                "numeric": "Femke legt 5 rode sleutels naast het raam."
+                "text": "Femke legt haar rode sleutels op tafel naast het raam.",
+                "numeric": "Femke legt haar rode sleutels op tafel naast het raam."
             },
             {
-                "text": "Gijs zegt rustig goedendag tegen de buurman.",
-                "numeric": "Gijs zegt rustig goedendag tegen de buurman."
+                "text": "Gijs loopt rustig door de straat en groet zijn buurman vriendelijk.",
+                "numeric": "Gijs loopt rustig door de straat en groet zijn buurman vriendelijk."
             }
         ]
     }

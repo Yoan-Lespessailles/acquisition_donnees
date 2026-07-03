@@ -1,6 +1,7 @@
 {
     "language_code": "it",
-    "language_name": "Italien",
+    "language_name": "Italian",
+    "mfa_model_name": "italian_cv",
     "whisper_code": "it",
     "syntax_order": "SVO",
     "template_1": {
@@ -94,44 +95,44 @@
         "type": "fixed",
         "sentences": [
             {
-                "text": "La ragazza guarda lo zaino vicino alla cucina.",
-                "numeric": "La ragazza guarda lo zaino vicino alla cucina."
+                "text": "La ragazza guarda lo zaino appoggiato sul tavolo della cucina.",
+                "numeric": "La ragazza guarda lo zaino appoggiato sul tavolo della cucina."
             },
             {
-                "text": "Giulia sceglie una bottiglia fresca per la famiglia.",
-                "numeric": "Giulia sceglie una bottiglia fresca per la famiglia."
+                "text": "Giulia cerca una bottiglia fresca nel frigorifero per la famiglia.",
+                "numeric": "Giulia cerca una bottiglia fresca nel frigorifero per la famiglia."
             },
             {
-                "text": "Lo gnomo disegna cinque foglie gialle sul quaderno.",
-                "numeric": "Lo gnomo disegna 5 foglie gialle sul quaderno."
+                "text": "È un dipinto in cui uno gnomo disegna cinque foglie gialle sul quaderno.",
+                "numeric": "È un dipinto in cui uno gnomo disegna 5 foglie gialle sul quaderno."
             },
             {
-                "text": "Francesca prepara una zuppa calda con poco sale.",
-                "numeric": "Francesca prepara una zuppa calda con poco sale."
+                "text": "Francesca prepara una zuppa molto calda e aggiunge sale e spezie.",
+                "numeric": "Francesca prepara una zuppa molto calda e aggiunge sale e spezie."
             },
             {
-                "text": "Il ragazzo sistema le calze azzurre sul divano.",
-                "numeric": "Il ragazzo sistema le calze azzurre sul divano."
+                "text": "Il ragazzo prende le calze azzurre rimaste sul divano.",
+                "numeric": "Il ragazzo prende le calze azzurre rimaste sul divano."
             },
             {
-                "text": "La signora porta dieci chiavi leggere nella borsa.",
-                "numeric": "La signora porta 10 chiavi leggere nella borsa."
+                "text": "La signora ha messo dieci chiavi nella borsa; non è più leggera come prima.",
+                "numeric": "La signora ha messo 10 chiavi nella borsa; non è più leggera come prima."
             },
             {
-                "text": "Paolo mette quattro piatti nuovi vicino al tavolo.",
-                "numeric": "Paolo mette 4 piatti nuovi vicino al tavolo."
+                "text": "Paolo mette quattro piatti sul tavolo da pranzo; il pasto è pronto.",
+                "numeric": "Paolo mette 4 piatti sul tavolo da pranzo; il pasto è pronto."
             },
             {
-                "text": "Anna conta quattro giochi piccoli davanti alla scuola.",
-                "numeric": "Anna conta 4 giochi piccoli davanti alla scuola."
+                "text": "Anna conta i suoi giochi prima di andare a scuola.",
+                "numeric": "Anna conta i suoi giochi prima di andare a scuola."
             },
             {
-                "text": "Roberto mette due sciarpe rosse sulla sedia.",
-                "numeric": "Roberto mette 2 sciarpe rosse sulla sedia."
+                "text": "Roberto posa le sue due sciarpe rosse sulla sedia; non sa quale scegliere.",
+                "numeric": "Roberto posa le sue 2 sciarpe rosse sulla sedia; non sa quale scegliere."
             },
             {
-                "text": "Sofia sistema una maglia bianca sotto la finestra.",
-                "numeric": "Sofia sistema una maglia bianca sotto la finestra."
+                "text": "Sofia appende il suo magnifico maglione bianco su una gruccia nell'armadio.",
+                "numeric": "Sofia appende il suo magnifico maglione bianco su una gruccia nell'armadio."
             }
         ]
     }

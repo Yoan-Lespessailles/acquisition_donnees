@@ -1,6 +1,7 @@
 {
     "language_code": "pl",
     "language_name": "Polonais",
+    "mfa_model_name": "polish_mfa",
     "whisper_code": "pl",
     "syntax_order": "SVO",
     "template_1": {
@@ -94,44 +95,44 @@
         "type": "fixed",
         "sentences": [
             {
-                "text": "Dziecko cicho siedzi przy zielonym stole.",
-                "numeric": "Dziecko cicho siedzi przy zielonym stole."
+                "text": "Dziecko siedzi przy zielonym stole, który pomalowało z tatą.",
+                "numeric": "Dziecko siedzi przy zielonym stole, który pomalowało z tatą."
             },
             {
-                "text": "Babcia smaży świeże pączki w dużej kuchni.",
-                "numeric": "Babcia smaży świeże pączki w dużej kuchni."
+                "text": "Babcia smaży pączki w dużej kuchni, a świeży zapach czuć w całym domu.",
+                "numeric": "Babcia smaży pączki w dużej kuchni, a świeży zapach czuć w całym domu."
             },
             {
-                "text": "Gruby kot szybko skacze przez wąski płot.",
-                "numeric": "Gruby kot szybko skacze przez wąski płot."
+                "text": "Mimo swojej tuszy gruby kot zwinnie skacze przez płot sąsiada.",
+                "numeric": "Mimo swojej tuszy gruby kot zwinnie skacze przez płot sąsiada."
             },
             {
-                "text": "Słoik dżemu stoi obok zielonego garnka.",
-                "numeric": "Słoik dżemu stoi obok zielonego garnka."
+                "text": "Mama stawia słoik dżemu obok zielonego garnka na kuchennym stole.",
+                "numeric": "Mama stawia słoik dżemu obok zielonego garnka na kuchennym stole."
             },
             {
-                "text": "Janek dzwoni do Beaty po ważnej lekcji.",
-                "numeric": "Janek dzwoni do Beaty po ważnej lekcji."
+                "text": "Janek dzwoni do Beaty po ważnej lekcji, żeby opowiedzieć jej o sprawdzianie.",
+                "numeric": "Janek dzwoni do Beaty po ważnej lekcji, żeby opowiedzieć jej o sprawdzianie."
             },
             {
-                "text": "Mała dziewczynka znajduje żółty klucz.",
-                "numeric": "Mała dziewczynka znajduje żółty klucz."
+                "text": "Mała dziewczynka znajduje żółty klucz, gdy bawi się w ogrodzie za domem.",
+                "numeric": "Mała dziewczynka znajduje żółty klucz, gdy bawi się w ogrodzie za domem."
             },
             {
-                "text": "Piotr rysuje czarny krzyż na kartce.",
-                "numeric": "Piotr rysuje czarny krzyż na kartce."
+                "text": "Piotr zaznacza czarny krzyż na mapie piratów, którą narysował z kolegami.",
+                "numeric": "Piotr zaznacza czarny krzyż na mapie piratów, którą narysował z kolegami."
             },
             {
-                "text": "Zosia niesie świeży chleb i ciepłą zupę.",
-                "numeric": "Zosia niesie świeży chleb i ciepłą zupę."
+                "text": "Zosia niesie świeży chleb i ciepłą zupę mężowi, który wrócił z pracy.",
+                "numeric": "Zosia niesie świeży chleb i ciepłą zupę mężowi, który wrócił z pracy."
             },
             {
-                "text": "Łukasz mówi spokojnie, gdy pada deszcz.",
-                "numeric": "Łukasz mówi spokojnie, gdy pada deszcz."
+                "text": "Łukasz spokojnie tłumaczy dzieciom zadanie, chociaż za oknem pada deszcz.",
+                "numeric": "Łukasz spokojnie tłumaczy dzieciom zadanie, chociaż za oknem pada deszcz."
             },
             {
-                "text": "Teresa liczy trzydzieści sześć jasnych obrazków.",
-                "numeric": "Teresa liczy 36 jasnych obrazków."
+                "text": "Teresa liczy trzydzieści sześć obrazków, które dzieci przykleiły na dużej tablicy.",
+                "numeric": "Teresa liczy 36 obrazków, które dzieci przykleiły na dużej tablicy."
             }
         ]
     }

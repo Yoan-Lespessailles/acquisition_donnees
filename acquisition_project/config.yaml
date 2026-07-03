@@ -9,8 +9,7 @@ recording:
   video_bitrate_high: 20000000
 
 sentence:
-  # Mode de sélection des templates utilisés pendant la session.
-  #
+  # -- Mode de sélection des templates utilisés pendant la session --
   # 0 = mode par défaut : utilise le template 1 et le template 2
   # 1 = utilise uniquement le template 1
   # 2 = utilise uniquement le template 2
