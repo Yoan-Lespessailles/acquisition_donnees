@@ -29,7 +29,13 @@ where.exe ffmpeg
 ffmpeg -filters | findstr ass
 ```
 
-La commande doit afficher une ligne contenant `ass`. Ensuite, créer l'environnement :
+La commande doit afficher une ligne contenant `ass`, par exemple :
+
+```text
+ass               V->V       Render ASS subtitles onto input video
+```
+
+Ensuite, créer l'environnement :
 
 ```powershell
 cd C:\chemin\vers\acquisition_donnees\annotation_project
@@ -50,6 +56,8 @@ conda env create -f environment.yml
 ```
 
 Ces canaux appartiennent à l'installation Anaconda. L'environnement du projet continuera ensuite à installer ses dépendances depuis `conda-forge`, conformément à `environment.yml`.
+
+Si `where.exe ffmpeg` ne trouve rien après activation de Conda, le programme cherchera aussi automatiquement le FFmpeg installé par `winget` dans le dossier utilisateur Windows.
 
 ### Linux
 
@@ -105,46 +113,7 @@ L'environnement n'a besoin d'être créé qu'une seule fois. Pour les utilisatio
 conda activate annotation
 ```
 
-## 3. Vérifier le support des sous-titres ASS
-
-L'application génère des fichiers de sous-titres `.ass`, puis FFmpeg les incruste dans les vidéos. FFmpeg doit donc disposer du filtre `ass`.
-
-La vérification ci-dessous est obligatoire avant de générer les vidéos sous-titrées.
-
-Sous Windows :
-
-```powershell
-ffmpeg -filters | findstr ass
-```
-
-Sous Linux ou macOS :
-
-```bash
-ffmpeg -filters | grep ass
-```
-
-La sortie doit contenir une ligne proche de :
-
-```text
-ass               V->V       Render ASS subtitles onto input video
-```
-
-Si le filtre `ass` est absent sous Windows, installer une version complète de FFmpeg :
-
-```powershell
-winget install Gyan.FFmpeg
-```
-
-Fermer puis rouvrir le terminal, et vérifier à nouveau :
-
-```powershell
-where ffmpeg
-ffmpeg -filters | findstr ass
-```
-
-Si `where.exe ffmpeg` ne trouve rien après activation de Conda, le programme cherchera aussi automatiquement le FFmpeg installé par `winget` dans le dossier utilisateur Windows.
-
-## 4. Préparer les données
+## 3. Préparer les données
 
 Glisser le dossier `data` généré par l'application **AVDataCollector** à la racine du dépôt `acquisition_donnees`. L'application d'acquisition se charge déjà de produire des données conformes au format attendu.
 
@@ -160,7 +129,7 @@ Pour une autre langue, créer le fichier `<code>_custom.dict`, par exemple `it_c
 
 Si aucun dictionnaire personnalisé n'existe, le programme vérifie si le dictionnaire MFA officiel correspondant est installé. S'il est absent, il le télécharge automatiquement. Le modèle acoustique MFA est également vérifié et téléchargé automatiquement si nécessaire.
 
-## 5. Organigramme fonctionnel de l'annotation
+## 4. Organigramme fonctionnel de l'annotation
 
 Le processus d'annotation part d'une langue et d'un dossier `data`, puis associe chaque vidéo à son fichier de métadonnées. Les fichiers compatibles sont préparés pour MFA, alignés, puis transformés en sous-titres phonétiques incrustés dans une copie de la vidéo originale.
 
@@ -212,7 +181,7 @@ flowchart TD
     class E,T error;
 ```
 
-## 6. Lancer l'annotation
+## 5. Lancer l'annotation
 
 Depuis le dossier `annotation_project`, avec l'environnement activé, contrôler d'abord les fichiers détectés :
 
@@ -232,7 +201,7 @@ Pour utiliser un dossier de données différent :
 python -m annotation.main --language fr --data-dir C:\chemin\vers\data
 ```
 
-## 7. Résultats
+## 6. Résultats
 
 Les fichiers produits sont enregistrés à la racine du dépôt :
 
