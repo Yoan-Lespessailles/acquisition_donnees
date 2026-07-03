@@ -1,6 +1,6 @@
 {
     "language_code": "sv",
-    "language_name": "Swedish",
+    "language_name": "Suédois",
     "mfa_model_name": "swedish_mfa",
     "whisper_code": "sv",
     "syntax_order": "SVO",
@@ -95,44 +95,44 @@
         "type": "fixed",
         "sentences": [
             {
-                "text": "Kjell köper färskt bröd och mjuk ost.",
-                "numeric": "Kjell köper färskt bröd och mjuk ost."
+                "text": "Kjell köper färskt bröd och en bit getost till kvällsmaten.",
+                "numeric": "Kjell köper färskt bröd och en bit getost till kvällsmaten."
             },
             {
-                "text": "Ylva öppnar en mörk dörr och ropar på Johan.",
-                "numeric": "Ylva öppnar en mörk dörr och ropar på Johan."
+                "text": "Ylva öppnar dörren till vinden och ropar på sin bror Johan, som gömmer sig där.",
+                "numeric": "Ylva öppnar dörren till vinden och ropar på sin bror Johan, som gömmer sig där."
             },
             {
-                "text": "Sofia sjunger en lugn sång medan regnet faller.",
-                "numeric": "Sofia sjunger en lugn sång medan regnet faller."
+                "text": "Sofia sjunger lågt för sitt barn medan hon ser regnet falla utanför fönstret.",
+                "numeric": "Sofia sjunger lågt för sitt barn medan hon ser regnet falla utanför fönstret."
             },
             {
-                "text": "Håkan lägger åtta nya böcker på hyllan.",
-                "numeric": "Håkan lägger 8 nya böcker på hyllan."
+                "text": "Håkan lägger åtta nya böcker på hyllan efter att ha köpt dem på en loppmarknad.",
+                "numeric": "Håkan lägger 8 nya böcker på hyllan efter att ha köpt dem på en loppmarknad."
             },
             {
-                "text": "Maja cyklar över bron när solen skiner.",
-                "numeric": "Maja cyklar över bron när solen skiner."
+                "text": "Maja cyklar över bron på väg till skolan; det är en vacker dag eftersom solen skiner.",
+                "numeric": "Maja cyklar över bron på väg till skolan; det är en vacker dag eftersom solen skiner."
             },
             {
-                "text": "Anna tvättar små sjalar i kallt vatten.",
-                "numeric": "Anna tvättar små sjalar i kallt vatten."
+                "text": "Anna sköljer sin blå sjal i kallt vatten eftersom den har fått en liten fläck.",
+                "numeric": "Anna sköljer sin blå sjal i kallt vatten eftersom den har fått en liten fläck."
             },
             {
-                "text": "Erik bygger ett gult hus nära sjön.",
-                "numeric": "Erik bygger ett gult hus nära sjön."
+                "text": "Erik bygger ett litet hus nära sjön och planerar att måla det gult och grönt.",
+                "numeric": "Erik bygger ett litet hus nära sjön och planerar att måla det gult och grönt."
             },
             {
-                "text": "Linnea hittar femton gamla nycklar under bordet.",
-                "numeric": "Linnea hittar 15 gamla nycklar under bordet."
+                "text": "Linnea hittar femton gamla nycklar i en dammig låda under ett bord på vinden.",
+                "numeric": "Linnea hittar 15 gamla nycklar i en dammig låda under ett bord på vinden."
             },
             {
-                "text": "Oskar målar tjocka streck på papper.",
-                "numeric": "Oskar målar tjocka streck på papper."
+                "text": "Oskar ritar streck på tjockt papper för att göra en skattkarta när han leker pirat.",
+                "numeric": "Oskar ritar streck på tjockt papper för att göra en skattkarta när han leker pirat."
             },
             {
-                "text": "Karin lagar soppa och skalar fyra äpplen.",
-                "numeric": "Karin lagar soppa och skalar 4 äpplen."
+                "text": "Karin lagar soppa till förrätt och skalar fyra äpplen till en paj till efterrätt.",
+                "numeric": "Karin lagar soppa till förrätt och skalar 4 äpplen till en paj till efterrätt."
             }
         ]
     }

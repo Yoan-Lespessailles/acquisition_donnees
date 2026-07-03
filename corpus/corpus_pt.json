@@ -1,6 +1,6 @@
 {
     "language_code": "pt",
-    "language_name": "Portuguese",
+    "language_name": "Portugais",
     "mfa_model_name": "portuguese_mfa",
     "whisper_code": "pt",
     "syntax_order": "SVO",
@@ -99,40 +99,40 @@
                 "numeric": "O vinho branco fica no frio durante a noite."
             },
             {
-                "text": "A mãe põe pão quente em cima da mesa.",
-                "numeric": "A mãe põe pão quente em cima da mesa."
+                "text": "A mãe do Miguel põe na mesa o pão quente que acabou de comprar na padaria.",
+                "numeric": "A mãe do Miguel põe na mesa o pão quente que acabou de comprar na padaria."
             },
             {
-                "text": "Guilherme trabalha junto ao jardim velho.",
-                "numeric": "Guilherme trabalha junto ao jardim velho."
+                "text": "Guilherme trabalha junto ao jardim velho e cava buracos para plantar árvores de fruto.",
+                "numeric": "Guilherme trabalha junto ao jardim velho e cava buracos para plantar árvores de fruto."
             },
             {
-                "text": "Rita sorri quando vê três cães pequenos.",
-                "numeric": "Rita sorri quando vê 3 cães pequenos."
+                "text": "Rita sorri quando vê três cães pequenos a passear no parque como uma pequena família.",
+                "numeric": "Rita sorri quando vê 3 cães pequenos a passear no parque como uma pequena família."
             },
             {
-                "text": "Teresa lê um jornal antigo junto da janela.",
-                "numeric": "Teresa lê um jornal antigo junto da janela."
+                "text": "Teresa folheia um jornal antigo junto da janela e encontra uma fotografia esquecida.",
+                "numeric": "Teresa folheia um jornal antigo junto da janela e encontra uma fotografia esquecida."
             },
             {
-                "text": "O rapaz guarda livros numa caixa grande.",
-                "numeric": "O rapaz guarda livros numa caixa grande."
+                "text": "O rapaz guarda numa caixa grande os livros que já não usa, para que sirvam a outras crianças.",
+                "numeric": "O rapaz guarda numa caixa grande os livros que já não usa, para que sirvam a outras crianças."
             },
             {
-                "text": "Miguel lava copos limpos antes do almoço.",
-                "numeric": "Miguel lava copos limpos antes do almoço."
+                "text": "Miguel lava os copos, os pratos e os talheres antes do almoço para preparar a mesa.",
+                "numeric": "Miguel lava os copos, os pratos e os talheres antes do almoço para preparar a mesa."
             },
             {
-                "text": "João fecha a porta do quarto com cuidado.",
-                "numeric": "João fecha a porta do quarto com cuidado."
+                "text": "João não quer ser incomodado, fecha com cuidado a porta do quarto e põe um aviso.",
+                "numeric": "João não quer ser incomodado, fecha com cuidado a porta do quarto e põe um aviso."
             },
             {
-                "text": "Sofia traz flores bonitas para Ana de manhã.",
-                "numeric": "Sofia traz flores bonitas para Ana de manhã."
+                "text": "Rafael traz um belo ramo de flores à sua amiga Sofia de manhã e espera que o gesto lhe agrade.",
+                "numeric": "Rafael traz um belo ramo de flores à sua amiga Sofia de manhã e espera que o gesto lhe agrade."
             },
             {
-                "text": "Pedro ouve música baixa enquanto caminha no fim da tarde.",
-                "numeric": "Pedro ouve música baixa enquanto caminha no fim da tarde."
+                "text": "Pedro ouve música calma enquanto caminha ao fim da tarde, depois de um longo dia de trabalho.",
+                "numeric": "Pedro ouve música calma enquanto caminha ao fim da tarde, depois de um longo dia de trabalho."
             }
         ]
     }
