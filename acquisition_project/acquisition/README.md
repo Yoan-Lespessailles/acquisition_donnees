@@ -30,7 +30,7 @@ C:\chemin\vers\Python312\python.exe -m venv .venv
 
 Le projet ne s'installe pas avec Python 3.11. Si l'environnement `.venv` a déjà été créé avec Python 3.11, il faut le supprimer puis le recréer avec Python 3.12.
 
-#### Linux / macOS
+#### Linux / macOS avec `.venv`
 
 ```bash
 cd acquisition_project
@@ -44,13 +44,13 @@ python -m pip install -e .
 
 Si un environnement conda Python 3.12 existe déjà, il peut être utilisé à la place de `.venv`. Si vous n'en avez pas et que vous souhaitez en créer un :
 
-```powershell
+```
 conda create -n acquisition-python312 python=3.12
 ```
 
 Dans un terminal où conda est disponible :
 
-```powershell
+```
 conda activate acquisition-python312
 cd acquisition_project
 python --version
@@ -64,13 +64,13 @@ La commande `python --version` doit afficher Python 3.12. Si `pip` affiche une e
 
 Depuis le dossier `acquisition_project`, avec l'environnement activé :
 
-```bash
+```
 python -m acquisition.main
 ```
 
 Il est aussi possible de fournir directement le prénom de l'utilisateur :
 
-```bash
+```
 python -m acquisition.main --firstname Alice
 ```
 
@@ -79,24 +79,32 @@ python -m acquisition.main --firstname Alice
 L'interface graphique est décrite dans le fichier Qt Designer :
 
 ```text
-acquisition/ui/main_pyside.ui
+acquisition/ui/main_pyside6.ui
 ```
 
 Depuis le dossier `acquisition_project`, avec l'environnement activé, ouvrir l'interface dans Qt Designer :
 
+Windows PowerShell :
+
 ```powershell
-pyside6-designer acquisition\ui\main_pyside.ui
+pyside6-designer acquisition\ui\main_pyside6.ui
+```
+
+Linux / macOS :
+
+```bash
+QT_QPA_PLATFORM=xcb pyside6-designer acquisition/ui/main_pyside6.ui
 ```
 
 Après modification du fichier `.ui`, régénérer le fichier Python utilisé par l'application :
 
-```powershell
-pyside6-uic acquisition\ui\main_pyside.ui -o acquisition\ui\ui_main_pyside6.py
+```
+pyside6-uic acquisition/ui/main_pyside6.ui -o acquisition/ui/ui_main_pyside6.py
 ```
 
 Relancer ensuite l'application pour vérifier les changements :
 
-```powershell
+```
 python -m acquisition.main
 ```
 
@@ -120,8 +128,7 @@ Ne pas lancer `pip install -e .\build_exe.ps1` : `build_exe.ps1` est un script, 
 L'application compilée est ensuite générée dans :
 
 ```text
-distribution/
-└── AVDataCollector/
+AVDataCollector/
 ```
 
 ## Présentation générale de l'application d'acquisition
@@ -273,6 +280,7 @@ classDiagram
         - audio_source : QAudioSource
         - audio_io_device : QIODevice
         - audio_format : QAudioFormat
+        - micro_level_timer : QTimer
 
         + setup()
         + load_microphones()
@@ -360,6 +368,7 @@ classDiagram
     MyWindow ..> MediaManager : démarre / arrête enregistrements
     MyWindow ..> CorpusManager : affiche et consomme phrases
     MyWindow ..> RecordingIndicator : affiche état REC
+    MyWindow ..> MetadataManager : sauvegarde métadonnées
     MediaManager ..> QMediaDevices : surveille périphériques
     MediaManager ..> QMediaRecorder : enregistre vidéo
     MediaManager ..> QAudioSource : mesure niveau micro

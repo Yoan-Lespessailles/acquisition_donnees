@@ -7,17 +7,19 @@ $ErrorActionPreference = "Stop"
 $projectDir = $PSScriptRoot
 
 # Le depot est le dossier parent de acquisition_project. Il contient notamment
-# le corpus partage et recevra le dossier distribution
+# le corpus partage et recevra le dossier final de distribution
 $repositoryDir = Split-Path -Parent $projectDir
 
 # Organisation finale :
-# distribution/
-# |-- AVDataCollector/    application et DLL Qt
-# |   |-- AVDataCollector.exe
-# |   `-- config.yaml
-# `-- corpus/             corpus partage avec les autres applications
-$distributionDir = Join-Path $repositoryDir "distribution"
-$applicationDir = Join-Path $distributionDir "AVDataCollector"
+# AVDataCollector/
+# |-- AVDataCollector.exe
+# |-- config.yaml
+# `-- corpus/
+#
+# PyInstaller cree automatiquement le dossier AVDataCollector a partir du nom
+# declare dans acquisition.spec. --distpath doit donc pointer vers son parent.
+$distParentDir = $repositoryDir
+$applicationDir = Join-Path $distParentDir "AVDataCollector"
 
 # PyInstaller doit etre execute depuis acquisition_project afin que les chemins
 # relatifs declares dans acquisition.spec soient resolus correctement
@@ -29,14 +31,14 @@ try {
     #
     # --noconfirm : remplace une ancienne construction sans poser de question
     # --clean     : supprime le cache temporaire de la construction precedente
-    # --distpath  : place le resultat dans le dossier distribution du depot
+    # --distpath  : place le dossier AVDataCollector a la racine du depot
     #
     # Le caractere ` place en fin de ligne est la continuation de ligne propre
     # a PowerShell
     python -m PyInstaller `
         --noconfirm `
         --clean `
-        --distpath $distributionDir `
+        --distpath $distParentDir `
         acquisition.spec
 
     # config.yaml n'est pas integre dans l'EXE : il reste a cote de celui-ci
@@ -46,11 +48,11 @@ try {
         -Destination (Join-Path $applicationDir "config.yaml") `
         -Force
 
-    # Copie le corpus au niveau partage de la distribution. -Recurse copie tous
-    # ses fichiers et sous-dossiers ; -Force met a jour une copie existante
+    # Copie le corpus a cote de l'executable. -Recurse copie tous ses fichiers
+    # et sous-dossiers ; -Force met a jour une copie existante
     Copy-Item `
         -LiteralPath (Join-Path $repositoryDir "corpus") `
-        -Destination (Join-Path $distributionDir "corpus") `
+        -Destination (Join-Path $applicationDir "corpus") `
         -Recurse `
         -Force
 
