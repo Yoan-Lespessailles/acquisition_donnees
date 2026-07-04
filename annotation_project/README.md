@@ -181,7 +181,93 @@ flowchart TD
     class E,T error;
 ```
 
-## 5. Lancer l'annotation
+## 5. Diagramme de dépendance entre modules
+
+Ce diagramme montre les rôles principaux des modules Python et leurs dépendances directes.
+
+```mermaid
+flowchart LR
+%% =========================
+%% ZONES PRINCIPALES
+%% =========================
+
+subgraph ENTRY["Point d'entrée"]
+    main["main.py<br/><b>Programme principal</b><br/>Arguments et orchestration"]
+end
+
+subgraph PREPARATION["Préparation des données"]
+    annotation_context["annotation_context.py<br/><b>AnnotationContext</b><br/>Langue, chemins et fichiers disponibles"]
+    file_pairing["file_pairing.py<br/><b>file_pairing</b><br/>Association vidéo / métadonnées"]
+    metadata_reader["metadata_reader.py<br/><b>csv_reader()</b><br/>Lecture des métadonnées"]
+end
+
+subgraph MANAGERS["Gestionnaires métier"]
+    mfa_manager["mfa_manager.py<br/><b>MfaManager</b><br/>Préparation et alignement MFA"]
+    subtitle_manager["subtitle_manager.py<br/><b>SubtitleManager</b><br/>Sous-titres et vidéos annotées"]
+end
+
+subgraph SERVICES["Services transversaux"]
+    ffmpeg_utils["ffmpeg_utils.py<br/><b>ffmpeg_utils</b><br/>Détection FFmpeg compatible"]
+end
+
+subgraph EXTERNAL["Outils externes"]
+    mfa_cli["MFA<br/>Alignement forcé"]
+    ffmpeg_cli["FFmpeg<br/>Audio et sous-titres"]
+end
+
+subgraph DATA["Données manipulées"]
+    input_data["data/langue/<br/>Vidéos + métadonnées"]
+    textgrid_file["TextGrid<br/>Mots et phones"]
+    subtitled_video["Vidéo annotée<br/>Sous-titres incrustés"]
+end
+
+%% =========================
+%% DÉPENDANCES PRINCIPALES
+%% =========================
+
+main -->|"crée / pilote"| annotation_context
+main -->|"associe avec"| file_pairing
+main -->|"lance"| mfa_manager
+main -->|"lance"| subtitle_manager
+
+annotation_context -->|"lit"| input_data
+annotation_context -->|"utilise"| metadata_reader
+
+file_pairing -->|"compare les fichiers de"| input_data
+
+mfa_manager -->|"lit phrase + modèle"| metadata_reader
+mfa_manager -->|"détecte FFmpeg via"| ffmpeg_utils
+mfa_manager -->|"extrait audio avec"| ffmpeg_cli
+mfa_manager -->|"aligne avec"| mfa_cli
+mfa_manager -->|"produit"| textgrid_file
+
+subtitle_manager -->|"détecte FFmpeg via"| ffmpeg_utils
+subtitle_manager -->|"lit"| textgrid_file
+subtitle_manager -->|"incruste avec"| ffmpeg_cli
+subtitle_manager -->|"produit"| subtitled_video
+
+ffmpeg_utils -->|"teste les filtres de"| ffmpeg_cli
+
+%% =========================
+%% COULEURS
+%% =========================
+
+classDef entry fill:#dbeafe,stroke:#1d4ed8,stroke-width:2px,color:#111827;
+classDef preparation fill:#e0f2fe,stroke:#0369a1,stroke-width:2px,color:#111827;
+classDef manager fill:#dcfce7,stroke:#15803d,stroke-width:2px,color:#111827;
+classDef service fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#111827;
+classDef external fill:#fee2e2,stroke:#b91c1c,stroke-width:2px,color:#111827;
+classDef data fill:#f3e8ff,stroke:#7e22ce,stroke-width:2px,color:#111827;
+
+class main entry;
+class annotation_context,file_pairing,metadata_reader preparation;
+class mfa_manager,subtitle_manager manager;
+class ffmpeg_utils service;
+class mfa_cli,ffmpeg_cli external;
+class input_data,textgrid_file,subtitled_video data;
+```
+
+## 6. Lancer l'annotation
 
 Depuis le dossier `annotation_project`, avec l'environnement activé, contrôler d'abord les fichiers détectés :
 
@@ -201,7 +287,7 @@ Pour utiliser un dossier de données différent :
 python -m annotation.main --language fr --data-dir C:\chemin\vers\data
 ```
 
-## 6. Résultats
+## 7. Résultats
 
 Les fichiers produits sont enregistrés à la racine du dépôt :
 
