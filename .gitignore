@@ -1,5 +1,7 @@
 # Environnements locaux
 .env
+.env.*
+!.env.example
 .venv/
 venv/
 env/
@@ -17,21 +19,21 @@ __pycache__/
 # Packaging / build
 build/
 dist/
-/distribution/
+distribution/
 
-# Données et sorties générées localement
-/data/
-/results/
+# Donnees et sorties generees localement
+data/
+results/
 
 # Logs
 *.log
 debug.log
 
-# Fichiers système / éditeurs
+# Fichiers systeme / editeurs
 .DS_Store
 Thumbs.db
 
-# Réglages VS Code partagés au projet
+# Reglages VS Code partages au projet
 .vscode/*
 !.vscode/settings.json
 !.vscode/extensions.json

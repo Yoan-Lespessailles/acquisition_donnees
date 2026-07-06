@@ -1,0 +1,24 @@
+name: annotation
+
+channels:
+  - conda-forge
+  # N'utilise pas les canaux Anaconda "defaults" configurés globalement
+  - nodefaults
+
+dependencies:
+  # Version de Python attendue par le projet
+  - python=3.12
+
+  - montreal-forced-aligner=3.3.9
+
+  # MFA 3.3.9 n'est pas compatible avec kalpy 0.10
+  - kalpy<0.10
+
+  # Evite que Conda installe la variante CUDA beaucoup plus lourde de Kaldi
+  - kaldi=*=cpu*
+
+  # Installe ensuite le projet et ses dependances Python declarees dans
+  # pyproject.toml
+  - pip
+  - pip:
+      - -e .
