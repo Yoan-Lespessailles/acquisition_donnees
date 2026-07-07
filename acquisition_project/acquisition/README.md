@@ -40,6 +40,15 @@ python -m pip install --upgrade pip
 python -m pip install -e .
 ```
 
+Sous Linux, Qt peut aussi avoir besoin de bibliothèques système pour charger le plugin graphique `xcb`. Sur Ubuntu / Linux Mint, installer au minimum :
+
+```bash
+sudo apt update
+sudo apt install libxcb-cursor0
+```
+
+Si l'application affiche l'erreur `Could not load the Qt platform plugin "xcb"`, relancer ces deux commandes puis relancer l'application avec le même environnement Python activé.
+
 #### Avec conda
 
 Si un environnement conda Python 3.12 existe déjà, il peut être utilisé à la place de `.venv`. Si vous n'en avez pas et que vous souhaitez en créer un :
@@ -59,6 +68,8 @@ python -m pip install -e .
 ```
 
 La commande `python --version` doit afficher Python 3.12. Si `pip` affiche une erreur indiquant Python 3.11, c'est que l'environnement conda n'est pas actif dans ce terminal. Dans ce cas, ouvrir un terminal conda, activer l'environnement, puis utiliser `python -m pip` plutôt que `pip`.
+
+Après activation de l'environnement conda, utiliser `python`, pas le chemin absolu `/home/yoan/miniconda3/bin/python`. Ce chemin correspond au Python de base de Miniconda et contourne l'environnement `acquisition-python312`, donc les paquets installés dans l'environnement comme `av` ne sont pas trouvés. Si un chemin absolu est nécessaire, utiliser plutôt `/home/yoan/miniconda3/envs/acquisition-python312/bin/python`.
 
 ### 2. Lancer l'application
 
