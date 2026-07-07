@@ -84,12 +84,7 @@ class CorpusManager:
         # Trie les langues par ordre alphabétique du nom de langue
         self.languages.sort(key=lambda language: language[0].lower())
 
-        # Si au moins une langue existe, on sélectionne la première par défaut
-        if self.languages and self.language_selected is None:
-            self.language_selected = self.languages[0]
-            # print(f"Langue sélectionnée par défaut : {self.language_selected}")
-
-        elif not self.languages:
+        if not self.languages:
             print("Aucune langue disponible dans le dossier corpus")
 
         return self.languages    

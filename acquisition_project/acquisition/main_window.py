@@ -470,6 +470,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         Charge les langues disponibles dans la ComboBox de l'interface.
         """
 
+        # Évite que le remplissage de la ComboBox déclenche language_changed()
+        self.select_language.blockSignals(True)
+
         # Vide la ComboBox avant de la remplir
         self.select_language.clear()
 
@@ -479,6 +482,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # Ajoute chaque langue dans la ComboBox
         for language_name, language_code, _ in languages:
             self.select_language.addItem(language_name, language_code)
+
+        # Réactive les signaux une fois la ComboBox remplie
+        self.select_language.blockSignals(False)
 
         # Si aucune langue n'est disponible, on désactive le bouton d'enregistrement
         if not languages:
