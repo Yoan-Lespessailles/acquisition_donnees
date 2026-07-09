@@ -1,0 +1,139 @@
+{
+  "language_code": "hr",
+  "language_name": "Croatian",
+  "mfa_model_name": "croatian_mfa",
+  "whisper_code": "hr",
+  "syntax_order": "SVO",
+  "template_1": {
+    "type": "generated",
+    "structure": [
+      "subject",
+      "verb",
+      "number",
+      "nominal_group"
+    ],
+    "subject": [
+      "Ana",
+      "Ivan",
+      "Luka",
+      "Marko",
+      "Petra",
+      "Nikola",
+      "Maja",
+      "Dora",
+      "Filip",
+      "Karla"
+    ],
+    "verb": [
+      "broji",
+      "gleda",
+      "traži",
+      "fotografira",
+      "opisuje",
+      "nosi",
+      "kupuje",
+      "bira",
+      "crta",
+      "pronalazi"
+    ],
+    "number": [
+      {
+        "text": "pet",
+        "value": 5
+      },
+      {
+        "text": "šest",
+        "value": 6
+      },
+      {
+        "text": "sedam",
+        "value": 7
+      },
+      {
+        "text": "osam",
+        "value": 8
+      },
+      {
+        "text": "devet",
+        "value": 9
+      },
+      {
+        "text": "deset",
+        "value": 10
+      },
+      {
+        "text": "jedanaest",
+        "value": 11
+      },
+      {
+        "text": "dvanaest",
+        "value": 12
+      },
+      {
+        "text": "petnaest",
+        "value": 15
+      },
+      {
+        "text": "dvadeset",
+        "value": 20
+      }
+    ],
+    "nominal_group": [
+      "crvenih jabuka",
+      "starih knjiga",
+      "malih prozora",
+      "žutih cvjetova",
+      "čistih čaša",
+      "dugih olovaka",
+      "plavih cipela",
+      "velikih tanjura",
+      "mekanih jastuka",
+      "oštrih noževa"
+    ]
+  },
+  "template_2": {
+    "type": "fixed",
+    "sentences": [
+      {
+        "text": "Željko uvijek nosi švicarski nožić u džepu, ali ga ovaj put sprema u ladicu.",
+        "numeric": "Željko uvijek nosi švicarski nožić u džepu, ali ga ovaj put sprema u ladicu."
+      },
+      {
+        "text": "Đurđa sjedi na drvenom konjiću i čita kratku priču svojoj lutki.",
+        "numeric": "Đurđa sjedi na drvenom konjiću i čita kratku priču svojoj lutki."
+      },
+      {
+        "text": "U jesen vjetar puše kroz grane drveća iza kuće, pa suho lišće tiho šušti.",
+        "numeric": "U jesen vjetar puše kroz grane drveća iza kuće, pa suho lišće tiho šušti."
+      },
+      {
+        "text": "Filip sjedi kraj prozora, pije finu kavu i fotografira ptice.",
+        "numeric": "Filip sjedi kraj prozora, pije finu kavu i fotografira ptice."
+      },
+      {
+        "text": "Ljubo prelazi kućno dvorište i nosi svježe voće baki.",
+        "numeric": "Ljubo prelazi kućno dvorište i nosi svježe voće baki."
+      },
+      {
+        "text": "Mirna broji sedamnaest šarenih zastava na gradskom trgu.",
+        "numeric": "Mirna broji 17 šarenih zastava na gradskom trgu."
+      },
+      {
+        "text": "Dječak za likovni projekt crta široku rijeku, zelenu šumu i visoku planinu.",
+        "numeric": "Dječak za likovni projekt crta široku rijeku, zelenu šumu i visoku planinu."
+      },
+      {
+        "text": "Obitelj sjedi kraj kamina, sluša tihu glazbu i igra karte.",
+        "numeric": "Obitelj sjedi kraj kamina, sluša tihu glazbu i igra karte."
+      },
+      {
+        "text": "Karolina kupuje dvadeset pet bijelih ručnika za mali hotel u kojem se brine o sobama.",
+        "numeric": "Karolina kupuje 25 bijelih ručnika za mali hotel u kojem se brine o sobama."
+      },
+      {
+        "text": "Pas brzo trči preko mokrog mosta, a Marko ga pažljivo gleda kako kliže i smije se.",
+        "numeric": "Pas brzo trči preko mokrog mosta, a Marko ga pažljivo gleda kako kliže i smije se."
+      }
+    ]
+  }
+}

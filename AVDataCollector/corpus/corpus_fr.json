@@ -1,0 +1,139 @@
+{
+    "language_code": "fr",
+    "language_name": "French",
+    "mfa_model_name": "french_mfa",
+    "whisper_code": "fr",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Camille",
+            "Julien",
+            "Lola",
+            "Théo",
+            "Luc",
+            "Thomas",
+            "Alice",
+            "Patrick",
+            "Bertrand",
+            "Maxime"
+        ],
+        "verb": [
+            "compte",
+            "regarde",
+            "observe",
+            "cherche",
+            "trouve",
+            "choisit",
+            "dessine",
+            "montre",
+            "décrit",
+            "découvre"
+        ],
+        "number": [
+            {
+                "text": "trois",
+                "value": 3
+            },
+            {
+                "text": "quatre",
+                "value": 4
+            },
+            {
+                "text": "six",
+                "value": 6
+            },
+            {
+                "text": "sept",
+                "value": 7
+            },
+            {
+                "text": "neuf",
+                "value": 9
+            },
+            {
+                "text": "dix",
+                "value": 10
+            },
+            {
+                "text": "douze",
+                "value": 12
+            },
+            {
+                "text": "quatorze",
+                "value": 14
+            },
+            {
+                "text": "seize",
+                "value": 16
+            },
+            {
+                "text": "quinze",
+                "value": 15
+            }
+        ],
+        "nominal_group": [
+            "lignes sombres",
+            "cuillères fines",
+            "fruits mûrs",
+            "chaussures rouges",
+            "lapins peureux",
+            "grands gâteaux",
+            "ballons ronds",
+            "poissons sauvages",
+            "chats mignons",
+            "fleurs blanches"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            {
+                "text": "D'après la recette, on caramélise un oignon dans une poêle bien chaude",
+                "numeric": "D'après la recette, on caramélise un oignon dans une poêle bien chaude"
+            },
+            {
+                "text": "Un jeune musicien joue joyeusement un air médiéval puis salue le public",
+                "numeric": "Un jeune musicien joue joyeusement un air médiéval puis salue le public"
+            },
+            {
+                "text": "Une grenouille croasse près de l'étang et gobe quelques moustiques",
+                "numeric": "Une grenouille croasse près de l'étang et gobe quelques moustiques"
+            },
+            {
+                "text": "Dans la montagne, ce matin, j'ai croisé un chien de berger et son troupeau",
+                "numeric": "Dans la montagne, ce matin, j'ai croisé un chien de berger et son troupeau"
+            },
+            {
+                "text": "Des nuages couvrent le ciel et un vent froid d'automne souffle sur les feuilles jaunes",
+                "numeric": "Des nuages couvrent le ciel et un vent froid d'automne souffle sur les feuilles jaunes"
+            },
+            {
+                "text": "Le peintre applique soigneusement une couche de peinture blanche sur le mur",
+                "numeric": "Le peintre applique soigneusement une couche de peinture blanche sur le mur"
+            },
+            {
+                "text": "Le crépuscule tombe sur cette grande vallée silencieuse",
+                "numeric": "Le crépuscule tombe sur cette grande vallée silencieuse"
+            },
+            {
+                "text": "Un nageur plonge dans les eaux calmes et profondes de la Seine",
+                "numeric": "Un nageur plonge dans les eaux calmes et profondes de la Seine"
+            },
+            {
+                "text": "Le boulanger gagne une médaille pour son pain croustillant et moelleux",
+                "numeric": "Le boulanger gagne une médaille pour son pain croustillant et moelleux"
+            },
+            {
+                "text": "Après l'averse, le vieux monsieur range son parapluie puis regarde l'arc-en-ciel se former",
+                "numeric": "Après l'averse, le vieux monsieur range son parapluie puis regarde l'arc-en-ciel se former"
+            }
+        ]
+    }
+}

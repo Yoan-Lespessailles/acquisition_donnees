@@ -1,0 +1,139 @@
+{
+    "language_code": "pt",
+    "language_name": "Portugais",
+    "mfa_model_name": "portuguese_mfa",
+    "whisper_code": "pt",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Ana",
+            "Maria",
+            "João",
+            "Pedro",
+            "Inês",
+            "Luís",
+            "Rita",
+            "Sofia",
+            "Teresa",
+            "Guilherme"
+        ],
+        "verb": [
+            "observa",
+            "compra",
+            "guarda",
+            "procura",
+            "encontra",
+            "mostra",
+            "limpa",
+            "traz",
+            "escolhe",
+            "arruma"
+        ],
+        "number": [
+            {
+                "text": "dois",
+                "value": 2
+            },
+            {
+                "text": "três",
+                "value": 3
+            },
+            {
+                "text": "quatro",
+                "value": 4
+            },
+            {
+                "text": "cinco",
+                "value": 5
+            },
+            {
+                "text": "sete",
+                "value": 7
+            },
+            {
+                "text": "oito",
+                "value": 8
+            },
+            {
+                "text": "nove",
+                "value": 9
+            },
+            {
+                "text": "dez",
+                "value": 10
+            },
+            {
+                "text": "doze",
+                "value": 12
+            },
+            {
+                "text": "trinta",
+                "value": 30
+            }
+        ],
+        "nominal_group": [
+            "livros novos",
+            "copos pequenos",
+            "pratos fundos",
+            "sacos brancos",
+            "sapatos pretos",
+            "carros vermelhos",
+            "bonecos pequenos",
+            "quadros antigos",
+            "jornais antigos",
+            "desenhos bonitos"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            {
+                "text": "O vinho branco fica no frio durante a noite.",
+                "numeric": "O vinho branco fica no frio durante a noite."
+            },
+            {
+                "text": "A mãe do Miguel põe na mesa o pão quente que acabou de comprar na padaria.",
+                "numeric": "A mãe do Miguel põe na mesa o pão quente que acabou de comprar na padaria."
+            },
+            {
+                "text": "Guilherme trabalha junto ao jardim velho e cava buracos para plantar árvores de fruto.",
+                "numeric": "Guilherme trabalha junto ao jardim velho e cava buracos para plantar árvores de fruto."
+            },
+            {
+                "text": "Rita sorri quando vê três cães pequenos a passear no parque como uma pequena família.",
+                "numeric": "Rita sorri quando vê 3 cães pequenos a passear no parque como uma pequena família."
+            },
+            {
+                "text": "Teresa folheia um jornal antigo junto da janela e encontra uma fotografia esquecida.",
+                "numeric": "Teresa folheia um jornal antigo junto da janela e encontra uma fotografia esquecida."
+            },
+            {
+                "text": "O rapaz guarda numa caixa grande os livros que já não usa, para que sirvam a outras crianças.",
+                "numeric": "O rapaz guarda numa caixa grande os livros que já não usa, para que sirvam a outras crianças."
+            },
+            {
+                "text": "Miguel lava os copos, os pratos e os talheres antes do almoço para preparar a mesa.",
+                "numeric": "Miguel lava os copos, os pratos e os talheres antes do almoço para preparar a mesa."
+            },
+            {
+                "text": "João não quer ser incomodado, fecha com cuidado a porta do quarto e põe um aviso.",
+                "numeric": "João não quer ser incomodado, fecha com cuidado a porta do quarto e põe um aviso."
+            },
+            {
+                "text": "Rafael traz um belo ramo de flores à sua amiga Sofia de manhã e espera que o gesto lhe agrade.",
+                "numeric": "Rafael traz um belo ramo de flores à sua amiga Sofia de manhã e espera que o gesto lhe agrade."
+            },
+            {
+                "text": "Pedro ouve música calma enquanto caminha ao fim da tarde, depois de um longo dia de trabalho.",
+                "numeric": "Pedro ouve música calma enquanto caminha ao fim da tarde, depois de um longo dia de trabalho."
+            }
+        ]
+    }
+}

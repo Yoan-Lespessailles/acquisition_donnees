@@ -1,0 +1,139 @@
+{
+    "language_code": "it",
+    "language_name": "Italian",
+    "mfa_model_name": "italian_cv",
+    "whisper_code": "it",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Marco",
+            "Lucia",
+            "Paolo",
+            "Sofia",
+            "Gianni",
+            "Anna",
+            "Roberto",
+            "Elena",
+            "Giulio",
+            "Francesca"
+        ],
+        "verb": [
+            "controlla",
+            "conta",
+            "cerca",
+            "trova",
+            "guarda",
+            "sistema",
+            "prende",
+            "sceglie",
+            "prepara",
+            "compra"
+        ],
+        "number": [
+            {
+                "text": "due",
+                "value": 2
+            },
+            {
+                "text": "quattro",
+                "value": 4
+            },
+            {
+                "text": "cinque",
+                "value": 5
+            },
+            {
+                "text": "sei",
+                "value": 6
+            },
+            {
+                "text": "sette",
+                "value": 7
+            },
+            {
+                "text": "otto",
+                "value": 8
+            },
+            {
+                "text": "nove",
+                "value": 9
+            },
+            {
+                "text": "dodici",
+                "value": 12
+            },
+            {
+                "text": "quindici",
+                "value": 15
+            },
+            {
+                "text": "trentadue",
+                "value": 32
+            }
+        ],
+        "nominal_group": [
+            "libri rossi",
+            "case nuove",
+            "fiori gialli",
+            "chiavi nuove",
+            "foglie secche",
+            "scarpe comode",
+            "piatti grandi",
+            "bottiglie fresche",
+            "calze azzurre",
+            "maglie bianche"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            {
+                "text": "La ragazza guarda lo zaino appoggiato sul tavolo della cucina.",
+                "numeric": "La ragazza guarda lo zaino appoggiato sul tavolo della cucina."
+            },
+            {
+                "text": "Giulia cerca una bottiglia fresca nel frigorifero per la famiglia.",
+                "numeric": "Giulia cerca una bottiglia fresca nel frigorifero per la famiglia."
+            },
+            {
+                "text": "È un dipinto in cui uno gnomo disegna cinque foglie gialle sul quaderno.",
+                "numeric": "È un dipinto in cui uno gnomo disegna 5 foglie gialle sul quaderno."
+            },
+            {
+                "text": "Francesca prepara una zuppa molto calda e aggiunge sale e spezie.",
+                "numeric": "Francesca prepara una zuppa molto calda e aggiunge sale e spezie."
+            },
+            {
+                "text": "Il ragazzo prende le calze azzurre rimaste sul divano.",
+                "numeric": "Il ragazzo prende le calze azzurre rimaste sul divano."
+            },
+            {
+                "text": "La signora ha messo dieci chiavi nella borsa; non è più leggera come prima.",
+                "numeric": "La signora ha messo 10 chiavi nella borsa; non è più leggera come prima."
+            },
+            {
+                "text": "Paolo mette quattro piatti sul tavolo da pranzo; il pasto è pronto.",
+                "numeric": "Paolo mette 4 piatti sul tavolo da pranzo; il pasto è pronto."
+            },
+            {
+                "text": "Anna conta i suoi giochi prima di andare a scuola.",
+                "numeric": "Anna conta i suoi giochi prima di andare a scuola."
+            },
+            {
+                "text": "Roberto posa le sue due sciarpe rosse sulla sedia; non sa quale scegliere.",
+                "numeric": "Roberto posa le sue 2 sciarpe rosse sulla sedia; non sa quale scegliere."
+            },
+            {
+                "text": "Sofia appende il suo magnifico maglione bianco su una gruccia nell'armadio.",
+                "numeric": "Sofia appende il suo magnifico maglione bianco su una gruccia nell'armadio."
+            }
+        ]
+    }
+}

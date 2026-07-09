@@ -1,0 +1,139 @@
+{
+    "language_code": "es",
+    "language_name": "Spanish",
+    "mfa_model_name": "spanish_mfa",
+    "whisper_code": "es",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Marta",
+            "Pablo",
+            "Lucía",
+            "Diego",
+            "Jorge",
+            "Nuria",
+            "Raquel",
+            "Beatriz",
+            "Ángel",
+            "Chema"
+        ],
+        "verb": [
+            "compra",
+            "vende",
+            "pide",
+            "lleva",
+            "guarda",
+            "enseña",
+            "ordena",
+            "busca",
+            "recoge",
+            "prepara"
+        ],
+        "number": [
+            {
+                "text": "dos",
+                "value": 2
+            },
+            {
+                "text": "tres",
+                "value": 3
+            },
+            {
+                "text": "cuatro",
+                "value": 4
+            },
+            {
+                "text": "cinco",
+                "value": 5
+            },
+            {
+                "text": "seis",
+                "value": 6
+            },
+            {
+                "text": "siete",
+                "value": 7
+            },
+            {
+                "text": "ocho",
+                "value": 8
+            },
+            {
+                "text": "nueve",
+                "value": 9
+            },
+            {
+                "text": "quince",
+                "value": 15
+            },
+            {
+                "text": "treinta y dos",
+                "value": 32
+            }
+        ],
+        "nominal_group": [
+            "libros grandes",
+            "llaves nuevas",
+            "cajas pequeñas",
+            "mochilas rojas",
+            "vasos azules",
+            "juguetes viejos",
+            "platos blancos",
+            "flores amarillas",
+            "camisas limpias",
+            "cuadernos baratos"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            {
+                "text": "La niña juega cerca de la fuente y ve una llave pequeña en el fondo del agua.",
+                "numeric": "La niña juega cerca de la fuente y ve una llave pequeña en el fondo del agua."
+            },
+            {
+                "text": "Fuera cae la nieve mientras Ramón prepara chocolate caliente para Beatriz y Jorge.",
+                "numeric": "Fuera cae la nieve mientras Ramón prepara chocolate caliente para Beatriz y Jorge."
+            },
+            {
+                "text": "Guillermo guarda en su caja azul cuatro juguetes viejos que ya no usa.",
+                "numeric": "Guillermo guarda en su caja azul 4 juguetes viejos que ya no usa."
+            },
+            {
+                "text": "El perro roba un chorizo seco en una carnicería y sale corriendo por la calle.",
+                "numeric": "El perro roba un chorizo seco en una carnicería y sale corriendo por la calle."
+            },
+            {
+                "text": "Cecilia recoge la mesa, lava cinco platos y guarda los cubiertos.",
+                "numeric": "Cecilia recoge la mesa, lava 5 platos y guarda los cubiertos."
+            },
+            {
+                "text": "Diego oye un ruido sordo bajo la ventana: la vecina ha tirado una maceta.",
+                "numeric": "Diego oye un ruido sordo bajo la ventana: la vecina ha tirado una maceta."
+            },
+            {
+                "text": "Ángel enseña a sus padres treinta y dos dibujos nuevos que hizo este mes.",
+                "numeric": "Ángel enseña a sus padres 32 dibujos nuevos que hizo este mes."
+            },
+            {
+                "text": "Chema recoge flores rojas en el jardín para regalar un ramo a su madre.",
+                "numeric": "Chema recoge flores rojas en el jardín para regalar un ramo a su madre."
+            },
+            {
+                "text": "Cuando vuelve del deporte, Nuria busca una botella de agua fría en la nevera de la cocina.",
+                "numeric": "Cuando vuelve del deporte, Nuria busca una botella de agua fría en la nevera de la cocina."
+            },
+            {
+                "text": "Pablo vende pan crujiente, queso fresco y bollos pequeños en la plaza del mercado.",
+                "numeric": "Pablo vende pan crujiente, queso fresco y bollos pequeños en la plaza del mercado."
+            }
+        ]
+    }
+}

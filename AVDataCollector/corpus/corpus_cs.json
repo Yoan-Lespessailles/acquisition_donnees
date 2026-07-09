@@ -1,0 +1,139 @@
+{
+    "language_code": "cs",
+    "language_name": "Tchèque",
+    "mfa_model_name": "czech_mfa",
+    "whisper_code": "cs",
+    "syntax_order": "SVO",
+    "template_1": {
+        "type": "generated",
+        "structure": [
+            "subject",
+            "verb",
+            "number",
+            "nominal_group"
+        ],
+        "subject": [
+            "Anna",
+            "Petr",
+            "Jana",
+            "Tomáš",
+            "Lucie",
+            "Martin",
+            "Eva",
+            "Pavel",
+            "Radek",
+            "Klára"
+        ],
+        "verb": [
+            "počítá",
+            "hledá",
+            "kreslí",
+            "vidí",
+            "vybírá",
+            "ukazuje",
+            "popisuje",
+            "fotí",
+            "sleduje",
+            "měří"
+        ],
+        "number": [
+            {
+                "text": "pět",
+                "value": 5
+            },
+            {
+                "text": "šest",
+                "value": 6
+            },
+            {
+                "text": "devět",
+                "value": 9
+            },
+            {
+                "text": "deset",
+                "value": 10
+            },
+            {
+                "text": "jedenáct",
+                "value": 11
+            },
+            {
+                "text": "dvanáct",
+                "value": 12
+            },
+            {
+                "text": "třináct",
+                "value": 13
+            },
+            {
+                "text": "patnáct",
+                "value": 15
+            },
+            {
+                "text": "dvacet",
+                "value": 20
+            },
+            {
+                "text": "třicet",
+                "value": 30
+            }
+        ],
+        "nominal_group": [
+            "červených balónů",
+            "mladých koní",
+            "starých židlí",
+            "bílých květin",
+            "malých psů",
+            "kulatých stolů",
+            "dlouhých řek",
+            "nových domů",
+            "žlutých klíčů",
+            "rychlých vlaků"
+        ]
+    },
+    "template_2": {
+        "type": "fixed",
+        "sentences": [
+            {
+                "text": "Žofie ve své malé kuchyni připravuje večeři a jako předkrm dělá houbovou polévku.",
+                "numeric": "Žofie ve své malé kuchyni připravuje večeři a jako předkrm dělá houbovou polévku."
+            },
+            {
+                "text": "Řidič autobusu čeká před školou, až vyjdou děti, a využije toho, aby se napil vody.",
+                "numeric": "Řidič autobusu čeká před školou, až vyjdou děti, a využije toho, aby se napil vody."
+            },
+            {
+                "text": "Obloha se zatahuje a chlapec běží přes dlouhý most ke svému domu, jediné zelené chalupě ve vesnici.",
+                "numeric": "Obloha se zatahuje a chlapec běží přes dlouhý most ke svému domu, jediné zelené chalupě ve vesnici."
+            },
+            {
+                "text": "Lékař měří teplotu malému dítěti, které má angínu a bude muset několik dní zůstat v posteli a odpočívat.",
+                "numeric": "Lékař měří teplotu malému dítěti, které má angínu a bude muset několik dní zůstat v posteli a odpočívat."
+            },
+            {
+                "text": "Oblohu zakrývají tmavé mraky a déšť začíná bubnovat na střechu staré garáže.",
+                "numeric": "Oblohu zakrývají tmavé mraky a déšť začíná bubnovat na střechu staré garáže."
+            },
+            {
+                "text": "Jirka píše krátký vzkaz na malý bílý papír pro Veroniku, která sedí dvě řady před ním.",
+                "numeric": "Jirka píše krátký vzkaz na malý bílý papír pro Veroniku, která sedí dvě řady před ním."
+            },
+            {
+                "text": "Dívka poslouchá hudbu ve svém pokoji a tiše se usmívá při pohledu z okna.",
+                "numeric": "Dívka poslouchá hudbu ve svém pokoji a tiše se usmívá při pohledu z okna."
+            },
+            {
+                "text": "Učitel vysvětluje u tabule těžký příklad z matematiky o derivacích a integrálech.",
+                "numeric": "Učitel vysvětluje u tabule těžký příklad z matematiky o derivacích a integrálech."
+            },
+            {
+                "text": "Kočka chvíli leží na měkkém koberci, potom se protáhne, posadí se a rozespale zívne.",
+                "numeric": "Kočka chvíli leží na měkkém koberci, potom se protáhne, posadí se a rozespale zívne."
+            },
+            {
+                "text": "Filip dostal pozvání na módní přehlídku jako profesionální fotograf a bere to jako velkou příležitost.",
+                "numeric": "Filip dostal pozvání na módní přehlídku jako profesionální fotograf a bere to jako velkou příležitost."
+            }
+        ]
+    }
+}
