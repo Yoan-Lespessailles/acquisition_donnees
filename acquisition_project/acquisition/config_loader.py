@@ -15,7 +15,7 @@ def load_config():
     if getattr(sys, "frozen", False):
         # En production, config.yaml reste modifiable a cote de l'executable
         acquisition_project_dir = Path(sys.executable).resolve().parent
-        base_dir = acquisition_project_dir.parent
+        base_dir = acquisition_project_dir
     else:
         acquisition_project_dir = Path(__file__).resolve().parents[1]
         base_dir = acquisition_project_dir.parent

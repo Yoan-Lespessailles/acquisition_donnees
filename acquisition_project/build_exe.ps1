@@ -49,10 +49,17 @@ try {
         -Force
 
     # Copie le corpus a cote de l'executable. -Recurse copie tous ses fichiers
-    # et sous-dossiers ; -Force met a jour une copie existante
+    # et sous-dossiers ; on remplace l'ancien dossier pour eviter corpus\corpus
+    # si le script est relance plusieurs fois
+    $corpusDestination = Join-Path $applicationDir "corpus"
+
+    if (Test-Path -LiteralPath $corpusDestination) {
+        Remove-Item -LiteralPath $corpusDestination -Recurse -Force
+    }
+
     Copy-Item `
         -LiteralPath (Join-Path $repositoryDir "corpus") `
-        -Destination (Join-Path $applicationDir "corpus") `
+        -Destination $corpusDestination `
         -Recurse `
         -Force
 
